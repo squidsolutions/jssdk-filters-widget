@@ -1,0 +1,25 @@
+{
+  "name": "squid_api_filters_widget",
+  "version": "1.0.0",
+  "authors": [
+    "obalbous <oba@squid>"
+  ],
+  "main": "dist/squid_api_filters-widget.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "src",
+    "build",
+    "Gruntfile.js"
+  ],
+  "dependencies": {
+      "squid_api": "git@github.com:squidsolutions/jssdk2.git",
+      "handlebars": "~1.3.0",
+      "jquery-ui": "~1.10.0",
+      "bootstrap-multiselect":"*"
+    }
+}

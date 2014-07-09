@@ -1,0 +1,20 @@
+   {{#if selAvailable}}
+        <!-- display filter name and selection -->
+        <label for="{{facetId}}">{{name}}</label>
+        <select name="{{facetId}}" class="sq-select" id="{{facetId}}" multiple="multiple" size="{{displaySize}}>
+            <option value="">-</option>
+            {{#each options}}
+                <option value="{{value}}"
+                    {{#if selected}}
+                        selected
+                    {{/if}}
+                >
+                    {{label}}
+                </option>
+            {{/each}}
+        </select>
+    {{else}}
+        <!-- just display filter name -->
+        <label>{{name}}</label>
+        <span>-</span>
+    {{/if}}

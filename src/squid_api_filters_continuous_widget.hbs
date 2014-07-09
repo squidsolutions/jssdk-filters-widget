@@ -1,0 +1,35 @@
+{{#if dateAvailable}}
+    <!-- display item name and date picker panel -->
+    <div class='sq-select' id='{{facetId}}'>
+        <div class='continuousFacetContainer'>
+            <label>{{name}}</label>
+            <div id='dateValues' class='dateValues'>
+                <span class="muted">From </span>
+                <span class='dateValue' id="startDate">{{startDateVal}}</span> 
+                <span class="muted"> To </span>  
+                <span class='dateValue' id="endDate">{{endDateVal}}</span>
+            </div>
+            <div id='pickerContainer' class='pickerContainer' style='position : absolute; z-index:1; display: none;'> 
+                <table class='datePickerPanels'>
+                    <tbody>
+                        <tr>
+                            <td valign='top'><div class='startDatePicker'></div></td>
+                            <td valign='top'><div class='endDatePicker'></div></td>
+                        </tr>
+                        <tr>
+                            <td colspan='2' align='right'>
+                            	<button type="button" class="btn btn-primary">Ok</button>
+                            	<button type="button" class="btn btn-default">Cancel</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+    </div>
+    
+{{else}}
+    <!-- just display item name -->
+    {{name}}
+    <div>-</div>
+{{/if}}

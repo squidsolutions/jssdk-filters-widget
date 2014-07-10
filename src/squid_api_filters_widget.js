@@ -342,7 +342,7 @@
                         initItems = [];
                     }
                     initItems.sort();
-                    if (curItems) {
+                    if (!curItems) {
                         curItems = [];
                     }
                     curItems.sort();

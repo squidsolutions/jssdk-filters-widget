@@ -26,7 +26,7 @@ module.exports = function(grunt) {
                     all : {
                         src : [ 'build/templates.js',
                                 'src/*.js' ],
-                        dest : 'dist/squid_api_filter-widget.js',
+                        dest : 'dist/squid_api_filters-widget.js',
                     }
                 },
                 handlebars : {

@@ -9,30 +9,26 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\r\n        <!-- display filter name and selection -->\r\n        <label for=\"";
-  if (helper = helpers.facetId) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.facetId); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "\">";
+  buffer += "\r\n        <!-- display filter name and selection -->\r\n        <dt>";
   if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</label>\r\n        <select name=\"";
+    + "</dt>\r\n        <dd>\r\n        <select name=\"";
   if (helper = helpers.facetId) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.facetId); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" class=\"sq-select\" id=\"";
+    + "\" class=\"multiselect\" multiple=\"multiple\" id=\"";
   if (helper = helpers.facetId) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.facetId); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" multiple=\"multiple\" size=\"";
+    + "\" size=\"";
   if (helper = helpers.displaySize) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.displaySize); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + ">\r\n            <option value=\"\">-</option>\r\n            ";
+    + "\">\r\n            ";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.options), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n        </select>\r\n    ";
+  buffer += "\r\n        </select>\r\n        </dd>\r\n    ";
   return buffer;
   }
 function program2(depth0,data) {
@@ -42,10 +38,10 @@ function program2(depth0,data) {
   if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\"\r\n                    ";
+    + "\"";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n                >\r\n                    ";
+  buffer += ">\r\n                    ";
   if (helper = helpers.label) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.label); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -55,17 +51,17 @@ function program2(depth0,data) {
 function program3(depth0,data) {
   
   
-  return "\r\n                        selected\r\n                    ";
+  return " selected";
   }
 
 function program5(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\r\n        <!-- just display filter name -->\r\n        <label>";
+  buffer += "\r\n        <!-- just display filter name -->\r\n        <dt>";
   if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</label>\r\n        <span>-</span>\r\n    ";
+    + "</dt>\r\n        <dd>-</dd>\r\n    ";
   return buffer;
   }
 
@@ -83,23 +79,19 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\r\n    <!-- display item name and date picker panel -->\r\n    <div class='sq-select' id='";
+  buffer += "\r\n\r\n<!-- display item name and date picker panel -->\r\n<div class='sq-select' id='";
   if (helper = helpers.facetId) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.facetId); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "'>\r\n        <div class='continuousFacetContainer'>\r\n            <label>";
-  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</label>\r\n            <div id='dateValues' class='dateValues'>\r\n                <span class=\"muted\">From </span>\r\n                <span class='dateValue' id=\"startDate\">";
+    + "'>\r\n    <div class='continuousFacetContainer'>\r\n        <div id='dateValues' class='dateValues'>\r\n            <span class=\"muted\">From </span>\r\n            <span class='dateValue' id=\"startDate\">";
   if (helper = helpers.startDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.startDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span> \r\n                <span class=\"muted\"> To </span>  \r\n                <span class='dateValue' id=\"endDate\">";
+    + "</span> \r\n            <span class=\"muted\"> To </span>  \r\n            <span class='dateValue' id=\"endDate\">";
   if (helper = helpers.endDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.endDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span>\r\n            </div>\r\n            <div id='pickerContainer' class='pickerContainer' style='position : absolute; z-index:1; display: none;'> \r\n                <table class='datePickerPanels'>\r\n                    <tbody>\r\n                        <tr>\r\n                            <td valign='top'><div class='startDatePicker'></div></td>\r\n                            <td valign='top'><div class='endDatePicker'></div></td>\r\n                        </tr>\r\n                        <tr>\r\n                            <td colspan='2' align='right'>\r\n                            	<button type=\"button\" class=\"btn btn-primary\">Ok</button>\r\n                            	<button type=\"button\" class=\"btn btn-default\">Cancel</button>\r\n                            </td>\r\n                        </tr>\r\n                    </tbody>\r\n                </table> \r\n            </div>\r\n        </div>\r\n    </div>\r\n    \r\n";
+    + "</span>\r\n        </div>\r\n        <div id='pickerContainer' class='pickerContainer'> \r\n            <div class='startDatePicker'></div>\r\n            <div class='endDatePicker'></div>\r\n        </div>\r\n    </div>\r\n</div>              \r\n\r\n    \r\n";
   return buffer;
   }
 
@@ -125,7 +117,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"sq-filters\">\n    <div class='sq-wait'>Computing in progress...</div>\n    <div class='sq-error'>An error has occurred</div>\n    <div class='sq-content'></div>\n</div>";
+  return "<div class=\"sq-filters\">\n    <div class='sq-wait'>Computing in progress...</div>\n    <div class='sq-error'>An error has occurred</div>\n    <dl class='sq-content dl-horizontal'></dl>\n</div>";
   });
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {

@@ -119,6 +119,46 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
   return "<div class=\"sq-filters\">\n    <div class='sq-wait'>Computing in progress...</div>\n    <div class='sq-error'>An error has occurred</div>\n    <dl class='sq-content dl-horizontal'></dl>\n</div>";
   });
+
+this["squid_api"]["template"]["squid_api_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.selection), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n<div class=\"col-md-1 filter clearfix\">\n	<span class=\"tools pull-right\"><a class=\"fa fa-times clear-filter\" id=\"";
+  if (helper = helpers.index) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.index); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"></a></span>\n	<p style=\"margin-bottom:5px;margin-right:0px;\">";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</p>\n	<p class=\"blue\">";
+  if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</p>\n</div>\n";
+  return buffer;
+  }
+
+  buffer += "<div id=\"selection-panel\">\n";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.facets), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</div>";
+  return buffer;
+  });
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD.
@@ -832,6 +872,174 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
             return null;
         }
 
+
+    });
+
+    return View;
+}));
+
+(function (root, factory) {
+    root.squid_api.view.PeriodView = factory(root.Backbone);
+}(this, function (Backbone) {
+
+    var View = Backbone.View.extend({
+
+        model : null,
+        
+        format : null,
+
+        initialize : function(options) {
+            this.model.on('change', this.render, this);
+            if (options.format) {
+                this.format = options.format;
+            } else {
+                this.format = function(val){return val;};
+            }
+        },
+
+        setModel : function(model) {
+            this.model = model;
+            this.initialize();
+        },
+
+        render : function() {
+            var sel = this.model.get("selection");
+            var facets;
+            if (sel && sel.facets) {
+                facets = sel.facets;
+                for (var i = 0; i < facets.length; i++) {
+                    var facet = facets[i];
+                    if (facet.dimension.type == "CONTINUOUS") {
+                        var items = facet.items;
+                        var selItems = facet.selectedItems;
+                        var name = facet.dimension.name;
+                        var facetId = facet.id;
+                        var startDateStr;
+                        var endDateStr;
+                        if (items && items.length > 0) {
+                            if (selItems && selItems.length > 0) {
+                                // get selected values instead
+                                startDateStr = selItems[0].lowerBound;
+                                endDateStr = selItems[0].upperBound;
+                            } else {
+                                startDateStr = items[0].lowerBound;
+                                endDateStr = items[0].upperBound;
+                            }
+                            // apply formatting
+                            if (this.format) {
+                                var startDate = new Date(Date.parse(startDateStr));
+                                startDateStr = this.format(startDate);
+                                var endDate = new Date(Date.parse(endDateStr));
+                                endDateStr = this.format(endDate);
+                            }
+                        }
+                        this.$el.find("#sq-startDate").text(startDateStr);
+                        this.$el.find("#sq-endDate").text(endDateStr);
+                    }
+                }
+            }
+        }
+    });
+
+    return View;
+}));
+
+(function (root, factory) {
+    root.squid_api.view.SelectionView = factory(root.Backbone, root.squid_api.template.squid_api_selection_widget);
+}(this, function (Backbone, template) {
+    var View = Backbone.View.extend( {
+
+        model: null,
+        template : template,
+        selection : null,
+
+        initialize : function() {
+            if (this.model) {
+                this.model.on('change:selection', this.render, this);
+                this.model.on('change:enabled', this.enabled, this);
+            }
+        },
+
+        setModel : function(model) {
+            this.model = model;
+            this.initialize();
+        },
+
+        setTemplate : function(t) {
+            if (t) {
+                this.template = t;
+            }
+        },
+
+        unselect : function(dimension,value) {
+            var sel = this.model.get("selection");
+            var userSel = { "facets" : [] };
+            for (var i=0; i<sel.facets.length; i++) {
+                var facet = sel.facets[i];
+                var userFacet = {"dimension" : facet.dimension, "selectedItems" : [], "id" : facet.id, "items" : facet.items, "totalSize" : facet.totalSize};
+                userSel.facets.push(userFacet);
+                for (var j=0;j<facet.selectedItems.length;j++) {
+                    var item = facet.selectedItems[j];
+                    if ((facet.dimension.oid == dimension.oid) && (item.id==value.item.id || (value.item.id==-1 && item.value==value.item.value))) {
+                        // unselect this item
+                    } else {
+                        userFacet.selectedItems.push(item);
+                    }
+                }
+            }
+            this.model.set("userSelection", userSel);
+        },
+
+        events: {
+            "click .clear-filter": function(event) {
+                if (this.model.get("selection") && this.selection && this.model.get("enabled")) {
+                    var index = event.target.id;
+                    if (index>=0) {
+                        var idx = 0;
+                        for (var key in this.selection) {
+                            var sel = this.selection[key];
+                            for (var j=0;j<sel.selection.length;j++) {
+                                if (index==idx++) {
+                                    this.unselect(sel.dimension,sel.selection[j]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        enabled : function() {
+            if (this.model.get("enabled")) {
+                this.$el.find('.clear-filter').removeAttr('disabled');
+            } else {
+                this.$el.find('.clear-filter').attr('disabled',"disabled");
+            }
+        },
+
+        render : function() {
+            if (this.model && this.model.get("selection")) {
+                this.selection = this.model.getSelection();
+                for (var key in this.selection) {
+                    for (var i=0;i<this.selection[key].selection.length;i++) {
+                        var item = this.selection[key].selection[i];
+                        if (item.item.id===0 && item.item.value=="true") {
+                            item.value = " ";
+                        }
+                    }
+                }
+                if (this.selection) {
+                    // get HTML template and fill corresponding data
+                    var selHTML = this.template({
+                        "facets" : this.selection
+                    });
+                    // render HTML
+                    this.$el.html(selHTML);
+                }
+                this.enabled();
+            }
+            return this;
+        },
 
     });
 

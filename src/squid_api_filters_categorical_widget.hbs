@@ -1,20 +1,17 @@
    {{#if selAvailable}}
         <!-- display filter name and selection -->
-        <label for="{{facetId}}">{{name}}</label>
-        <select name="{{facetId}}" class="sq-select" id="{{facetId}}" multiple="multiple" size="{{displaySize}}>
-            <option value="">-</option>
+        <dt>{{name}}</dt>
+        <dd>
+        <select name="{{facetId}}" class="multiselect" multiple="multiple" id="{{facetId}}" size="{{displaySize}}">
             {{#each options}}
-                <option value="{{value}}"
-                    {{#if selected}}
-                        selected
-                    {{/if}}
-                >
+                <option value="{{value}}"{{#if selected}} selected{{/if}}>
                     {{label}}
                 </option>
             {{/each}}
         </select>
+        </dd>
     {{else}}
         <!-- just display filter name -->
-        <label>{{name}}</label>
-        <span>-</span>
+        <dt>{{name}}</dt>
+        <dd>-</dd>
     {{/if}}

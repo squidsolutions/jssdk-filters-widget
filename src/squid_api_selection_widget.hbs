@@ -1,0 +1,11 @@
+<div id="selection-panel">
+{{#each facets}}
+{{#each selection}}
+<div class="col-md-1 filter clearfix">
+	<span class="tools pull-right"><a class="fa fa-times clear-filter" id="{{index}}"></a></span>
+	<p style="margin-bottom:5px;margin-right:0px;">{{name}}</p>
+	<p class="blue">{{value}}</p>
+</div>
+{{/each}}
+{{/each}}
+</div>

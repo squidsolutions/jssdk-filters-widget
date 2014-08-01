@@ -1,0 +1,65 @@
+(function (root, factory) {
+    root.squid_api.view.PeriodView = factory(root.Backbone);
+}(this, function (Backbone) {
+
+    var View = Backbone.View.extend({
+
+        model : null,
+        
+        format : null,
+
+        initialize : function(options) {
+            this.model.on('change', this.render, this);
+            if (options.format) {
+                this.format = options.format;
+            } else {
+                this.format = function(val){return val;};
+            }
+        },
+
+        setModel : function(model) {
+            this.model = model;
+            this.initialize();
+        },
+
+        render : function() {
+            var sel = this.model.get("selection");
+            var facets;
+            if (sel && sel.facets) {
+                facets = sel.facets;
+                for (var i = 0; i < facets.length; i++) {
+                    var facet = facets[i];
+                    if (facet.dimension.type == "CONTINUOUS") {
+                        var items = facet.items;
+                        var selItems = facet.selectedItems;
+                        var name = facet.dimension.name;
+                        var facetId = facet.id;
+                        var startDateStr;
+                        var endDateStr;
+                        if (items && items.length > 0) {
+                            if (selItems && selItems.length > 0) {
+                                // get selected values instead
+                                startDateStr = selItems[0].lowerBound;
+                                endDateStr = selItems[0].upperBound;
+                            } else {
+                                startDateStr = items[0].lowerBound;
+                                endDateStr = items[0].upperBound;
+                            }
+                            // apply formatting
+                            if (this.format) {
+                                var startDate = new Date(Date.parse(startDateStr));
+                                startDateStr = this.format(startDate);
+                                var endDate = new Date(Date.parse(endDateStr));
+                                endDateStr = this.format(endDate);
+                            }
+                        }
+                        this.$el.find("#sq-startDate").text(startDateStr);
+                        this.$el.find("#sq-endDate").text(endDateStr);
+                    }
+                }
+            }
+        }
+    });
+
+    return View;
+}));

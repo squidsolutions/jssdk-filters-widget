@@ -137,23 +137,23 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n<div class=\"col-md-1 filter clearfix\">\n	<span class=\"tools pull-right\"><a class=\"fa fa-times clear-filter\" id=\"";
-  if (helper = helpers.index) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.index); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "\"></a></span>\n	<p style=\"margin-bottom:5px;margin-right:0px;\">";
+  buffer += "\n<div class=\"item\" style=\"padding: 3px; display: inline-block;\">\n<table style=\"border:1px solid #DDD; border-collapse: separate; border-spacing: 3px;\">\n	<tr>\n		<td><span class=\"name\">";
   if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</p>\n	<p class=\"blue\">";
+    + "</span></td>\n		<td><a href=\"#\" id=\"";
+  if (helper = helpers.index) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.index); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" class=\"clear-filter\"><i class=\"glyphicon glyphicon-remove\"></i></a></td>\n	</tr>\n	<tr>\n		<td><span class=\"value\" style=\"color:#999;\">";
   if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</p>\n</div>\n";
+    + "</span></td>\n		<td></td>\n	</tr>\n</table>\n</div>\n";
   return buffer;
   }
 
-  buffer += "<div id=\"selection-panel\">\n";
+  buffer += "<div id=\"sq-selection-panel\">\n";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.facets), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n</div>";
@@ -944,31 +944,31 @@ function program2(depth0,data) {
     return View;
 }));
 
+// squid_api_selection_widget.js
 (function (root, factory) {
     root.squid_api.view.SelectionView = factory(root.Backbone, root.squid_api.template.squid_api_selection_widget);
 }(this, function (Backbone, template) {
     var View = Backbone.View.extend( {
 
         model: null,
-        template : template,
+        template : null,
         selection : null,
 
-        initialize : function() {
+        initialize : function(options) {
             if (this.model) {
                 this.model.on('change:selection', this.render, this);
                 this.model.on('change:enabled', this.enabled, this);
+            }
+            if (options.template) {
+                this.template = options.template;
+            } else {
+                this.template = template;
             }
         },
 
         setModel : function(model) {
             this.model = model;
             this.initialize();
-        },
-
-        setTemplate : function(t) {
-            if (t) {
-                this.template = t;
-            }
         },
 
         unselect : function(dimension,value) {
@@ -992,7 +992,8 @@ function program2(depth0,data) {
 
         events: {
             "click .clear-filter": function(event) {
-                if (this.model.get("selection") && this.selection && this.model.get("enabled")) {
+                event.preventDefault();
+                if (this.model.get("selection") && this.selection && this.model.isDone()) {
                     var index = event.target.id;
                     if (index>=0) {
                         var idx = 0;

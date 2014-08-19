@@ -66,6 +66,8 @@
             }
             if (options.multiselectOptions) {
                 this.multiselectOptions = options.multiselectOptions;
+            } else {
+                this.multiselectOptions = {nonSelectedText: 'ALL',maxHeight: 400, buttonClass: 'btn btn-link', enableFiltering: true, enableCaseInsensitiveFiltering: true};
             }
             if (this.model) {
                 var me = this;

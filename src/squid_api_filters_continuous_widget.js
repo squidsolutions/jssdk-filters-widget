@@ -90,16 +90,7 @@
                     }
                 }
                 if (this.initialized) {
-                    // just update the pickers dates
-                    this.$el.find("#startDate").text(this.startDate.toDateString());
-                    var p1 = this.$el.find(".startDatePicker");
-                    p1.datepicker({ minDate: this.minDate });
-                    p1.datepicker("setDate",this.startDate);
-
-                    this.$el.find("#endDate").text(this.endDate.toDateString());
-                    var p2 = this.$el.find(".endDatePicker");
-                    p2.datepicker({ maxDate: this.maxDate });
-                    p2.datepicker("setDate",this.endDate);
+                    
                 } else {
                     // build the date pickers
                     var selHTML = "";
@@ -161,6 +152,18 @@
 
                     this.initialized = true;
                 }
+             // just update the pickers dates
+                this.$el.find("#startDate").text(this.startDate.toDateString());
+                var p1 = this.$el.find(".startDatePicker");
+                p1.datepicker( "option", "minDate", this.minDate);
+                p1.datepicker( "option", "maxDate", this.maxDate);
+                p1.datepicker("setDate",this.startDate);
+
+                this.$el.find("#endDate").text(this.endDate.toDateString());
+                var p2 = this.$el.find(".endDatePicker");
+                p1.datepicker( "option", "minDate", this.minDate);
+                p1.datepicker( "option", "maxDate", this.maxDate);
+                p2.datepicker("setDate",this.endDate);
             }
 
             return this;

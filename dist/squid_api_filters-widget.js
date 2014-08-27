@@ -120,6 +120,42 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<div class=\"sq-filters\">\n    <div class='sq-wait'>Computing in progress...</div>\n    <div class='sq-error'>An error has occurred</div>\n    <dl class='sq-content dl-horizontal'></dl>\n</div>";
   });
 
+this["squid_api"]["template"]["squid_api_period_selection_panel"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "\n<div class=\"panel panel-default filter-panel\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"fa fa-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Period</h4>\n	</div>\n	<div class=\"panel-body\" id=\"period\">\n		<div id=\"date-picker\"></div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">Apply</button>\n		<button type=\"button\" class=\"btn btn-default\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">Cancel</button>\n	</div>\n</div>\n";
+  return buffer;
+  });
+
+this["squid_api"]["template"]["squid_api_period_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">\n	From <span id=\"sq-startDate\"></span> To <span id=\"sq-endDate\"></span>\n</a>";
+  return buffer;
+  });
+
 this["squid_api"]["template"]["squid_api_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -369,16 +405,7 @@ function program2(depth0,data) {
                     }
                 }
                 if (this.initialized) {
-                    // just update the pickers dates
-                    this.$el.find("#startDate").text(this.startDate.toDateString());
-                    var p1 = this.$el.find(".startDatePicker");
-                    p1.datepicker({ minDate: this.minDate });
-                    p1.datepicker("setDate",this.startDate);
-
-                    this.$el.find("#endDate").text(this.endDate.toDateString());
-                    var p2 = this.$el.find(".endDatePicker");
-                    p2.datepicker({ maxDate: this.maxDate });
-                    p2.datepicker("setDate",this.endDate);
+                    
                 } else {
                     // build the date pickers
                     var selHTML = "";
@@ -440,6 +467,18 @@ function program2(depth0,data) {
 
                     this.initialized = true;
                 }
+             // just update the pickers dates
+                this.$el.find("#startDate").text(this.startDate.toDateString());
+                var p1 = this.$el.find(".startDatePicker");
+                p1.datepicker( "option", "minDate", this.minDate);
+                p1.datepicker( "option", "maxDate", this.maxDate);
+                p1.datepicker("setDate",this.startDate);
+
+                this.$el.find("#endDate").text(this.endDate.toDateString());
+                var p2 = this.$el.find(".endDatePicker");
+                p1.datepicker( "option", "minDate", this.minDate);
+                p1.datepicker( "option", "maxDate", this.maxDate);
+                p2.datepicker("setDate",this.endDate);
             }
 
             return this;
@@ -875,6 +914,84 @@ function program2(depth0,data) {
         }
 
 
+    });
+
+    return View;
+}));
+
+(function (root, factory) {
+    root.squid_api.view.PeriodSelectionView = factory(
+            root.Backbone, 
+            root.squid_api.view.PeriodView, 
+            root.squid_api.template.squid_api_period_selection_widget, 
+            root.squid_api.template.squid_api_period_selection_panel);
+}(this, function (Backbone, PeriodView, defaultTemplate, defaultPanelTemplate) {
+
+    var View = Backbone.View.extend({
+
+        model : null,
+        
+        template : null,
+        
+        format : null,
+        
+        periodView : null,
+        
+        datePickerEl : null,
+        
+        datePickerView : null,
+
+        initialize : function(options) {
+            if (options.template) {
+                this.template = options.template;
+            } else {
+                this.template = defaultTemplate;
+            }
+            if (options.format) {
+                this.format = options.format;
+            } else {
+                this.format = function(val){return val;};
+            }
+            if (options.datePickerEl) {
+                this.datePickerEl = options.datePickerEl;
+            }
+            this.render();
+        },
+
+        setModel : function(model) {
+            this.model = model;
+            this.initialize();
+        },
+
+        render : function() {
+            if (!this.periodView) {
+                // first call, setup the child views
+                this.$el.html(this.template({"data-target" : this.datePickerEl.selector}));
+                this.periodView = new squid_api.view.PeriodView({
+                    el : this.el,
+                    model : this.model,
+                    format : this.format
+                });
+                
+                this.datePickerEl.html(defaultPanelTemplate({"data-target" : this.datePickerEl.selector}));
+                if (this.datePickerEl) {
+                    this.datePickerView = new squid_api.view.FiltersView({
+                        model : this.model,
+                        el : this.datePickerEl.find("#date-picker"),
+                        pickerVisible : true,
+                        refreshOnChange : false,
+                        displayCategorical : false
+                    });
+                    var me = this;
+                    this.datePickerEl.find(".btn-primary").click(function() {
+                        me.datePickerView.applySelection();
+                    });
+                    this.datePickerEl.find(".btn-default").click(function() {
+                        me.datePickerView.cancelSelection();
+                    });
+                }
+            }
+        }
     });
 
     return View;

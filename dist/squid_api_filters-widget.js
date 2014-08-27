@@ -549,14 +549,15 @@ function program2(depth0,data) {
         // Global
         root.squid_api.view.FiltersView = 
             factory(root.$, 
-                    root.Backbone, 
+                    root.Backbone,
+                    root.squid_api,
                     root.squid_api.view.CategoricalFilterView,  
                     root.squid_api.view.ContinuousFilterView,
                     root.squid_api.controller.facetjob,
                     root.squid_api.template.squid_api_filters_widget
                     );
     }
-}(this, function ($,Backbone, CategoricalFilterView, ContinuousFilterView, FacetJobController, defaultTemplate) {
+}(this, function ($,Backbone, squid_api, CategoricalFilterView, ContinuousFilterView, FacetJobController, defaultTemplate) {
 
     var View = Backbone.View.extend({
         initialModel: null,
@@ -608,38 +609,40 @@ function program2(depth0,data) {
             } else {
                 this.multiselectOptions = {nonSelectedText: 'ALL',maxHeight: 400, buttonClass: 'btn btn-link', enableFiltering: true, enableCaseInsensitiveFiltering: true};
             }
-            if (this.model) {
-                var me = this;
-                if (!this.initialSelection) {
-                    // duplicate the initial model (once)
-                    this.initialModel = $.extend(true, {}, this.model.attributes);
-                }
-
-                // build the current model
-                this.currentModel = new FacetJobController.FiltersModel();
-                // set the current model
-                var attributesClone = $.extend(true, {}, me.model.attributes);
-                me.currentModel.set(attributesClone);
-                me.currentModel.set("enabled", true);
-
-                this.currentModel.on('change:status', function() {
-                    if (me.currentModel.isDone()) {
-                        me.currentModel.set("enabled",true);
-                    }
-                    me.render();
-                }, this);
-                this.currentModel.on('change:enabled', function() {
-                    me.setEnable(me.currentModel.get("enabled"));
-                }, this);
-                // listen for some model events
-                this.model.on('change:selection', function() {
-                    // update the current model
-                    var attributesClone = $.extend(true, {}, me.model.attributes);
-                    me.currentModel.set("selection", attributesClone.selection);
-                    me.render();
-                }, this);
-                this.model.on('change:enabled', this.setEnable, this);
+            if (!this.model) {
+                this.model = squid_api.model.filters;
             }
+            var me = this;
+            if (!this.initialSelection) {
+                // duplicate the initial model (once)
+                this.initialModel = $.extend(true, {}, this.model.attributes);
+            }
+
+            // build the current model
+            this.currentModel = new FacetJobController.FiltersModel();
+            // set the current model
+            var attributesClone = $.extend(true, {}, me.model.attributes);
+            me.currentModel.set(attributesClone);
+            me.currentModel.set("enabled", true);
+
+            this.currentModel.on('change:status', function() {
+                if (me.currentModel.isDone()) {
+                    me.currentModel.set("enabled",true);
+                }
+                me.render();
+            }, this);
+            this.currentModel.on('change:enabled', function() {
+                me.setEnable(me.currentModel.get("enabled"));
+            }, this);
+            // listen for some model events
+            this.model.on('change:selection', function() {
+                // update the current model
+                var attributesClone = $.extend(true, {}, me.model.attributes);
+                me.currentModel.set("selection", attributesClone.selection);
+                me.render();
+            }, this);
+            this.model.on('change:enabled', this.setEnable, this);
+            
         },
 
         setModel: function(model) {
@@ -922,10 +925,11 @@ function program2(depth0,data) {
 (function (root, factory) {
     root.squid_api.view.PeriodSelectionView = factory(
             root.Backbone, 
+            root.squid_api,
             root.squid_api.view.PeriodView, 
             root.squid_api.template.squid_api_period_selection_widget, 
             root.squid_api.template.squid_api_period_selection_panel);
-}(this, function (Backbone, PeriodView, defaultTemplate, defaultPanelTemplate) {
+}(this, function (Backbone, squid_api, PeriodView, defaultTemplate, defaultPanelTemplate) {
 
     var View = Backbone.View.extend({
 
@@ -942,6 +946,9 @@ function program2(depth0,data) {
         datePickerView : null,
 
         initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
             if (options.template) {
                 this.template = options.template;
             } else {
@@ -998,8 +1005,8 @@ function program2(depth0,data) {
 }));
 
 (function (root, factory) {
-    root.squid_api.view.PeriodView = factory(root.Backbone);
-}(this, function (Backbone) {
+    root.squid_api.view.PeriodView = factory(root.Backbone, root.squid_api);
+}(this, function (Backbone, squid_api) {
 
     var View = Backbone.View.extend({
 
@@ -1008,6 +1015,9 @@ function program2(depth0,data) {
         format : null,
 
         initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
             this.model.on('change', this.render, this);
             if (options.format) {
                 this.format = options.format;
@@ -1065,8 +1075,8 @@ function program2(depth0,data) {
 
 // squid_api_selection_widget.js
 (function (root, factory) {
-    root.squid_api.view.SelectionView = factory(root.Backbone, root.squid_api.template.squid_api_selection_widget);
-}(this, function (Backbone, template) {
+    root.squid_api.view.SelectionView = factory(root.Backbone, root.squid_api, root.squid_api.template.squid_api_selection_widget);
+}(this, function (Backbone, squid_api, template) {
     var View = Backbone.View.extend( {
 
         model: null,
@@ -1074,6 +1084,9 @@ function program2(depth0,data) {
         selection : null,
 
         initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
             if (this.model) {
                 this.model.on('change:selection', this.render, this);
                 this.model.on('change:enabled', this.enabled, this);

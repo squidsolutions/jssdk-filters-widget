@@ -1,10 +1,11 @@
 (function (root, factory) {
     root.squid_api.view.PeriodSelectionView = factory(
             root.Backbone, 
+            root.squid_api,
             root.squid_api.view.PeriodView, 
             root.squid_api.template.squid_api_period_selection_widget, 
             root.squid_api.template.squid_api_period_selection_panel);
-}(this, function (Backbone, PeriodView, defaultTemplate, defaultPanelTemplate) {
+}(this, function (Backbone, squid_api, PeriodView, defaultTemplate, defaultPanelTemplate) {
 
     var View = Backbone.View.extend({
 
@@ -21,6 +22,9 @@
         datePickerView : null,
 
         initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
             if (options.template) {
                 this.template = options.template;
             } else {

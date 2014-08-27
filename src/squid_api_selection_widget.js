@@ -1,7 +1,7 @@
 // squid_api_selection_widget.js
 (function (root, factory) {
-    root.squid_api.view.SelectionView = factory(root.Backbone, root.squid_api.template.squid_api_selection_widget);
-}(this, function (Backbone, template) {
+    root.squid_api.view.SelectionView = factory(root.Backbone, root.squid_api, root.squid_api.template.squid_api_selection_widget);
+}(this, function (Backbone, squid_api, template) {
     var View = Backbone.View.extend( {
 
         model: null,
@@ -9,6 +9,9 @@
         selection : null,
 
         initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
             if (this.model) {
                 this.model.on('change:selection', this.render, this);
                 this.model.on('change:enabled', this.enabled, this);

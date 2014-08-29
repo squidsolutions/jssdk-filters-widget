@@ -83,15 +83,15 @@ function program1(depth0,data) {
   if (helper = helpers.facetId) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.facetId); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "'>\r\n    <div class='continuousFacetContainer'>\r\n        <div id='dateValues' class='dateValues'>\r\n            <span class=\"muted\">From </span>\r\n            <span class='dateValue' id=\"startDate\">";
+    + "'>\r\n    <table class='continuousFacetContainer'>\r\n    	<tr>\r\n	    	<td colspan=\"2\" align=\"center\">\r\n		        <div id='dateValues' class='dateValues'>\r\n		            <span class=\"muted\">From </span>\r\n		            <span class='dateValue' id=\"startDate\">";
   if (helper = helpers.startDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.startDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span> \r\n            <span class=\"muted\"> To </span>  \r\n            <span class='dateValue' id=\"endDate\">";
+    + "</span> \r\n		            <span class=\"muted\"> To </span>  \r\n		            <span class='dateValue' id=\"endDate\">";
   if (helper = helpers.endDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.endDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span>\r\n        </div>\r\n        <div id='pickerContainer' class='pickerContainer'> \r\n            <div class='startDatePicker'></div>\r\n            <div class='endDatePicker'></div>\r\n        </div>\r\n    </div>\r\n</div>              \r\n\r\n    \r\n";
+    + "</span>\r\n		        </div>\r\n	        </td>\r\n	    </tr>\r\n	    <tr id='pickerContainer' class='pickerContainer'>\r\n	        <td style=\"padding: 3px;\">\r\n		    	<div class='startDatePicker'></div>\r\n		    </td>\r\n		    <td style=\"padding: 3px;\">\r\n		    	<div class='endDatePicker'></div>\r\n	        </td>\r\n        </tr>\r\n    </table>\r\n</div>              \r\n\r\n    \r\n";
   return buffer;
   }
 
@@ -109,6 +109,42 @@ function program3(depth0,data) {
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.dateAvailable), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { return stack1; }
   else { return ''; }
+  });
+
+this["squid_api"]["template"]["squid_api_filters_selection_panel"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div class=\"panel panel-default filter-panel\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div id=\"filters\"></div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">Apply</button>\n		<button type=\"button\" class=\"btn btn-default\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">Cancel</button>\n	</div>\n</div>\n";
+  return buffer;
+  });
+
+this["squid_api"]["template"]["squid_api_filters_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div id=\"selection\"></div>\n<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">\n	Change\n</a>";
+  return buffer;
   });
 
 this["squid_api"]["template"]["squid_api_filters_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -148,11 +184,11 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
+  buffer += "From <span id=\"sq-startDate\"></span> To <span id=\"sq-endDate\"></span>\n<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\">\n	From <span id=\"sq-startDate\"></span> To <span id=\"sq-endDate\"></span>\n</a>";
+    + "\" data-clavier=\"true\">\n	Change\n</a>";
   return buffer;
   });
 
@@ -537,6 +573,97 @@ function program2(depth0,data) {
 
     return View;
 }));
+(function (root, factory) {
+    root.squid_api.view.FiltersSelectionView = factory(
+            root.Backbone, 
+            root.squid_api,
+            root.squid_api.template.squid_api_filters_selection_widget, 
+            root.squid_api.template.squid_api_filters_selection_panel);
+}(this, function (Backbone, squid_api, defaultSelectorTemplate, defaultPanelTemplate) {
+
+    var View = Backbone.View.extend({
+
+        model : null,
+        
+        template : null,
+        
+        selectorView : null,
+        
+        filtersEl : null,
+        
+        filtersView : null,
+        
+        options : null,
+        
+        booleanGroupName : null,
+        
+        displayContinuous : false,
+        
+        refreshOnChange : false,
+
+        initialize : function(options) {
+            
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+            if (options.template) {
+                this.template = options.template;
+            } else {
+                this.template = defaultSelectorTemplate;
+            }
+            if (options.filtersEl) {
+                this.filtersEl = options.filtersEl;
+            }
+            if (options.booleanGroupName) {
+                this.booleanGroupName = options.booleanGroupName;
+            }
+            if (options.displayContinuous) {
+                this.displayContinuous = options.displayContinuous;
+            }
+            if (options.refreshOnChange) {
+                this.refreshOnChange = options.refreshOnChange;
+            }
+            this.render();
+        },
+
+        setModel : function(model) {
+            this.model = model;
+            this.initialize();
+        },
+
+        render : function() {
+            if (!this.selectorView) {
+                // first call, setup the child views
+                this.$el.html(this.template({"data-target" : this.filtersEl.selector}));
+                this.selectorView = new squid_api.view.SelectionView({
+                    el : this.$el.find("#selection"),
+                    model : this.model
+                });
+                
+                this.filtersEl.html(defaultPanelTemplate({"data-target" : this.filtersEl.selector}));
+                
+                this.filtersView = new squid_api.view.FiltersView({
+                    model : this.model,
+                    el : this.filtersEl.find("#filters"),
+                    refreshOnChange : this.refreshOnChange,
+                    booleanGroupName : this.booleanGroupName,
+                    displayContinuous : this.displayContinuous
+                });
+                
+                var me = this;
+                this.filtersEl.find(".btn-primary").click(function() {
+                    me.filtersView.applySelection();
+                });
+                this.filtersEl.find(".btn-default").click(function() {
+                    me.filtersView.cancelSelection();
+                });
+            }
+        }
+    });
+
+    return View;
+}));
+
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD.

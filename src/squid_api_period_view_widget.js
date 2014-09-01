@@ -1,6 +1,6 @@
 (function (root, factory) {
-    root.squid_api.view.PeriodView = factory(root.Backbone);
-}(this, function (Backbone) {
+    root.squid_api.view.PeriodView = factory(root.Backbone, root.squid_api);
+}(this, function (Backbone, squid_api) {
 
     var View = Backbone.View.extend({
 
@@ -9,6 +9,9 @@
         format : null,
 
         initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
             this.model.on('change', this.render, this);
             if (options.format) {
                 this.format = options.format;

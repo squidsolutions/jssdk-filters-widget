@@ -10,14 +10,15 @@
         // Global
         root.squid_api.view.FiltersView = 
             factory(root.$, 
-                    root.Backbone, 
+                    root.Backbone,
+                    root.squid_api,
                     root.squid_api.view.CategoricalFilterView,  
                     root.squid_api.view.ContinuousFilterView,
                     root.squid_api.controller.facetjob,
                     root.squid_api.template.squid_api_filters_widget
                     );
     }
-}(this, function ($,Backbone, CategoricalFilterView, ContinuousFilterView, FacetJobController, defaultTemplate) {
+}(this, function ($,Backbone, squid_api, CategoricalFilterView, ContinuousFilterView, FacetJobController, defaultTemplate) {
 
     var View = Backbone.View.extend({
         initialModel: null,
@@ -66,39 +67,43 @@
             }
             if (options.multiselectOptions) {
                 this.multiselectOptions = options.multiselectOptions;
+            } else {
+                this.multiselectOptions = {nonSelectedText: 'ALL',maxHeight: 400, buttonClass: 'btn btn-link', enableFiltering: true, enableCaseInsensitiveFiltering: true};
             }
-            if (this.model) {
-                var me = this;
-                if (!this.initialSelection) {
-                    // duplicate the initial model (once)
-                    this.initialModel = $.extend(true, {}, this.model.attributes);
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+            var me = this;
+            if (!this.initialSelection) {
+                // duplicate the initial model (once)
+                this.initialModel = $.extend(true, {}, this.model.attributes);
+            }
+
+            // build the current model
+            this.currentModel = new FacetJobController.FiltersModel();
+            // set the current model
+            var attributesClone = $.extend(true, {}, me.model.attributes);
+            me.currentModel.set(attributesClone);
+            me.currentModel.set("enabled", true);
+
+            this.currentModel.on('change:status', function() {
+                if (me.currentModel.isDone()) {
+                    me.currentModel.set("enabled",true);
                 }
-
-                // build the current model
-                this.currentModel = new FacetJobController.FiltersModel();
-                // set the current model
+                me.render();
+            }, this);
+            this.currentModel.on('change:enabled', function() {
+                me.setEnable(me.currentModel.get("enabled"));
+            }, this);
+            // listen for some model events
+            this.model.on('change:selection', function() {
+                // update the current model
                 var attributesClone = $.extend(true, {}, me.model.attributes);
-                me.currentModel.set(attributesClone);
-                me.currentModel.set("enabled", true);
-
-                this.currentModel.on('change:status', function() {
-                    if (me.currentModel.isDone()) {
-                        me.currentModel.set("enabled",true);
-                    }
-                    me.render();
-                }, this);
-                this.currentModel.on('change:enabled', function() {
-                    me.setEnable(me.currentModel.get("enabled"));
-                }, this);
-                // listen for some model events
-                this.model.on('change:selection', function() {
-                    // update the current model
-                    var attributesClone = $.extend(true, {}, me.model.attributes);
-                    me.currentModel.set("selection", attributesClone.selection);
-                    me.render();
-                }, this);
-                this.model.on('change:enabled', this.setEnable, this);
-            }
+                me.currentModel.set("selection", attributesClone.selection);
+                me.render();
+            }, this);
+            this.model.on('change:enabled', this.setEnable, this);
+            
         },
 
         setModel: function(model) {

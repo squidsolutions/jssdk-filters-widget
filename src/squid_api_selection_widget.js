@@ -1,28 +1,31 @@
+// squid_api_selection_widget.js
 (function (root, factory) {
-    root.squid_api.view.SelectionView = factory(root.Backbone, root.squid_api.template.squid_api_selection_widget);
-}(this, function (Backbone, template) {
+    root.squid_api.view.SelectionView = factory(root.Backbone, root.squid_api, root.squid_api.template.squid_api_selection_widget);
+}(this, function (Backbone, squid_api, template) {
     var View = Backbone.View.extend( {
 
         model: null,
-        template : template,
+        template : null,
         selection : null,
 
-        initialize : function() {
+        initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
             if (this.model) {
                 this.model.on('change:selection', this.render, this);
                 this.model.on('change:enabled', this.enabled, this);
+            }
+            if (options.template) {
+                this.template = options.template;
+            } else {
+                this.template = template;
             }
         },
 
         setModel : function(model) {
             this.model = model;
             this.initialize();
-        },
-
-        setTemplate : function(t) {
-            if (t) {
-                this.template = t;
-            }
         },
 
         unselect : function(dimension,value) {
@@ -46,7 +49,8 @@
 
         events: {
             "click .clear-filter": function(event) {
-                if (this.model.get("selection") && this.selection && this.model.get("enabled")) {
+                event.preventDefault();
+                if (this.model.get("selection") && this.selection && this.model.isDone()) {
                     var index = event.target.id;
                     if (index>=0) {
                         var idx = 0;

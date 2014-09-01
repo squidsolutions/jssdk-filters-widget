@@ -1,10 +1,17 @@
-<div id="selection-panel">
+<div id="sq-selection-panel">
 {{#each facets}}
 {{#each selection}}
-<div class="col-md-1 filter clearfix">
-	<span class="tools pull-right"><a class="fa fa-times clear-filter" id="{{index}}"></a></span>
-	<p style="margin-bottom:5px;margin-right:0px;">{{name}}</p>
-	<p class="blue">{{value}}</p>
+<div class="item" style="padding: 3px; display: inline-block;">
+<table style="border:1px solid #DDD; border-collapse: separate; border-spacing: 3px;">
+	<tr>
+		<td><span class="name">{{name}}</span></td>
+		<td><a href="#" id="{{index}}" class="clear-filter"><i class="glyphicon glyphicon-remove"></i></a></td>
+	</tr>
+	<tr>
+		<td><span class="value" style="color:#999;">{{value}}</span></td>
+		<td></td>
+	</tr>
+</table>
 </div>
 {{/each}}
 {{/each}}

@@ -83,15 +83,15 @@ function program1(depth0,data) {
   if (helper = helpers.facetId) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.facetId); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "'>\r\n    <div class='continuousFacetContainer'>\r\n        <div id='dateValues' class='dateValues'>\r\n            <span class=\"muted\">From </span>\r\n            <span class='dateValue' id=\"startDate\">";
+    + "'>\r\n    <table class='continuousFacetContainer'>\r\n    	<tr>\r\n	    	<td colspan=\"2\" align=\"center\">\r\n		        <div id='dateValues' class='dateValues'>\r\n		            <span class=\"muted\">From </span>\r\n		            <span class='dateValue' id=\"startDate\">";
   if (helper = helpers.startDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.startDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span> \r\n            <span class=\"muted\"> To </span>  \r\n            <span class='dateValue' id=\"endDate\">";
+    + "</span> \r\n		            <span class=\"muted\"> To </span>  \r\n		            <span class='dateValue' id=\"endDate\">";
   if (helper = helpers.endDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.endDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span>\r\n        </div>\r\n        <div id='pickerContainer' class='pickerContainer'> \r\n            <div class='startDatePicker'></div>\r\n            <div class='endDatePicker'></div>\r\n        </div>\r\n    </div>\r\n</div>              \r\n\r\n    \r\n";
+    + "</span>\r\n		        </div>\r\n	        </td>\r\n	    </tr>\r\n	    <tr id='pickerContainer' class='pickerContainer'>\r\n	        <td style=\"padding: 3px;\">\r\n		    	<div class='startDatePicker'></div>\r\n		    </td>\r\n		    <td style=\"padding: 3px;\">\r\n		    	<div class='endDatePicker'></div>\r\n	        </td>\r\n        </tr>\r\n    </table>\r\n</div>              \r\n\r\n    \r\n";
   return buffer;
   }
 
@@ -111,6 +111,42 @@ function program3(depth0,data) {
   else { return ''; }
   });
 
+this["squid_api"]["template"]["squid_api_filters_selection_panel"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div class=\"panel panel-default filter-panel\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div id=\"filters\"></div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">Apply</button>\n		<button type=\"button\" class=\"btn btn-default\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">Cancel</button>\n	</div>\n</div>\n";
+  return buffer;
+  });
+
+this["squid_api"]["template"]["squid_api_filters_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div id=\"selection\"></div>\n<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">\n	Change\n</a>";
+  return buffer;
+  });
+
 this["squid_api"]["template"]["squid_api_filters_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -118,6 +154,42 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 
   return "<div class=\"sq-filters\">\n    <div class='sq-wait'>Computing in progress...</div>\n    <div class='sq-error'>An error has occurred</div>\n    <dl class='sq-content dl-horizontal'></dl>\n</div>";
+  });
+
+this["squid_api"]["template"]["squid_api_period_selection_panel"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "\n<div class=\"panel panel-default filter-panel\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"fa fa-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Period</h4>\n	</div>\n	<div class=\"panel-body\" id=\"period\">\n		<div id=\"date-picker\"></div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">Apply</button>\n		<button type=\"button\" class=\"btn btn-default\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">Cancel</button>\n	</div>\n</div>\n";
+  return buffer;
+  });
+
+this["squid_api"]["template"]["squid_api_period_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "From <span id=\"sq-startDate\"></span> To <span id=\"sq-endDate\"></span>\n<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">\n	Change\n</a>";
+  return buffer;
   });
 
 this["squid_api"]["template"]["squid_api_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -137,23 +209,23 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n<div class=\"col-md-1 filter clearfix\">\n	<span class=\"tools pull-right\"><a class=\"fa fa-times clear-filter\" id=\"";
-  if (helper = helpers.index) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.index); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "\"></a></span>\n	<p style=\"margin-bottom:5px;margin-right:0px;\">";
+  buffer += "\n<div class=\"item\" style=\"padding: 3px; display: inline-block;\">\n<table style=\"border:1px solid #DDD; border-collapse: separate; border-spacing: 3px;\">\n	<tr>\n		<td><span class=\"name\">";
   if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</p>\n	<p class=\"blue\">";
+    + "</span></td>\n		<td><a href=\"#\" id=\"";
+  if (helper = helpers.index) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.index); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" class=\"clear-filter\"><i class=\"glyphicon glyphicon-remove\"></i></a></td>\n	</tr>\n	<tr>\n		<td><span class=\"value\" style=\"color:#999;\">";
   if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</p>\n</div>\n";
+    + "</span></td>\n		<td></td>\n	</tr>\n</table>\n</div>\n";
   return buffer;
   }
 
-  buffer += "<div id=\"selection-panel\">\n";
+  buffer += "<div id=\"sq-selection-panel\">\n";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.facets), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n</div>";
@@ -369,16 +441,7 @@ function program2(depth0,data) {
                     }
                 }
                 if (this.initialized) {
-                    // just update the pickers dates
-                    this.$el.find("#startDate").text(this.startDate.toDateString());
-                    var p1 = this.$el.find(".startDatePicker");
-                    p1.datepicker({ minDate: this.minDate });
-                    p1.datepicker("setDate",this.startDate);
-
-                    this.$el.find("#endDate").text(this.endDate.toDateString());
-                    var p2 = this.$el.find(".endDatePicker");
-                    p2.datepicker({ maxDate: this.maxDate });
-                    p2.datepicker("setDate",this.endDate);
+                    
                 } else {
                     // build the date pickers
                     var selHTML = "";
@@ -440,6 +503,18 @@ function program2(depth0,data) {
 
                     this.initialized = true;
                 }
+             // just update the pickers dates
+                this.$el.find("#startDate").text(this.startDate.toDateString());
+                var p1 = this.$el.find(".startDatePicker");
+                p1.datepicker( "option", "minDate", this.minDate);
+                p1.datepicker( "option", "maxDate", this.maxDate);
+                p1.datepicker("setDate",this.startDate);
+
+                this.$el.find("#endDate").text(this.endDate.toDateString());
+                var p2 = this.$el.find(".endDatePicker");
+                p1.datepicker( "option", "minDate", this.minDate);
+                p1.datepicker( "option", "maxDate", this.maxDate);
+                p2.datepicker("setDate",this.endDate);
             }
 
             return this;
@@ -499,6 +574,97 @@ function program2(depth0,data) {
     return View;
 }));
 (function (root, factory) {
+    root.squid_api.view.FiltersSelectionView = factory(
+            root.Backbone, 
+            root.squid_api,
+            root.squid_api.template.squid_api_filters_selection_widget, 
+            root.squid_api.template.squid_api_filters_selection_panel);
+}(this, function (Backbone, squid_api, defaultSelectorTemplate, defaultPanelTemplate) {
+
+    var View = Backbone.View.extend({
+
+        model : null,
+        
+        template : null,
+        
+        selectorView : null,
+        
+        filtersEl : null,
+        
+        filtersView : null,
+        
+        options : null,
+        
+        booleanGroupName : null,
+        
+        displayContinuous : false,
+        
+        refreshOnChange : false,
+
+        initialize : function(options) {
+            
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+            if (options.template) {
+                this.template = options.template;
+            } else {
+                this.template = defaultSelectorTemplate;
+            }
+            if (options.filtersEl) {
+                this.filtersEl = options.filtersEl;
+            }
+            if (options.booleanGroupName) {
+                this.booleanGroupName = options.booleanGroupName;
+            }
+            if (options.displayContinuous) {
+                this.displayContinuous = options.displayContinuous;
+            }
+            if (options.refreshOnChange) {
+                this.refreshOnChange = options.refreshOnChange;
+            }
+            this.render();
+        },
+
+        setModel : function(model) {
+            this.model = model;
+            this.initialize();
+        },
+
+        render : function() {
+            if (!this.selectorView) {
+                // first call, setup the child views
+                this.$el.html(this.template({"data-target" : this.filtersEl.selector}));
+                this.selectorView = new squid_api.view.SelectionView({
+                    el : this.$el.find("#selection"),
+                    model : this.model
+                });
+                
+                this.filtersEl.html(defaultPanelTemplate({"data-target" : this.filtersEl.selector}));
+                
+                this.filtersView = new squid_api.view.FiltersView({
+                    model : this.model,
+                    el : this.filtersEl.find("#filters"),
+                    refreshOnChange : this.refreshOnChange,
+                    booleanGroupName : this.booleanGroupName,
+                    displayContinuous : this.displayContinuous
+                });
+                
+                var me = this;
+                this.filtersEl.find(".btn-primary").click(function() {
+                    me.filtersView.applySelection();
+                });
+                this.filtersEl.find(".btn-default").click(function() {
+                    me.filtersView.cancelSelection();
+                });
+            }
+        }
+    });
+
+    return View;
+}));
+
+(function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD.
         define(['jquery','backbone',
@@ -510,14 +676,15 @@ function program2(depth0,data) {
         // Global
         root.squid_api.view.FiltersView = 
             factory(root.$, 
-                    root.Backbone, 
+                    root.Backbone,
+                    root.squid_api,
                     root.squid_api.view.CategoricalFilterView,  
                     root.squid_api.view.ContinuousFilterView,
                     root.squid_api.controller.facetjob,
                     root.squid_api.template.squid_api_filters_widget
                     );
     }
-}(this, function ($,Backbone, CategoricalFilterView, ContinuousFilterView, FacetJobController, defaultTemplate) {
+}(this, function ($,Backbone, squid_api, CategoricalFilterView, ContinuousFilterView, FacetJobController, defaultTemplate) {
 
     var View = Backbone.View.extend({
         initialModel: null,
@@ -566,39 +733,43 @@ function program2(depth0,data) {
             }
             if (options.multiselectOptions) {
                 this.multiselectOptions = options.multiselectOptions;
+            } else {
+                this.multiselectOptions = {nonSelectedText: 'ALL',maxHeight: 400, buttonClass: 'btn btn-link', enableFiltering: true, enableCaseInsensitiveFiltering: true};
             }
-            if (this.model) {
-                var me = this;
-                if (!this.initialSelection) {
-                    // duplicate the initial model (once)
-                    this.initialModel = $.extend(true, {}, this.model.attributes);
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+            var me = this;
+            if (!this.initialSelection) {
+                // duplicate the initial model (once)
+                this.initialModel = $.extend(true, {}, this.model.attributes);
+            }
+
+            // build the current model
+            this.currentModel = new FacetJobController.FiltersModel();
+            // set the current model
+            var attributesClone = $.extend(true, {}, me.model.attributes);
+            me.currentModel.set(attributesClone);
+            me.currentModel.set("enabled", true);
+
+            this.currentModel.on('change:status', function() {
+                if (me.currentModel.isDone()) {
+                    me.currentModel.set("enabled",true);
                 }
-
-                // build the current model
-                this.currentModel = new FacetJobController.FiltersModel();
-                // set the current model
+                me.render();
+            }, this);
+            this.currentModel.on('change:enabled', function() {
+                me.setEnable(me.currentModel.get("enabled"));
+            }, this);
+            // listen for some model events
+            this.model.on('change:selection', function() {
+                // update the current model
                 var attributesClone = $.extend(true, {}, me.model.attributes);
-                me.currentModel.set(attributesClone);
-                me.currentModel.set("enabled", true);
-
-                this.currentModel.on('change:status', function() {
-                    if (me.currentModel.isDone()) {
-                        me.currentModel.set("enabled",true);
-                    }
-                    me.render();
-                }, this);
-                this.currentModel.on('change:enabled', function() {
-                    me.setEnable(me.currentModel.get("enabled"));
-                }, this);
-                // listen for some model events
-                this.model.on('change:selection', function() {
-                    // update the current model
-                    var attributesClone = $.extend(true, {}, me.model.attributes);
-                    me.currentModel.set("selection", attributesClone.selection);
-                    me.render();
-                }, this);
-                this.model.on('change:enabled', this.setEnable, this);
-            }
+                me.currentModel.set("selection", attributesClone.selection);
+                me.render();
+            }, this);
+            this.model.on('change:enabled', this.setEnable, this);
+            
         },
 
         setModel: function(model) {
@@ -879,8 +1050,90 @@ function program2(depth0,data) {
 }));
 
 (function (root, factory) {
-    root.squid_api.view.PeriodView = factory(root.Backbone);
-}(this, function (Backbone) {
+    root.squid_api.view.PeriodSelectionView = factory(
+            root.Backbone, 
+            root.squid_api,
+            root.squid_api.view.PeriodView, 
+            root.squid_api.template.squid_api_period_selection_widget, 
+            root.squid_api.template.squid_api_period_selection_panel);
+}(this, function (Backbone, squid_api, PeriodView, defaultTemplate, defaultPanelTemplate) {
+
+    var View = Backbone.View.extend({
+
+        model : null,
+        
+        template : null,
+        
+        format : null,
+        
+        periodView : null,
+        
+        datePickerEl : null,
+        
+        datePickerView : null,
+
+        initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+            if (options.template) {
+                this.template = options.template;
+            } else {
+                this.template = defaultTemplate;
+            }
+            if (options.format) {
+                this.format = options.format;
+            } else {
+                this.format = function(val){return val;};
+            }
+            if (options.datePickerEl) {
+                this.datePickerEl = options.datePickerEl;
+            }
+            this.render();
+        },
+
+        setModel : function(model) {
+            this.model = model;
+            this.initialize();
+        },
+
+        render : function() {
+            if (!this.periodView) {
+                // first call, setup the child views
+                this.$el.html(this.template({"data-target" : this.datePickerEl.selector}));
+                this.periodView = new squid_api.view.PeriodView({
+                    el : this.el,
+                    model : this.model,
+                    format : this.format
+                });
+                
+                this.datePickerEl.html(defaultPanelTemplate({"data-target" : this.datePickerEl.selector}));
+                if (this.datePickerEl) {
+                    this.datePickerView = new squid_api.view.FiltersView({
+                        model : this.model,
+                        el : this.datePickerEl.find("#date-picker"),
+                        pickerVisible : true,
+                        refreshOnChange : false,
+                        displayCategorical : false
+                    });
+                    var me = this;
+                    this.datePickerEl.find(".btn-primary").click(function() {
+                        me.datePickerView.applySelection();
+                    });
+                    this.datePickerEl.find(".btn-default").click(function() {
+                        me.datePickerView.cancelSelection();
+                    });
+                }
+            }
+        }
+    });
+
+    return View;
+}));
+
+(function (root, factory) {
+    root.squid_api.view.PeriodView = factory(root.Backbone, root.squid_api);
+}(this, function (Backbone, squid_api) {
 
     var View = Backbone.View.extend({
 
@@ -889,6 +1142,9 @@ function program2(depth0,data) {
         format : null,
 
         initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
             this.model.on('change', this.render, this);
             if (options.format) {
                 this.format = options.format;
@@ -944,31 +1200,34 @@ function program2(depth0,data) {
     return View;
 }));
 
+// squid_api_selection_widget.js
 (function (root, factory) {
-    root.squid_api.view.SelectionView = factory(root.Backbone, root.squid_api.template.squid_api_selection_widget);
-}(this, function (Backbone, template) {
+    root.squid_api.view.SelectionView = factory(root.Backbone, root.squid_api, root.squid_api.template.squid_api_selection_widget);
+}(this, function (Backbone, squid_api, template) {
     var View = Backbone.View.extend( {
 
         model: null,
-        template : template,
+        template : null,
         selection : null,
 
-        initialize : function() {
+        initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
             if (this.model) {
                 this.model.on('change:selection', this.render, this);
                 this.model.on('change:enabled', this.enabled, this);
+            }
+            if (options.template) {
+                this.template = options.template;
+            } else {
+                this.template = template;
             }
         },
 
         setModel : function(model) {
             this.model = model;
             this.initialize();
-        },
-
-        setTemplate : function(t) {
-            if (t) {
-                this.template = t;
-            }
         },
 
         unselect : function(dimension,value) {
@@ -992,7 +1251,8 @@ function program2(depth0,data) {
 
         events: {
             "click .clear-filter": function(event) {
-                if (this.model.get("selection") && this.selection && this.model.get("enabled")) {
+                event.preventDefault();
+                if (this.model.get("selection") && this.selection && this.model.isDone()) {
                     var index = event.target.id;
                     if (index>=0) {
                         var idx = 0;

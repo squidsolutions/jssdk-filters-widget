@@ -4,7 +4,7 @@
   "authors": [
     "obalbous <oba@squid>"
   ],
-  "main": "dist/squid_api_filters-widget.js",
+  "main": ["dist/squid_api_filters-widget.js","dist/squid_api_filters-widgets.css"],
   "license": "MIT",
   "private": true,
   "ignore": [
@@ -20,6 +20,7 @@
       "squid_api": "https://github.com/squidsolutions/jssdk2.git",
       "handlebars": "~1.3.0",
       "jquery-ui": "~1.10.0",
-      "bootstrap-multiselect":"*"
+      "bootstrap-multiselect":"*",
+      "d3" : "3"
     }
 }

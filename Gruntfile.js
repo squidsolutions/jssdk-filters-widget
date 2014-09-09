@@ -23,7 +23,11 @@ module.exports = function(grunt) {
                     options : {
                         stripBanners : true,
                     },
-                    all : {
+                    css : {
+                        src : ['bower_components/jquery-ui/themes/ui-lightness/jquery-ui.min.css' ],
+                        dest : 'dist/squid_api_filters-widgets.css',
+                    },
+                    js : {
                         src : [ 'build/templates.js',
                                 'src/*.js' ],
                         dest : 'dist/squid_api_filters-widget.js',

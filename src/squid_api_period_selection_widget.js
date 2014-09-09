@@ -33,7 +33,11 @@
             if (options.format) {
                 this.format = options.format;
             } else {
-                this.format = function(val){return val;};
+                if (d3) {
+                    this.format = d3.time.format("%Y-%m-%d");
+                } else {
+                    this.format = function(val){return val;};
+                }
             }
             if (options.datePickerEl) {
                 this.datePickerEl = options.datePickerEl;

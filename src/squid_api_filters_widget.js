@@ -228,49 +228,53 @@
 
                     // sort & filter the facets
                     var sortedFacets = [];
+                    var unsortedFacets = [];
                     var booleanGroupFacet = {"dimension" : {"type" : "CATEGORICAL", "oid" : null, "id" : null, "name" : this.booleanGroupName }, "items" : [], "selectedItems" : []};
                     for (var i = 0; i < facets.length; i++) {
                         var facet = facets[i];
                         var facetId = facet.dimension.oid;
                         var idx;
-                        if (!this.filterIds) {
-                            // bypass sorting
-                            idx = i;
-                        } else {
-                            // apply sorting
-                            idx = this.filterIds.indexOf(facetId);
-                            if (idx < 0) {
-                                // ignore this facet
-                                idx = null;
-                            }
-                        }
+                        
                         // apply group boolean rule
-                        if (this.booleanGroupName) {
-                            if ((facet.items.length == 1) && (facet.items[0].value == "true")) {
-                                idx = null;
-                                // add a new item to the boolean group
-                                booleanGroupFacet.items.push({"type" : "v", "id" : facet.dimension.oid, "value" : facet.dimension.name});
-                                if (facet.selectedItems.length > 0) {
-                                    // this facet is selected
-                                    booleanGroupFacet.selectedItems.push({"type" : "v", "id" : facet.dimension.oid, "value" : facet.dimension.name});
+                        if ((this.booleanGroupName) && (facet.items.length == 1) && (facet.items[0].value == "true")) {
+                            // add a new item to the boolean group
+                            idx = -1;
+                            booleanGroupFacet.items.push({"type" : "v", "id" : facet.dimension.oid, "value" : facet.dimension.name});
+                            if (facet.selectedItems.length > 0) {
+                                // this facet is selected
+                                booleanGroupFacet.selectedItems.push({"type" : "v", "id" : facet.dimension.oid, "value" : facet.dimension.name});
+                            }
+                        } else {
+                            if (!this.filterIds) {
+                                // bypass sorting
+                                idx = i;
+                            } else {
+                                // apply sorting
+                                idx = this.filterIds.indexOf(facetId);
+                            }
+                            
+                            // apply display rules
+                            if (((facet.dimension.type == "CONTINUOUS") && (this.displayContinuous)) || ((facet.dimension.type == "CATEGORICAL") && (this.displayCategorical))) {
+                                if (idx >= 0) {
+                                    sortedFacets[idx] = facet;
+                                } else {
+                                    unsortedFacets.push(facet);
                                 }
                             }
                         }
-                        // apply display rules
-                        if ((facet.dimension.type == "CONTINUOUS") && (this.displayContinuous)) {
-                            sortedFacets[idx] = facets[i];
-                        }
-                        if ((facet.dimension.type == "CATEGORICAL") && (this.displayCategorical)) {
-                            sortedFacets[idx] = facets[i];
-                        }
                     }
+                    
+                    // append the unsorted facets
+                    sortedFacets = sortedFacets.concat(unsortedFacets);
+                    
+                    // append the booleanGroupFacet at the end
                     if (this.booleanGroupName) {
                         // sort by alphabetical order
                         booleanGroupFacet.items.sort(function(a,b) { 
-                            if (a.value < b.value) return -1;
-                            if (a.value > b.value) return 1;
-                            return 0;
-                        } 
+                                if (a.value < b.value) return -1;
+                                if (a.value > b.value) return 1;
+                                return 0;
+                            } 
                         );
                         sortedFacets.push(booleanGroupFacet);
                     }

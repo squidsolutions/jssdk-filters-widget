@@ -189,6 +189,8 @@
             if (this.currentModel.get("enabled") === true) {
                 // update the model selection with current           
                 var attributesClone = $.extend(true, {}, this.currentModel.attributes);
+                // here we directly set the selection and not the userSelection since
+                // we already did the facets computation
                 this.model.set("selection", attributesClone.selection);
             }
         },

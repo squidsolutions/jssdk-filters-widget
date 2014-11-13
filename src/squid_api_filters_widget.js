@@ -62,7 +62,7 @@
             } else {
                 this.template = defaultTemplate;
             }
-            if (options.refreshOnChange) {
+            if (typeof options.refreshOnChange !== 'undefined') {
                 this.refreshOnChange = options.refreshOnChange;
             }
             if (options.multiselectOptions) {
@@ -189,9 +189,14 @@
             if (this.currentModel.get("enabled") === true) {
                 // update the model selection with current           
                 var attributesClone = $.extend(true, {}, this.currentModel.attributes);
-                // here we directly set the selection and not the userSelection since
-                // we already did the facets computation
-                this.model.set("selection", attributesClone.selection);
+                if (this.refreshOnChange) {
+                    // here we directly set the selection and not the userSelection since
+                    // we already did the facets computation
+                    this.model.set("selection", attributesClone.selection);
+                } else {
+                    // update the userSelection (will compute the facets)
+                    this.model.set("userSelection", attributesClone.selection);
+                }
             }
         },
 

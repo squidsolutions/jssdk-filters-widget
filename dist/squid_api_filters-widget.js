@@ -744,9 +744,28 @@ function program2(depth0,data) {
                 // duplicate the initial model (once)
                 this.initialModel = $.extend(true, {}, this.model.attributes);
             }
+            
+            this.initCurrentModel(this.model);
+            
+            // listen for some model events
+            this.model.on('change:domains', function(model) {
+                me.initCurrentModel(model);
+            }, this);
+            this.model.on('change:selection', function(model) {
+                // update the current model
+                var attributesClone = $.extend(true, {}, model.attributes);
+                me.currentModel.set("selection", attributesClone.selection);
+                me.render();
+            }, this);
+            this.model.on('change:enabled', this.setEnable, this);
+            
+        },
 
+        initCurrentModel : function(model) {
+            var me = this;
+            me.childViews = null;
             // build the current model
-            this.currentModel = new FacetJobController.FiltersModel();
+            me.currentModel = new FacetJobController.FiltersModel();
             // set the current model
             var attributesClone = $.extend(true, {}, me.model.attributes);
             me.currentModel.set(attributesClone);
@@ -761,15 +780,6 @@ function program2(depth0,data) {
             this.currentModel.on('change:enabled', function() {
                 me.setEnable(me.currentModel.get("enabled"));
             }, this);
-            // listen for some model events
-            this.model.on('change:selection', function() {
-                // update the current model
-                var attributesClone = $.extend(true, {}, me.model.attributes);
-                me.currentModel.set("selection", attributesClone.selection);
-                me.render();
-            }, this);
-            this.model.on('change:enabled', this.setEnable, this);
-            
         },
 
         setModel: function(model) {
@@ -878,7 +888,7 @@ function program2(depth0,data) {
 
         render: function() {
             var container;
-            if (!this.$el.html()) {
+            if (!this.childViews) {
                 // first call, setup the child views
                 this.$el.html(this.template());            
             }

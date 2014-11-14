@@ -74,25 +74,12 @@ function program5(depth0,data) {
 this["squid_api"]["template"]["squid_api_filters_continuous_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
   
-  var buffer = "", stack1, helper;
-  buffer += "\r\n\r\n<!-- display item name and date picker panel -->\r\n<div class='sq-select' id='";
-  if (helper = helpers.facetId) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.facetId); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "'>\r\n    <table class='continuousFacetContainer'>\r\n    	<tr>\r\n	    	<td colspan=\"2\" align=\"center\">\r\n		        <div id='dateValues' class='dateValues'>\r\n		            <span class=\"muted\">From </span>\r\n		            <span class='dateValue' id=\"startDate\">";
-  if (helper = helpers.startDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.startDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span> \r\n		            <span class=\"muted\"> To </span>  \r\n		            <span class='dateValue' id=\"endDate\">";
-  if (helper = helpers.endDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.endDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span>\r\n		        </div>\r\n	        </td>\r\n	    </tr>\r\n	    <tr id='pickerContainer' class='pickerContainer'>\r\n	        <td style=\"padding: 3px;\">\r\n		    	<div class='startDatePicker'></div>\r\n		    </td>\r\n		    <td style=\"padding: 3px;\">\r\n		    	<div class='endDatePicker'></div>\r\n	        </td>\r\n        </tr>\r\n    </table>\r\n</div>              \r\n\r\n    \r\n";
-  return buffer;
+  
+  return "\r\n\r\n<a class=\"datepicker\">Change</a>\r\n\r\n";
   }
 
 function program3(depth0,data) {
@@ -107,8 +94,9 @@ function program3(depth0,data) {
   }
 
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.dateAvailable), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { return stack1; }
-  else { return ''; }
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n";
+  return buffer;
   });
 
 this["squid_api"]["template"]["squid_api_filters_selection_panel"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -181,15 +169,10 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 this["squid_api"]["template"]["squid_api_period_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+  
 
 
-  buffer += "From <span id=\"sq-startDate\"></span> To <span id=\"sq-endDate\"></span>\n<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
-  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\">\n	Change\n</a>";
-  return buffer;
+  return "From <span id=\"sq-startDate\"></span> To <span id=\"sq-endDate\"></span>\n<div id=\"date-picker\"></div>\n";
   });
 
 this["squid_api"]["template"]["squid_api_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -361,7 +344,7 @@ function program2(depth0,data) {
         root.squid_api.view.ContinuousFilterView = factory(root.Backbone, root.squid_api);
     }
 }(this, function (Backbone, squid_api) {
-    
+
     var View = Backbone.View.extend({
 
         enable: true,
@@ -441,7 +424,7 @@ function program2(depth0,data) {
                     }
                 }
                 if (this.initialized) {
-                    
+
                 } else {
                     // build the date pickers
                     var selHTML = "";
@@ -457,113 +440,60 @@ function program2(depth0,data) {
                     this.$el.html(selHTML);
 
                     var me = this;
-                    if (!me.pickerAlwaysVisible) {
-                        // attach observers
-                        me.$el.click(function(e) {
-                            // on click, show the date pickers
-                            e.stopPropagation();
-                            if (!me.pickerVisible) {
-                                me.renderPicker(me);
-                                me.pickerVisible = true;
-                            }
-                        });
-
-                        // close on click outside of the picker
-                        $(document).click(function(e) {
-                            if (me.pickerVisible) {
-                                me.$el.find("#pickerContainer").hide();
-                                me.pickerVisible = false;
-                            }
-                        });
-
-                        // close on click on "cancel"
-                        me.$el.find(".btn-default").click(function(e) {
-                            e.stopPropagation();
-                            if (me.pickerVisible) {
-                                me.$el.find("#pickerContainer").hide();
-                                me.pickerVisible = false;
-                            }
-                        });
-
-                        // process on click on "ok"
-                        me.$el.find(".btn-primary").click(function(e) {
-                            e.stopPropagation();
-                            if (me.pickerVisible) {
-                                me.$el.find("#pickerContainer").fadeOut("fast");
-                                me.pickerVisible = false;
-                                if (me.parent) {
-                                    me.parent.changeSelection(me);
-                                }
-                            }
-                        });
-                    } else {
-                        // just render
-                        me.renderPicker(me);
-                    }
+                    me.renderPicker(me);
 
                     this.initialized = true;
                 }
-             // just update the pickers dates
-                this.$el.find("#startDate").text(this.startDate.toDateString());
-                var p1 = this.$el.find(".startDatePicker");
-                p1.datepicker( "option", "minDate", this.minDate);
-                p1.datepicker( "option", "maxDate", this.maxDate);
-                p1.datepicker("setDate",this.startDate);
-
-                this.$el.find("#endDate").text(this.endDate.toDateString());
-                var p2 = this.$el.find(".endDatePicker");
-                p1.datepicker( "option", "minDate", this.minDate);
-                p1.datepicker( "option", "maxDate", this.maxDate);
-                p2.datepicker("setDate",this.endDate);
             }
 
             return this;
         },
 
         renderPicker : function(me) {
-            // build the date pickers (using classes instead of id to select the pickers as this is a bug in datePicker)
-            var p1 = me.$el.find(".startDatePicker");
-            var p2 = me.$el.find(".endDatePicker");
-            p1.datepicker({
-                changeMonth: true,
-                changeYear: true,
-                defaultDate: me.startDate,
-                minDate: me.minDate,
-                maxDate: me.maxDate,
-                onSelect : function(date) {
-                    selDate = new Date(Date.parse(date));
-                    if (selDate <= me.endDate) {
-                        me.startDate = selDate;
-                        if (me.parent) {
-                            me.parent.changeSelection(me);
-                        } 
-                    } else {
-                        // revert
-                        p1.datepicker( "setDate", me.startDate );
-                    }
-                }
-            });
-            p2.datepicker({
-                changeMonth: true,
-                changeYear: true,
-                defaultDate: me.endDate,
-                minDate: me.minDate,
-                maxDate: me.maxDate,
-                onSelect : function(date) {
-                    selDate = new Date(Date.parse(date));
-                    if (selDate >= me.startDate) {
-                        me.endDate = selDate;
-                        if (me.parent) {
-                            me.parent.changeSelection(me);
+            if (me.pickerVisible) {
+                // Build Date Picker
+                 this.$el.find(".datepicker").daterangepicker(
+                     {
+                        opens: "left",
+                        format: 'YYYY-MM-DD',
+                        startDate: me.startDate,
+                        endDate: me.endDate,
+                        minDate: me.minDate,
+                        maxDate: me.maxDate,
+                        showDropdowns: true,
+                        ranges: {
+                            'All Available Dates': [moment(me.minDate), moment(me.maxDate)],
+                            'First Month': [moment(me.minDate).startOf('month'), moment(me.minDate).endOf('month')],
+                            'Last Month': [moment(me.maxDate).startOf('month'), moment(me.maxDate).endOf('month')]
                         }
-                    } else {
-                        // revert
-                        p2.datepicker( "setDate", me.endDate );
                     }
-                }
-            });
+                );
 
-            me.$el.find("#pickerContainer").show();
+                var dateItems;
+
+                // Detect Apply Action
+                this.$el.find(".datepicker").on('apply.daterangepicker', function(ev, picker) {
+                    // Update Change Selection upon date widget close
+
+                    var startDate = new Date(Date.parse(picker.startDate._d));
+                    var endDate = new Date(Date.parse(picker.endDate._d));
+
+                    me.startDate = startDate;
+                    me.endDate = endDate;
+
+                    if (me.parent) {
+                        me.parent.changeSelection(me);
+                        me.parent.applySelection(me);
+                    }
+                });
+
+                // Detect Cancel Action
+                this.$el.find(".datepicker").on('cancel.daterangepicker', function(ev, picker) {
+                    if (me.parent) {
+                        me.parent.cancelSelection(me);
+                    }
+                });
+            }
         },
 
         setEnable: function(enable) {
@@ -573,36 +503,37 @@ function program2(depth0,data) {
 
     return View;
 }));
+
 (function (root, factory) {
     root.squid_api.view.FiltersSelectionView = factory(
-            root.Backbone, 
+            root.Backbone,
             root.squid_api,
-            root.squid_api.template.squid_api_filters_selection_widget, 
+            root.squid_api.template.squid_api_filters_selection_widget,
             root.squid_api.template.squid_api_filters_selection_panel);
 }(this, function (Backbone, squid_api, defaultSelectorTemplate, defaultPanelTemplate) {
 
     var View = Backbone.View.extend({
 
         model : null,
-        
+
         template : null,
-        
+
         selectorView : null,
-        
+
         filtersEl : null,
-        
+
         filtersView : null,
-        
+
         options : null,
-        
+
         booleanGroupName : null,
-        
+
         displayContinuous : false,
-        
+
         refreshOnChange : false,
 
         initialize : function(options) {
-            
+
             if (!this.model) {
                 this.model = squid_api.model.filters;
             }
@@ -639,9 +570,9 @@ function program2(depth0,data) {
                     el : this.$el.find("#selection"),
                     model : this.model
                 });
-                
+
                 this.filtersEl.html(defaultPanelTemplate({"data-target" : this.filtersEl.selector}));
-                
+
                 this.filtersView = new squid_api.view.FiltersView({
                     model : this.model,
                     el : this.filtersEl.find("#filters"),
@@ -649,7 +580,7 @@ function program2(depth0,data) {
                     booleanGroupName : this.booleanGroupName,
                     displayContinuous : this.displayContinuous
                 });
-                
+
                 var me = this;
                 this.filtersEl.find(".btn-primary").click(function() {
                     me.filtersView.applySelection();
@@ -668,17 +599,17 @@ function program2(depth0,data) {
     if (typeof define === 'function' && define.amd) {
         // AMD.
         define(['jquery','backbone',
-                'jssdk/sdk/widgets/squid_api_filters_categorical_widget', 
+                'jssdk/sdk/widgets/squid_api_filters_categorical_widget',
                 'jssdk/sdk/widgets/squid_api_filters_continuous_widget',
                 'jssdk/sdk/squid_api_facetjob_controller',
                 'hbs!jssdk/sdk/templates/squid_api_filters_widget', 'underscore', 'bootstrap-multiselect'], factory);
     } else {
         // Global
-        root.squid_api.view.FiltersView = 
-            factory(root.$, 
+        root.squid_api.view.FiltersView =
+            factory(root.$,
                     root.Backbone,
                     root.squid_api,
-                    root.squid_api.view.CategoricalFilterView,  
+                    root.squid_api.view.CategoricalFilterView,
                     root.squid_api.view.ContinuousFilterView,
                     root.squid_api.controller.facetjob,
                     root.squid_api.template.squid_api_filters_widget
@@ -744,9 +675,9 @@ function program2(depth0,data) {
                 // duplicate the initial model (once)
                 this.initialModel = $.extend(true, {}, this.model.attributes);
             }
-            
+
             this.initCurrentModel(this.model);
-            
+
             // listen for some model events
             this.model.on('change:domains', function(model) {
                 me.initCurrentModel(model);
@@ -758,7 +689,7 @@ function program2(depth0,data) {
                 me.render();
             }, this);
             this.model.on('change:enabled', this.setEnable, this);
-            
+
         },
 
         initCurrentModel : function(model) {
@@ -863,7 +794,7 @@ function program2(depth0,data) {
 
         applySelection: function() {
             if (this.currentModel.get("enabled") === true) {
-                // update the model selection with current           
+                // update the model selection with current
                 var attributesClone = $.extend(true, {}, this.currentModel.attributes);
                 if (this.refreshOnChange) {
                     // here we directly set the selection and not the userSelection since
@@ -890,7 +821,7 @@ function program2(depth0,data) {
             var container;
             if (!this.childViews) {
                 // first call, setup the child views
-                this.$el.html(this.template());            
+                this.$el.html(this.template());
             }
             container = this.$el.find(".sq-content");
             var errorData = this.model.get("error");
@@ -917,7 +848,7 @@ function program2(depth0,data) {
                         var facet = facets[i];
                         var facetId = facet.dimension.oid;
                         var idx;
-                        
+
                         // apply group boolean rule
                         if ((this.booleanGroupName) && (facet.items.length == 1) && (facet.items[0].value == "true")) {
                             // add a new item to the boolean group
@@ -935,7 +866,7 @@ function program2(depth0,data) {
                                 // apply sorting
                                 idx = this.filterIds.indexOf(facetId);
                             }
-                            
+
                             // apply display rules
                             if (((facet.dimension.type == "CONTINUOUS") && (this.displayContinuous)) || ((facet.dimension.type == "CATEGORICAL") && (this.displayCategorical))) {
                                 if (idx >= 0) {
@@ -946,18 +877,18 @@ function program2(depth0,data) {
                             }
                         }
                     }
-                    
+
                     // append the unsorted facets
                     sortedFacets = sortedFacets.concat(unsortedFacets);
-                    
+
                     // append the booleanGroupFacet at the end
                     if (this.booleanGroupName) {
                         // sort by alphabetical order
-                        booleanGroupFacet.items.sort(function(a,b) { 
+                        booleanGroupFacet.items.sort(function(a,b) {
                                 if (a.value < b.value) return -1;
                                 if (a.value > b.value) return 1;
                                 return 0;
-                            } 
+                            }
                         );
                         sortedFacets.push(booleanGroupFacet);
                     }
@@ -1017,7 +948,7 @@ function program2(depth0,data) {
                     }
                 }
             }
-            container.find('.multiselect').multiselect(this.multiselectOptions);		
+            container.find('.multiselect').multiselect(this.multiselectOptions);
             return this;
         },
 
@@ -1072,25 +1003,25 @@ function program2(depth0,data) {
 
 (function (root, factory) {
     root.squid_api.view.PeriodSelectionView = factory(
-            root.Backbone, 
+            root.Backbone,
             root.squid_api,
-            root.squid_api.view.PeriodView, 
-            root.squid_api.template.squid_api_period_selection_widget, 
+            root.squid_api.view.PeriodView,
+            root.squid_api.template.squid_api_period_selection_widget,
             root.squid_api.template.squid_api_period_selection_panel);
 }(this, function (Backbone, squid_api, PeriodView, defaultTemplate, defaultPanelTemplate) {
 
     var View = Backbone.View.extend({
 
         model : null,
-        
+
         template : null,
-        
+
         format : null,
-        
+
         periodView : null,
-        
+
         datePickerEl : null,
-        
+
         datePickerView : null,
 
         initialize : function(options) {
@@ -1124,31 +1055,24 @@ function program2(depth0,data) {
 
         render : function() {
             if (!this.periodView) {
+
                 // first call, setup the child views
-                this.$el.html(this.template({"data-target" : this.datePickerEl.selector}));
+                this.$el.html(this.template());
+
                 this.periodView = new squid_api.view.PeriodView({
                     el : this.el,
                     model : this.model,
                     format : this.format
                 });
-                
-                this.datePickerEl.html(defaultPanelTemplate({"data-target" : this.datePickerEl.selector}));
-                if (this.datePickerEl) {
-                    this.datePickerView = new squid_api.view.FiltersView({
-                        model : this.model,
-                        el : this.datePickerEl.find("#date-picker"),
-                        pickerVisible : true,
-                        refreshOnChange : false,
-                        displayCategorical : false
-                    });
-                    var me = this;
-                    this.datePickerEl.find(".btn-primary").click(function() {
-                        me.datePickerView.applySelection();
-                    });
-                    this.datePickerEl.find(".btn-default").click(function() {
-                        me.datePickerView.cancelSelection();
-                    });
-                }
+
+                // this.datePickerEl.html(this.datePickerEl.selector);
+                this.datePickerView = new squid_api.view.FiltersView({
+                    model : this.model,
+                    el : this.$el.find("#date-picker"),
+                    pickerVisible : true,
+                    refreshOnChange : false,
+                    displayCategorical : false
+                });
             }
         }
     });

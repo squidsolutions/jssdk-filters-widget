@@ -10,7 +10,7 @@
         root.squid_api.view.ContinuousFilterView = factory(root.Backbone, root.squid_api);
     }
 }(this, function (Backbone, squid_api) {
-    
+
     var View = Backbone.View.extend({
 
         enable: true,
@@ -90,7 +90,7 @@
                     }
                 }
                 if (this.initialized) {
-                    
+
                 } else {
                     // build the date pickers
                     var selHTML = "";
@@ -106,113 +106,60 @@
                     this.$el.html(selHTML);
 
                     var me = this;
-                    if (!me.pickerAlwaysVisible) {
-                        // attach observers
-                        me.$el.click(function(e) {
-                            // on click, show the date pickers
-                            e.stopPropagation();
-                            if (!me.pickerVisible) {
-                                me.renderPicker(me);
-                                me.pickerVisible = true;
-                            }
-                        });
-
-                        // close on click outside of the picker
-                        $(document).click(function(e) {
-                            if (me.pickerVisible) {
-                                me.$el.find("#pickerContainer").hide();
-                                me.pickerVisible = false;
-                            }
-                        });
-
-                        // close on click on "cancel"
-                        me.$el.find(".btn-default").click(function(e) {
-                            e.stopPropagation();
-                            if (me.pickerVisible) {
-                                me.$el.find("#pickerContainer").hide();
-                                me.pickerVisible = false;
-                            }
-                        });
-
-                        // process on click on "ok"
-                        me.$el.find(".btn-primary").click(function(e) {
-                            e.stopPropagation();
-                            if (me.pickerVisible) {
-                                me.$el.find("#pickerContainer").fadeOut("fast");
-                                me.pickerVisible = false;
-                                if (me.parent) {
-                                    me.parent.changeSelection(me);
-                                }
-                            }
-                        });
-                    } else {
-                        // just render
-                        me.renderPicker(me);
-                    }
+                    me.renderPicker(me);
 
                     this.initialized = true;
                 }
-             // just update the pickers dates
-                this.$el.find("#startDate").text(this.startDate.toDateString());
-                var p1 = this.$el.find(".startDatePicker");
-                p1.datepicker( "option", "minDate", this.minDate);
-                p1.datepicker( "option", "maxDate", this.maxDate);
-                p1.datepicker("setDate",this.startDate);
-
-                this.$el.find("#endDate").text(this.endDate.toDateString());
-                var p2 = this.$el.find(".endDatePicker");
-                p1.datepicker( "option", "minDate", this.minDate);
-                p1.datepicker( "option", "maxDate", this.maxDate);
-                p2.datepicker("setDate",this.endDate);
             }
 
             return this;
         },
 
         renderPicker : function(me) {
-            // build the date pickers (using classes instead of id to select the pickers as this is a bug in datePicker)
-            var p1 = me.$el.find(".startDatePicker");
-            var p2 = me.$el.find(".endDatePicker");
-            p1.datepicker({
-                changeMonth: true,
-                changeYear: true,
-                defaultDate: me.startDate,
-                minDate: me.minDate,
-                maxDate: me.maxDate,
-                onSelect : function(date) {
-                    selDate = new Date(Date.parse(date));
-                    if (selDate <= me.endDate) {
-                        me.startDate = selDate;
-                        if (me.parent) {
-                            me.parent.changeSelection(me);
-                        } 
-                    } else {
-                        // revert
-                        p1.datepicker( "setDate", me.startDate );
-                    }
-                }
-            });
-            p2.datepicker({
-                changeMonth: true,
-                changeYear: true,
-                defaultDate: me.endDate,
-                minDate: me.minDate,
-                maxDate: me.maxDate,
-                onSelect : function(date) {
-                    selDate = new Date(Date.parse(date));
-                    if (selDate >= me.startDate) {
-                        me.endDate = selDate;
-                        if (me.parent) {
-                            me.parent.changeSelection(me);
+            if (me.pickerVisible) {
+                // Build Date Picker
+                 this.$el.find(".datepicker").daterangepicker(
+                     {
+                        opens: "left",
+                        format: 'YYYY-MM-DD',
+                        startDate: me.startDate,
+                        endDate: me.endDate,
+                        minDate: me.minDate,
+                        maxDate: me.maxDate,
+                        showDropdowns: true,
+                        ranges: {
+                            'All Available Dates': [moment(me.minDate), moment(me.maxDate)],
+                            'First Month': [moment(me.minDate).startOf('month'), moment(me.minDate).endOf('month')],
+                            'Last Month': [moment(me.maxDate).startOf('month'), moment(me.maxDate).endOf('month')]
                         }
-                    } else {
-                        // revert
-                        p2.datepicker( "setDate", me.endDate );
                     }
-                }
-            });
+                );
 
-            me.$el.find("#pickerContainer").show();
+                var dateItems;
+
+                // Detect Apply Action
+                this.$el.find(".datepicker").on('apply.daterangepicker', function(ev, picker) {
+
+                    // Update Change Selection upon date widget close
+                    var startDate = new Date(Date.parse(picker.startDate._d));
+                    var endDate = new Date(Date.parse(picker.endDate._d));
+
+                    me.startDate = startDate;
+                    me.endDate = endDate;
+
+                    if (me.parent) {
+                        me.parent.changeSelection(me);
+                        me.parent.applySelection(me);
+                    }
+                });
+
+                // Detect Cancel Action
+                this.$el.find(".datepicker").on('cancel.daterangepicker', function(ev, picker) {
+                    if (me.parent) {
+                        me.parent.cancelSelection(me);
+                    }
+                });
+            }
         },
 
         setEnable: function(enable) {

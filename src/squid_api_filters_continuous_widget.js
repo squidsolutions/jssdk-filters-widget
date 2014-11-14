@@ -29,10 +29,12 @@
             if (this.model) {
                 this.model.on('change', this.render, this);
             }
+
             if (options.pickerVisible && (options.pickerVisible === true)) {
                 this.pickerVisible = true;
                 this.pickerAlwaysVisible = true;
             }
+
         },
 
         setModel: function(model) {
@@ -120,7 +122,7 @@
                 // Build Date Picker
                  this.$el.find(".datepicker").daterangepicker(
                      {
-                        opens: "left",
+                        opens: me.parent.datePickerPosition,
                         format: 'YYYY-MM-DD',
                         startDate: me.startDate,
                         endDate: me.endDate,

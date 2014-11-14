@@ -19,9 +19,12 @@
 
         datePickerEl : null,
 
-        datePickerView : null,
+        datePickerPosition : "left",
+
+        refreshOnChange: false,
 
         initialize : function(options) {
+
             if (!this.model) {
                 this.model = squid_api.model.filters;
             }
@@ -29,6 +32,12 @@
                 this.template = options.template;
             } else {
                 this.template = defaultTemplate;
+            }
+            if (options.datePickerPosition) {
+                this.datePickerPosition = options.datePickerPosition;
+            }
+            if (options.refreshOnChange) {
+                this.refreshOnChange = options.refreshOnChange;
             }
             if (options.format) {
                 this.format = options.format;
@@ -66,7 +75,8 @@
                     model : this.model,
                     el : this.$el.find("#date-picker"),
                     pickerVisible : true,
-                    refreshOnChange : false,
+                    datePickerPosition: this.datePickerPosition,
+                    refreshOnChange : this.refreshOnChange,
                     displayCategorical : false
                 });
             }

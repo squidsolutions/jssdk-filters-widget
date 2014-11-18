@@ -34,6 +34,7 @@
         pickerAlwaysVisible : false,
         booleanGroupName : null,
         multiselectOptions : {},
+        ranges : null,
 
         filterModel: Backbone.Model.extend({
             facetId: null,
@@ -69,6 +70,9 @@
                 this.multiselectOptions = options.multiselectOptions;
             } else {
                 this.multiselectOptions = {nonSelectedText: 'ALL',maxHeight: 400, buttonClass: 'btn btn-link', enableFiltering: true, enableCaseInsensitiveFiltering: true};
+            }
+            if (options.ranges) {
+                this.ranges = options.ranges;
             }
             if (!this.model) {
                 this.model = squid_api.model.filters;
@@ -321,7 +325,8 @@
                                     view = new ContinuousFilterView({
                                         model: model,
                                         el: filterEl,
-                                        pickerVisible : this.pickerAlwaysVisible
+                                        pickerVisible : this.pickerAlwaysVisible,
+                                        ranges : this.ranges
                                     });
                                     view.setTemplate(this.continuousFilterTemplate);
                                 }

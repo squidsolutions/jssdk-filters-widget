@@ -2,17 +2,17 @@
     if (typeof define === 'function' && define.amd) {
         // AMD.
         define(['jquery','backbone',
-                'jssdk/sdk/widgets/squid_api_filters_categorical_widget', 
+                'jssdk/sdk/widgets/squid_api_filters_categorical_widget',
                 'jssdk/sdk/widgets/squid_api_filters_continuous_widget',
                 'jssdk/sdk/squid_api_facetjob_controller',
                 'hbs!jssdk/sdk/templates/squid_api_filters_widget', 'underscore', 'bootstrap-multiselect'], factory);
     } else {
         // Global
-        root.squid_api.view.FiltersView = 
-            factory(root.$, 
+        root.squid_api.view.FiltersView =
+            factory(root.$,
                     root.Backbone,
                     root.squid_api,
-                    root.squid_api.view.CategoricalFilterView,  
+                    root.squid_api.view.CategoricalFilterView,
                     root.squid_api.view.ContinuousFilterView,
                     root.squid_api.controller.facetjob,
                     root.squid_api.template.squid_api_filters_widget
@@ -33,6 +33,7 @@
         categoricalFilterTemplate : null,
         pickerAlwaysVisible : false,
         booleanGroupName : null,
+        datePickerPosition : null,
         multiselectOptions : {},
 
         filterModel: Backbone.Model.extend({
@@ -50,6 +51,9 @@
             }
             if (options.displayContinuous === false) {
                 this.displayContinuous = false;
+            }
+            if (options.datePickerPosition) {
+                this.datePickerPosition = options.datePickerPosition;
             }
             if (options.pickerVisible && (options.pickerVisible === true)) {
                 this.pickerAlwaysVisible = true;
@@ -78,9 +82,9 @@
                 // duplicate the initial model (once)
                 this.initialModel = $.extend(true, {}, this.model.attributes);
             }
-            
+
             this.initCurrentModel(this.model);
-            
+
             // listen for some model events
             this.model.on('change:domains', function(model) {
                 me.initCurrentModel(model);
@@ -92,7 +96,7 @@
                 me.render();
             }, this);
             this.model.on('change:enabled', this.setEnable, this);
-            
+
         },
 
         initCurrentModel : function(model) {
@@ -197,7 +201,7 @@
 
         applySelection: function() {
             if (this.currentModel.get("enabled") === true) {
-                // update the model selection with current           
+                // update the model selection with current
                 var attributesClone = $.extend(true, {}, this.currentModel.attributes);
                 if (this.refreshOnChange) {
                     // here we directly set the selection and not the userSelection since
@@ -224,7 +228,7 @@
             var container;
             if (!this.childViews) {
                 // first call, setup the child views
-                this.$el.html(this.template());            
+                this.$el.html(this.template());
             }
             container = this.$el.find(".sq-content");
             var errorData = this.model.get("error");
@@ -251,7 +255,7 @@
                         var facet = facets[i];
                         var facetId = facet.dimension.oid;
                         var idx;
-                        
+
                         // apply group boolean rule
                         if ((this.booleanGroupName) && (facet.items.length == 1) && (facet.items[0].value == "true")) {
                             // add a new item to the boolean group
@@ -269,7 +273,7 @@
                                 // apply sorting
                                 idx = this.filterIds.indexOf(facetId);
                             }
-                            
+
                             // apply display rules
                             if (((facet.dimension.type == "CONTINUOUS") && (this.displayContinuous)) || ((facet.dimension.type == "CATEGORICAL") && (this.displayCategorical))) {
                                 if (idx >= 0) {
@@ -280,18 +284,18 @@
                             }
                         }
                     }
-                    
+
                     // append the unsorted facets
                     sortedFacets = sortedFacets.concat(unsortedFacets);
-                    
+
                     // append the booleanGroupFacet at the end
                     if (this.booleanGroupName) {
                         // sort by alphabetical order
-                        booleanGroupFacet.items.sort(function(a,b) { 
+                        booleanGroupFacet.items.sort(function(a,b) {
                                 if (a.value < b.value) return -1;
                                 if (a.value > b.value) return 1;
                                 return 0;
-                            } 
+                            }
                         );
                         sortedFacets.push(booleanGroupFacet);
                     }
@@ -351,7 +355,7 @@
                     }
                 }
             }
-            container.find('.multiselect').multiselect(this.multiselectOptions);		
+            container.find('.multiselect').multiselect(this.multiselectOptions);
             return this;
         },
 

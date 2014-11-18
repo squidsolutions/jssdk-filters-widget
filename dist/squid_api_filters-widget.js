@@ -363,10 +363,12 @@ function program2(depth0,data) {
             if (this.model) {
                 this.model.on('change', this.render, this);
             }
+
             if (options.pickerVisible && (options.pickerVisible === true)) {
                 this.pickerVisible = true;
                 this.pickerAlwaysVisible = true;
             }
+
         },
 
         setModel: function(model) {
@@ -454,7 +456,7 @@ function program2(depth0,data) {
                 // Build Date Picker
                  this.$el.find(".datepicker").daterangepicker(
                      {
-                        opens: "left",
+                        opens: me.parent.datePickerPosition,
                         format: 'YYYY-MM-DD',
                         startDate: me.startDate,
                         endDate: me.endDate,
@@ -473,8 +475,8 @@ function program2(depth0,data) {
 
                 // Detect Apply Action
                 this.$el.find(".datepicker").on('apply.daterangepicker', function(ev, picker) {
-                    // Update Change Selection upon date widget close
 
+                    // Update Change Selection upon date widget close
                     var startDate = new Date(Date.parse(picker.startDate._d));
                     var endDate = new Date(Date.parse(picker.endDate._d));
 
@@ -630,6 +632,7 @@ function program2(depth0,data) {
         categoricalFilterTemplate : null,
         pickerAlwaysVisible : false,
         booleanGroupName : null,
+        datePickerPosition : null,
         multiselectOptions : {},
 
         filterModel: Backbone.Model.extend({
@@ -647,6 +650,9 @@ function program2(depth0,data) {
             }
             if (options.displayContinuous === false) {
                 this.displayContinuous = false;
+            }
+            if (options.datePickerPosition) {
+                this.datePickerPosition = options.datePickerPosition;
             }
             if (options.pickerVisible && (options.pickerVisible === true)) {
                 this.pickerAlwaysVisible = true;
@@ -1022,9 +1028,12 @@ function program2(depth0,data) {
 
         datePickerEl : null,
 
-        datePickerView : null,
+        datePickerPosition : "left",
+
+        refreshOnChange: false,
 
         initialize : function(options) {
+
             if (!this.model) {
                 this.model = squid_api.model.filters;
             }
@@ -1032,6 +1041,12 @@ function program2(depth0,data) {
                 this.template = options.template;
             } else {
                 this.template = defaultTemplate;
+            }
+            if (options.datePickerPosition) {
+                this.datePickerPosition = options.datePickerPosition;
+            }
+            if (options.refreshOnChange) {
+                this.refreshOnChange = options.refreshOnChange;
             }
             if (options.format) {
                 this.format = options.format;
@@ -1065,12 +1080,12 @@ function program2(depth0,data) {
                     format : this.format
                 });
 
-                // this.datePickerEl.html(this.datePickerEl.selector);
                 this.datePickerView = new squid_api.view.FiltersView({
                     model : this.model,
                     el : this.$el.find("#date-picker"),
                     pickerVisible : true,
-                    refreshOnChange : false,
+                    datePickerPosition: this.datePickerPosition,
+                    refreshOnChange : this.refreshOnChange,
                     displayCategorical : false
                 });
             }

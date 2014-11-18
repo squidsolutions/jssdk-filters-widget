@@ -22,6 +22,8 @@
         datePickerPosition : "left",
 
         refreshOnChange: false,
+        
+        ranges: null,
 
         initialize : function(options) {
 
@@ -51,6 +53,9 @@
             if (options.datePickerEl) {
                 this.datePickerEl = options.datePickerEl;
             }
+            if (options.ranges) {
+                this.ranges = options.ranges;
+            }
             this.render();
         },
 
@@ -77,7 +82,8 @@
                     pickerVisible : true,
                     datePickerPosition: this.datePickerPosition,
                     refreshOnChange : this.refreshOnChange,
-                    displayCategorical : false
+                    displayCategorical : false,
+                    ranges : this.ranges
                 });
             }
         }

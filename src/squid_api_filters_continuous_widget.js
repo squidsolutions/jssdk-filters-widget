@@ -24,6 +24,12 @@
         pickerAlwaysVisible : false,
         parent : null,
         template : squid_api.template.squid_api_filters_continuous_widget,
+        ranges : null,
+        rangesPresets : {
+            'all': function(min, max) { return [moment(min), moment(max)]; },
+            'first-month': function(min, max) { return [moment(min).startOf('month'), moment(min).endOf('month')]; },
+            'last-month': function(min, max) { return [moment(max).startOf('month'), moment(max).endOf('month')]; }
+        },
 
         initialize: function(options) {
             if (this.model) {
@@ -33,6 +39,10 @@
             if (options.pickerVisible && (options.pickerVisible === true)) {
                 this.pickerVisible = true;
                 this.pickerAlwaysVisible = true;
+            }
+            
+            if (options.ranges) {
+                this.ranges = options.ranges;
             }
 
         },
@@ -119,22 +129,36 @@
 
         renderPicker : function(me) {
             if (me.pickerVisible) {
-                // Build Date Picker
-                 this.$el.find(".datepicker").daterangepicker(
-                     {
-                        opens: me.parent.datePickerPosition,
-                        format: 'YYYY-MM-DD',
-                        startDate: me.startDate,
-                        endDate: me.endDate,
-                        minDate: me.minDate,
-                        maxDate: me.maxDate,
-                        showDropdowns: true,
-                        ranges: {
-                            'All Available Dates': [moment(me.minDate), moment(me.maxDate)],
-                            'First Month': [moment(me.minDate).startOf('month'), moment(me.minDate).endOf('month')],
-                            'Last Month': [moment(me.maxDate).startOf('month'), moment(me.maxDate).endOf('month')]
+                // compute the ranges
+                var pickerRanges = {};
+                for (var rangeName in me.ranges) {
+                    var value = me.ranges[rangeName];
+                    var func = null;
+                    if ((typeof value === "string") || (value instanceof String)) {
+                        // check for a predefined range
+                        if (me.rangesPresets[value]) {
+                            func = me.rangesPresets[value];
                         }
+                    } else {
+                        func = value;
                     }
+                    if (func) {
+                        pickerRanges[rangeName] = func.call(this, me.minDate, me.maxDate);
+                    }
+                }
+                
+                // Build Date Picker
+                this.$el.find(".datepicker").daterangepicker(
+                        {
+                            opens: me.parent.datePickerPosition,
+                            format: 'YYYY-MM-DD',
+                            startDate: me.startDate,
+                            endDate: me.endDate,
+                            minDate: me.minDate,
+                            maxDate: me.maxDate,
+                            showDropdowns: true,
+                            ranges: pickerRanges
+                        }
                 );
 
                 var dateItems;

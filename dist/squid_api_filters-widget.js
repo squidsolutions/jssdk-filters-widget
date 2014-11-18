@@ -358,6 +358,12 @@ function program2(depth0,data) {
         pickerAlwaysVisible : false,
         parent : null,
         template : squid_api.template.squid_api_filters_continuous_widget,
+        ranges : null,
+        rangesPresets : {
+            'all': function(min, max) { return [moment(min), moment(max)]; },
+            'first-month': function(min, max) { return [moment(min).startOf('month'), moment(min).endOf('month')]; },
+            'last-month': function(min, max) { return [moment(max).startOf('month'), moment(max).endOf('month')]; }
+        },
 
         initialize: function(options) {
             if (this.model) {
@@ -368,7 +374,6 @@ function program2(depth0,data) {
                 this.pickerVisible = true;
                 this.pickerAlwaysVisible = true;
             }
-
         },
 
         setModel: function(model) {
@@ -453,22 +458,36 @@ function program2(depth0,data) {
 
         renderPicker : function(me) {
             if (me.pickerVisible) {
-                // Build Date Picker
-                 this.$el.find(".datepicker").daterangepicker(
-                     {
-                        opens: me.parent.datePickerPosition,
-                        format: 'YYYY-MM-DD',
-                        startDate: me.startDate,
-                        endDate: me.endDate,
-                        minDate: me.minDate,
-                        maxDate: me.maxDate,
-                        showDropdowns: true,
-                        ranges: {
-                            'All Available Dates': [moment(me.minDate), moment(me.maxDate)],
-                            'First Month': [moment(me.minDate).startOf('month'), moment(me.minDate).endOf('month')],
-                            'Last Month': [moment(me.maxDate).startOf('month'), moment(me.maxDate).endOf('month')]
+                // compute the ranges
+                var pickerRanges = {};
+                for (var rangeName in me.ranges) {
+                    var value = me.ranges[rangeName];
+                    var func = null;
+                    if ((typeof value === "string") || (value instanceof String)) {
+                        // check for a predefined range
+                        if (me.rangesPresets[value]) {
+                            func = me.rangesPresets[value];
                         }
+                    } else {
+                        func = value;
                     }
+                    if (func) {
+                        pickerRanges[rangeName] = func.call(this, me.minDate, me.maxDate);
+                    }
+                }
+                
+                // Build Date Picker
+                this.$el.find(".datepicker").daterangepicker(
+                        {
+                            opens: me.parent.datePickerPosition,
+                            format: 'YYYY-MM-DD',
+                            startDate: me.startDate,
+                            endDate: me.endDate,
+                            minDate: me.minDate,
+                            maxDate: me.maxDate,
+                            showDropdowns: true,
+                            ranges: pickerRanges
+                        }
                 );
 
                 var dateItems;
@@ -601,17 +620,17 @@ function program2(depth0,data) {
     if (typeof define === 'function' && define.amd) {
         // AMD.
         define(['jquery','backbone',
-                'jssdk/sdk/widgets/squid_api_filters_categorical_widget',
+                'jssdk/sdk/widgets/squid_api_filters_categorical_widget', 
                 'jssdk/sdk/widgets/squid_api_filters_continuous_widget',
                 'jssdk/sdk/squid_api_facetjob_controller',
                 'hbs!jssdk/sdk/templates/squid_api_filters_widget', 'underscore', 'bootstrap-multiselect'], factory);
     } else {
         // Global
-        root.squid_api.view.FiltersView =
-            factory(root.$,
+        root.squid_api.view.FiltersView = 
+            factory(root.$, 
                     root.Backbone,
                     root.squid_api,
-                    root.squid_api.view.CategoricalFilterView,
+                    root.squid_api.view.CategoricalFilterView,  
                     root.squid_api.view.ContinuousFilterView,
                     root.squid_api.controller.facetjob,
                     root.squid_api.template.squid_api_filters_widget
@@ -634,6 +653,7 @@ function program2(depth0,data) {
         booleanGroupName : null,
         datePickerPosition : null,
         multiselectOptions : {},
+        ranges : null,
 
         filterModel: Backbone.Model.extend({
             facetId: null,
@@ -673,6 +693,9 @@ function program2(depth0,data) {
             } else {
                 this.multiselectOptions = {nonSelectedText: 'ALL',maxHeight: 400, buttonClass: 'btn btn-link', enableFiltering: true, enableCaseInsensitiveFiltering: true};
             }
+            if (options.ranges) {
+                this.ranges = options.ranges;
+            }
             if (!this.model) {
                 this.model = squid_api.model.filters;
             }
@@ -681,9 +704,9 @@ function program2(depth0,data) {
                 // duplicate the initial model (once)
                 this.initialModel = $.extend(true, {}, this.model.attributes);
             }
-
+            
             this.initCurrentModel(this.model);
-
+            
             // listen for some model events
             this.model.on('change:domains', function(model) {
                 me.initCurrentModel(model);
@@ -695,7 +718,7 @@ function program2(depth0,data) {
                 me.render();
             }, this);
             this.model.on('change:enabled', this.setEnable, this);
-
+            
         },
 
         initCurrentModel : function(model) {
@@ -800,7 +823,7 @@ function program2(depth0,data) {
 
         applySelection: function() {
             if (this.currentModel.get("enabled") === true) {
-                // update the model selection with current
+                // update the model selection with current           
                 var attributesClone = $.extend(true, {}, this.currentModel.attributes);
                 if (this.refreshOnChange) {
                     // here we directly set the selection and not the userSelection since
@@ -827,7 +850,7 @@ function program2(depth0,data) {
             var container;
             if (!this.childViews) {
                 // first call, setup the child views
-                this.$el.html(this.template());
+                this.$el.html(this.template());            
             }
             container = this.$el.find(".sq-content");
             var errorData = this.model.get("error");
@@ -854,7 +877,7 @@ function program2(depth0,data) {
                         var facet = facets[i];
                         var facetId = facet.dimension.oid;
                         var idx;
-
+                        
                         // apply group boolean rule
                         if ((this.booleanGroupName) && (facet.items.length == 1) && (facet.items[0].value == "true")) {
                             // add a new item to the boolean group
@@ -872,7 +895,7 @@ function program2(depth0,data) {
                                 // apply sorting
                                 idx = this.filterIds.indexOf(facetId);
                             }
-
+                            
                             // apply display rules
                             if (((facet.dimension.type == "CONTINUOUS") && (this.displayContinuous)) || ((facet.dimension.type == "CATEGORICAL") && (this.displayCategorical))) {
                                 if (idx >= 0) {
@@ -883,18 +906,18 @@ function program2(depth0,data) {
                             }
                         }
                     }
-
+                    
                     // append the unsorted facets
                     sortedFacets = sortedFacets.concat(unsortedFacets);
-
+                    
                     // append the booleanGroupFacet at the end
                     if (this.booleanGroupName) {
                         // sort by alphabetical order
-                        booleanGroupFacet.items.sort(function(a,b) {
+                        booleanGroupFacet.items.sort(function(a,b) { 
                                 if (a.value < b.value) return -1;
                                 if (a.value > b.value) return 1;
                                 return 0;
-                            }
+                            } 
                         );
                         sortedFacets.push(booleanGroupFacet);
                     }
@@ -924,7 +947,8 @@ function program2(depth0,data) {
                                     view = new ContinuousFilterView({
                                         model: model,
                                         el: filterEl,
-                                        pickerVisible : this.pickerAlwaysVisible
+                                        pickerVisible : this.pickerAlwaysVisible,
+                                        ranges : this.ranges
                                     });
                                     view.setTemplate(this.continuousFilterTemplate);
                                 }
@@ -954,7 +978,7 @@ function program2(depth0,data) {
                     }
                 }
             }
-            container.find('.multiselect').multiselect(this.multiselectOptions);
+            container.find('.multiselect').multiselect(this.multiselectOptions);		
             return this;
         },
 
@@ -1031,6 +1055,8 @@ function program2(depth0,data) {
         datePickerPosition : "left",
 
         refreshOnChange: false,
+        
+        ranges: null,
 
         initialize : function(options) {
 
@@ -1060,6 +1086,9 @@ function program2(depth0,data) {
             if (options.datePickerEl) {
                 this.datePickerEl = options.datePickerEl;
             }
+            if (options.ranges) {
+                this.ranges = options.ranges;
+            }
             this.render();
         },
 
@@ -1086,7 +1115,8 @@ function program2(depth0,data) {
                     pickerVisible : true,
                     datePickerPosition: this.datePickerPosition,
                     refreshOnChange : this.refreshOnChange,
-                    displayCategorical : false
+                    displayCategorical : false,
+                    ranges : this.ranges
                 });
             }
         }

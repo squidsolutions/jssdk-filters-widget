@@ -374,6 +374,11 @@ function program2(depth0,data) {
                 this.pickerVisible = true;
                 this.pickerAlwaysVisible = true;
             }
+            
+            if (options.ranges) {
+                this.ranges = options.ranges;
+            }
+
         },
 
         setModel: function(model) {
@@ -620,17 +625,17 @@ function program2(depth0,data) {
     if (typeof define === 'function' && define.amd) {
         // AMD.
         define(['jquery','backbone',
-                'jssdk/sdk/widgets/squid_api_filters_categorical_widget', 
+                'jssdk/sdk/widgets/squid_api_filters_categorical_widget',
                 'jssdk/sdk/widgets/squid_api_filters_continuous_widget',
                 'jssdk/sdk/squid_api_facetjob_controller',
                 'hbs!jssdk/sdk/templates/squid_api_filters_widget', 'underscore', 'bootstrap-multiselect'], factory);
     } else {
         // Global
-        root.squid_api.view.FiltersView = 
-            factory(root.$, 
+        root.squid_api.view.FiltersView =
+            factory(root.$,
                     root.Backbone,
                     root.squid_api,
-                    root.squid_api.view.CategoricalFilterView,  
+                    root.squid_api.view.CategoricalFilterView,
                     root.squid_api.view.ContinuousFilterView,
                     root.squid_api.controller.facetjob,
                     root.squid_api.template.squid_api_filters_widget
@@ -704,9 +709,9 @@ function program2(depth0,data) {
                 // duplicate the initial model (once)
                 this.initialModel = $.extend(true, {}, this.model.attributes);
             }
-            
+
             this.initCurrentModel(this.model);
-            
+
             // listen for some model events
             this.model.on('change:domains', function(model) {
                 me.initCurrentModel(model);
@@ -718,7 +723,7 @@ function program2(depth0,data) {
                 me.render();
             }, this);
             this.model.on('change:enabled', this.setEnable, this);
-            
+
         },
 
         initCurrentModel : function(model) {
@@ -823,7 +828,7 @@ function program2(depth0,data) {
 
         applySelection: function() {
             if (this.currentModel.get("enabled") === true) {
-                // update the model selection with current           
+                // update the model selection with current
                 var attributesClone = $.extend(true, {}, this.currentModel.attributes);
                 if (this.refreshOnChange) {
                     // here we directly set the selection and not the userSelection since
@@ -850,7 +855,7 @@ function program2(depth0,data) {
             var container;
             if (!this.childViews) {
                 // first call, setup the child views
-                this.$el.html(this.template());            
+                this.$el.html(this.template());
             }
             container = this.$el.find(".sq-content");
             var errorData = this.model.get("error");
@@ -877,7 +882,7 @@ function program2(depth0,data) {
                         var facet = facets[i];
                         var facetId = facet.dimension.oid;
                         var idx;
-                        
+
                         // apply group boolean rule
                         if ((this.booleanGroupName) && (facet.items.length == 1) && (facet.items[0].value == "true")) {
                             // add a new item to the boolean group
@@ -895,7 +900,7 @@ function program2(depth0,data) {
                                 // apply sorting
                                 idx = this.filterIds.indexOf(facetId);
                             }
-                            
+
                             // apply display rules
                             if (((facet.dimension.type == "CONTINUOUS") && (this.displayContinuous)) || ((facet.dimension.type == "CATEGORICAL") && (this.displayCategorical))) {
                                 if (idx >= 0) {
@@ -906,18 +911,18 @@ function program2(depth0,data) {
                             }
                         }
                     }
-                    
+
                     // append the unsorted facets
                     sortedFacets = sortedFacets.concat(unsortedFacets);
-                    
+
                     // append the booleanGroupFacet at the end
                     if (this.booleanGroupName) {
                         // sort by alphabetical order
-                        booleanGroupFacet.items.sort(function(a,b) { 
+                        booleanGroupFacet.items.sort(function(a,b) {
                                 if (a.value < b.value) return -1;
                                 if (a.value > b.value) return 1;
                                 return 0;
-                            } 
+                            }
                         );
                         sortedFacets.push(booleanGroupFacet);
                     }
@@ -978,7 +983,7 @@ function program2(depth0,data) {
                     }
                 }
             }
-            container.find('.multiselect').multiselect(this.multiselectOptions);		
+            container.find('.multiselect').multiselect(this.multiselectOptions);
             return this;
         },
 

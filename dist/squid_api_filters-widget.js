@@ -79,7 +79,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   
-  return "\r\n\r\n<a class=\"datepicker\">Change</a>\r\n\r\n";
+  return "\r\n\r\n<a class=\"datepicker\">Period</a>\r\n\r\n";
   }
 
 function program3(depth0,data) {
@@ -127,11 +127,11 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div id=\"selection\"></div>\n<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
+  buffer += "<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\">\n	Change\n</a>";
+    + "\" data-clavier=\"true\">\n	Filters\n</a>\n<div id=\"selection\"></div>";
   return buffer;
   });
 

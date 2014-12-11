@@ -52,12 +52,25 @@
                                 startDateStr = items[0].lowerBound;
                                 endDateStr = items[0].upperBound;
                             }
+
+
                             // apply formatting
                             if (this.format) {
                                 var startDate = new Date(Date.parse(startDateStr));
-                                startDateStr = this.format(startDate);
                                 var endDate = new Date(Date.parse(endDateStr));
-                                endDateStr = this.format(endDate);
+                                
+                                if (moment(endDate).isValid()) {
+                                    endDateStr = this.format(endDate);
+                                }
+                                else {
+                                    endDateStr = moment.utc(endDateStr).format("YYYY-MM-DD");
+                                }
+                                if (moment(startDate).isValid()) {
+                                    startDateStr = this.format(startDate);
+                                }
+                                else {
+                                    startDateStr = moment.utc(startDateStr).format("YYYY-MM-DD");
+                                }
                             }
                         }
                         this.$el.find("#sq-startDate").text(startDateStr);

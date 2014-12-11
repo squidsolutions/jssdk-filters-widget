@@ -27,8 +27,8 @@
         ranges : null,
         rangesPresets : {
             'all': function(min, max) { return [moment(min), moment(max)]; },
-            'first-month': function(min, max) { return [moment(min).startOf('month'), moment(min).endOf('month')]; },
-            'last-month': function(min, max) { return [moment(max).startOf('month'), moment(max).endOf('month')]; }
+            'first-month': function(min, max) { return [moment.utc(min).startOf('month'), moment.utc(min).endOf('month')]; },
+            'last-month': function(min, max) { return [moment.utc(max).startOf('month'), moment.utc(max).endOf('month')]; }
         },
 
         initialize: function(options) {
@@ -63,8 +63,8 @@
             var d2 = this.endDate;
             var selectedItems = [];
             selectedItems.push({
-                "lowerBound": d1.toISOString(),
-                "upperBound": d2.toISOString(),
+                "lowerBound": moment.utc(d1).format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]'),
+                "upperBound": moment.utc(d2).format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]'),
                 "type": "i"
             });
             return selectedItems;
@@ -81,11 +81,11 @@
                 if (items && items.length > 0) {
                     // compute min and max dates
                     for (var i=0; i<items.length; i++) {
-                        var lowerDate = new Date(Date.parse(items[i].lowerBound));
+                        var lowerDate = moment.utc(items[i].lowerBound)._i;
                         if ((!this.minDate) || (lowerDate < this.minDate)) {
                             this.minDate = lowerDate;
                         }
-                        var upperDate = new Date(Date.parse(items[i].upperBound));
+                        var upperDate = moment.utc(items[i].upperBound)._i;
                         if ((!this.maxDate) || (upperDate > this.maxDate)) {
                             this.maxDate = upperDate;
                         }
@@ -99,6 +99,14 @@
                         // get selected values instead
                         this.startDate = new Date(Date.parse(selItems[0].lowerBound));
                         this.endDate = new Date(Date.parse(selItems[0].upperBound));
+                        
+                        if (! moment(this.startDate).isValid()) {
+                            this.startDate = moment.utc(selItems[0].lowerBound);
+                        }
+
+                        if (! moment(this.endDate).isValid()) {
+                            this.endDate = moment.utc(selItems[0].upperBound);
+                        }
                     }
                 }
                 if (this.initialized) {
@@ -110,8 +118,8 @@
                         dateAvailable: dateAvailable,
                         facetId: facetId,
                         name: name,
-                        startDateVal: this.startDate.toDateString(),
-                        endDateVal: this.endDate.toDateString()
+                        startDateVal: this.startDate,
+                        endDateVal: this.endDate
                     });
 
                     // render HTML
@@ -146,7 +154,7 @@
                         pickerRanges[rangeName] = func.call(this, me.minDate, me.maxDate);
                     }
                 }
-                
+
                 // Build Date Picker
                 this.$el.find(".datepicker").daterangepicker(
                         {

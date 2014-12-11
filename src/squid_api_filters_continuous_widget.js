@@ -81,11 +81,11 @@
                 if (items && items.length > 0) {
                     // compute min and max dates
                     for (var i=0; i<items.length; i++) {
-                        var lowerDate = moment.utc(items[i].lowerBound)._i;
+                        var lowerDate = moment.utc(items[i].lowerBound)._d;
                         if ((!this.minDate) || (lowerDate < this.minDate)) {
                             this.minDate = lowerDate;
                         }
-                        var upperDate = moment.utc(items[i].upperBound)._i;
+                        var upperDate = moment.utc(items[i].upperBound)._d;
                         if ((!this.maxDate) || (upperDate > this.maxDate)) {
                             this.maxDate = upperDate;
                         }

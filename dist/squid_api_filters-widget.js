@@ -360,8 +360,8 @@ function program2(depth0,data) {
         template : squid_api.template.squid_api_filters_continuous_widget,
         ranges : null,
         rangesPresets : {
-            'all': function(min, max) { return [moment(min), moment(max)]; },
-            'first-month': function(min, max) { return [moment.utc(min).startOf('month'), moment.utc(min).endOf('month')]; },
+            'all': function(min, max) { return [moment.utc(min), moment.utc(max)]; },
+            'first-month': function(min, max) { return [moment.utc(min).startOf('month'), moment(min).endOf('month')]; },
             'last-month': function(min, max) { return [moment.utc(max).startOf('month'), moment.utc(max).endOf('month')]; }
         },
 
@@ -397,8 +397,8 @@ function program2(depth0,data) {
             var d2 = this.endDate;
             var selectedItems = [];
             selectedItems.push({
-                "lowerBound": moment.utc(d1).format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]'),
-                "upperBound": moment.utc(d2).format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]'),
+                "lowerBound": d1,
+                "upperBound": d2,
                 "type": "i"
             });
             return selectedItems;
@@ -415,11 +415,11 @@ function program2(depth0,data) {
                 if (items && items.length > 0) {
                     // compute min and max dates
                     for (var i=0; i<items.length; i++) {
-                        var lowerDate = moment.utc(items[i].lowerBound)._d;
+                        var lowerDate = moment.utc(items[i].lowerBound).toDate();
                         if ((!this.minDate) || (lowerDate < this.minDate)) {
                             this.minDate = lowerDate;
                         }
-                        var upperDate = moment.utc(items[i].upperBound)._d;
+                        var upperDate = moment.utc(items[i].upperBound).toDate();
                         if ((!this.maxDate) || (upperDate > this.maxDate)) {
                             this.maxDate = upperDate;
                         }
@@ -431,16 +431,8 @@ function program2(depth0,data) {
                     this.endDate = this.maxDate;
                     if (selItems && selItems.length > 0) { // dates are selected
                         // get selected values instead
-                        this.startDate = new Date(Date.parse(selItems[0].lowerBound));
-                        this.endDate = new Date(Date.parse(selItems[0].upperBound));
-                        
-                        if (! moment(this.startDate).isValid()) {
-                            this.startDate = moment.utc(selItems[0].lowerBound);
-                        }
-
-                        if (! moment(this.endDate).isValid()) {
-                            this.endDate = moment.utc(selItems[0].upperBound);
-                        }
+                        this.startDate = moment.utc(selItems[0].lowerBound).format();
+                        this.endDate = moment.utc(selItems[0].upperBound).format();
                     }
                 }
                 if (this.initialized) {
@@ -509,9 +501,8 @@ function program2(depth0,data) {
                 this.$el.find(".datepicker").on('apply.daterangepicker', function(ev, picker) {
 
                     // Update Change Selection upon date widget close
-                    var startDate = new Date(Date.parse(picker.startDate._d));
-                    var endDate = new Date(Date.parse(picker.endDate._d));
-
+                    var startDate = moment.utc(picker.startDate).toDate();
+                    var endDate = moment.utc(picker.endDate).toDate();
                     me.startDate = startDate;
                     me.endDate = endDate;
 
@@ -1192,25 +1183,10 @@ function program2(depth0,data) {
                                 startDateStr = items[0].lowerBound;
                                 endDateStr = items[0].upperBound;
                             }
-
-
                             // apply formatting
                             if (this.format) {
-                                var startDate = new Date(Date.parse(startDateStr));
-                                var endDate = new Date(Date.parse(endDateStr));
-                                
-                                if (moment(endDate).isValid()) {
-                                    endDateStr = this.format(endDate);
-                                }
-                                else {
-                                    endDateStr = moment.utc(endDateStr).format("YYYY-MM-DD");
-                                }
-                                if (moment(startDate).isValid()) {
-                                    startDateStr = this.format(startDate);
-                                }
-                                else {
-                                    startDateStr = moment.utc(startDateStr).format("YYYY-MM-DD");
-                                }
+                                endDateStr = moment(endDateStr).format("YYYY-MM-DD");
+                                startDateStr = moment(startDateStr).format("YYYY-MM-DD");
                             }
                         }
                         this.$el.find("#sq-startDate").text(startDateStr);

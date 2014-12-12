@@ -361,7 +361,7 @@ function program2(depth0,data) {
         ranges : null,
         rangesPresets : {
             'all': function(min, max) { return [moment.utc(min), moment.utc(max)]; },
-            'first-month': function(min, max) { return [moment.utc(min).startOf('month'), moment(min).endOf('month')]; },
+            'first-month': function(min, max) { return [moment.utc(min).startOf('month'), moment.utc(min).endOf('month')]; },
             'last-month': function(min, max) { return [moment.utc(max).startOf('month'), moment.utc(max).endOf('month')]; }
         },
 
@@ -415,11 +415,11 @@ function program2(depth0,data) {
                 if (items && items.length > 0) {
                     // compute min and max dates
                     for (var i=0; i<items.length; i++) {
-                        var lowerDate = moment.utc(items[i].lowerBound).toDate();
+                        var lowerDate = moment.utc(items[i].lowerBound);
                         if ((!this.minDate) || (lowerDate < this.minDate)) {
                             this.minDate = lowerDate;
                         }
-                        var upperDate = moment.utc(items[i].upperBound).toDate();
+                        var upperDate = moment.utc(items[i].upperBound);
                         if ((!this.maxDate) || (upperDate > this.maxDate)) {
                             this.maxDate = upperDate;
                         }
@@ -431,8 +431,8 @@ function program2(depth0,data) {
                     this.endDate = this.maxDate;
                     if (selItems && selItems.length > 0) { // dates are selected
                         // get selected values instead
-                        this.startDate = moment.utc(selItems[0].lowerBound).format();
-                        this.endDate = moment.utc(selItems[0].upperBound).format();
+                        this.startDate = moment.utc(selItems[0].lowerBound);
+                        this.endDate = moment.utc(selItems[0].upperBound);
                     }
                 }
                 if (this.initialized) {
@@ -1185,8 +1185,8 @@ function program2(depth0,data) {
                             }
                             // apply formatting
                             if (this.format) {
-                                endDateStr = moment(endDateStr).format("YYYY-MM-DD");
-                                startDateStr = moment(startDateStr).format("YYYY-MM-DD");
+                                endDateStr = moment.utc(endDateStr).format("YYYY-MM-DD");
+                                startDateStr = moment.utc(startDateStr).format("YYYY-MM-DD");
                             }
                         }
                         this.$el.find("#sq-startDate").text(startDateStr);

@@ -127,11 +127,11 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
+  buffer += "<div class=\"col-md-2\">\n<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\">\n	Filters\n</a>\n<div id=\"selection\"></div>";
+    + "\" data-clavier=\"true\">\n	Filters\n</a>\n</div>\n<div class=\"col-md-9\">\n<div id=\"selection\"></div>\n</div>";
   return buffer;
   });
 
@@ -172,7 +172,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<span class=\"date-wrap\">From <span id=\"sq-startDate\"></span> To <span id=\"sq-endDate\"></span></div>\n<div id=\"date-picker\"></div>\n";
+  return "<div class=\"col-md-2\">\n<div id=\"date-picker\"></div>\n</div>\n<div class=\"col-md-6\">\n<span class=\"date-wrap\">From <span id=\"sq-startDate\"></span> To <span id=\"sq-endDate\"></span></div>\n</div>\n";
   });
 
 this["squid_api"]["template"]["squid_api_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {

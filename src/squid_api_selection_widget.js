@@ -88,8 +88,11 @@
                 }
                 if (this.selection) {
                     // get HTML template and fill corresponding data
+                    var empty = $.isEmptyObject(this.selection);
+
                     var selHTML = this.template({
-                        "facets" : this.selection
+                        "facets" : this.selection,
+                        "empty" : empty
                     });
                     // render HTML
                     this.$el.html(selHTML);

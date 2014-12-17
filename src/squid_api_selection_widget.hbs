@@ -1,4 +1,7 @@
 <div id="sq-selection-panel">
+{{#if empty}}
+<div class="information">All</div>
+{{/if}}
 {{#each facets}}
 {{#each selection}}
 <div class="item" style="padding: 3px; display: inline-block;">

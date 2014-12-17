@@ -182,14 +182,20 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 function program1(depth0,data) {
   
+  
+  return "\n<div class=\"information\">All</div>\n";
+  }
+
+function program3(depth0,data) {
+  
   var buffer = "", stack1;
   buffer += "\n";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.selection), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.selection), {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n";
   return buffer;
   }
-function program2(depth0,data) {
+function program4(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += "\n<div class=\"item\" style=\"padding: 3px; display: inline-block;\">\n<table style=\"border:1px solid #DDD; border-collapse: separate; border-spacing: 3px;\">\n	<tr>\n		<td><span class=\"name\">";
@@ -209,7 +215,10 @@ function program2(depth0,data) {
   }
 
   buffer += "<div id=\"sq-selection-panel\">\n";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.facets), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.empty), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.facets), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n</div>";
   return buffer;
@@ -1290,8 +1299,11 @@ function program2(depth0,data) {
                 }
                 if (this.selection) {
                     // get HTML template and fill corresponding data
+                    var empty = $.isEmptyObject(this.selection);
+
                     var selHTML = this.template({
-                        "facets" : this.selection
+                        "facets" : this.selection,
+                        "empty" : empty
                     });
                     // render HTML
                     this.$el.html(selHTML);

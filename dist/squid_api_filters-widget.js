@@ -1299,7 +1299,16 @@ function program4(depth0,data) {
                 }
                 if (this.selection) {
                     // get HTML template and fill corresponding data
-                    var empty = $.isEmptyObject(this.selection);
+                    var empty = true;
+                    var selection = this.model.get("selection").facets;
+
+                    for (var facet=0; facet<selection.length; facet++) {
+                        if (selection[facet].dimension.type !== "CONTINUOUS") {
+                            if (selection[facet].selectedItems.length !== 0) {
+                                empty = false;
+                            }
+                        }
+                    }
 
                     var selHTML = this.template({
                         "facets" : this.selection,

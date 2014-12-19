@@ -79,7 +79,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   
-  return "\r\n\r\n<a class=\"datepicker\">Period</a>\r\n\r\n";
+  return "\r\n\r\n<button class=\"btn btn-default\">Period <span class=\"caret\"></span></button>\r\n\r\n";
   }
 
 function program3(depth0,data) {
@@ -127,11 +127,11 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"col-md-2\">\n<a href=\"#\" class=\"prevent-default\" data-toggle=\"collapse\" data-target=\"";
+  buffer += "<div class=\"col-md-2\">\n<button href=\"#\" class=\"btn btn-default\" data-toggle=\"collapse\" data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\">\n	Filters\n</a>\n</div>\n<div class=\"col-md-9\">\n<div id=\"selection\"></div>\n</div>";
+    + "\" data-clavier=\"true\">\n	Filters\n	<span class=\"caret\"></span>\n</button>\n</div>\n<div class=\"col-md-9\">\n<div id=\"selection\"></div>\n</div>";
   return buffer;
   });
 
@@ -172,7 +172,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"col-md-2\">\n<div id=\"date-picker\"></div>\n</div>\n<div class=\"col-md-6\">\n<span class=\"date-wrap\">From <span id=\"sq-startDate\"></span> To <span id=\"sq-endDate\"></span></div>\n</div>\n";
+  return "<div class=\"col-md-2\">\n<div id=\"date-picker\"></div>\n</div>\n<div class=\"col-md-6\">\n<span class=\"date-wrap\"><span id=\"sq-startDate\"></span> - <span id=\"sq-endDate\"></span></div>\n</div>\n";
   });
 
 this["squid_api"]["template"]["squid_api_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -491,7 +491,7 @@ function program4(depth0,data) {
                 }
 
                 // Build Date Picker
-                this.$el.find(".datepicker").daterangepicker(
+                this.$el.find("button").daterangepicker(
                         {
                             opens: me.parent.datePickerPosition,
                             format: 'YYYY-MM-DD',
@@ -507,7 +507,7 @@ function program4(depth0,data) {
                 var dateItems;
 
                 // Detect Apply Action
-                this.$el.find(".datepicker").on('apply.daterangepicker', function(ev, picker) {
+                this.$el.find("button").on('apply.daterangepicker', function(ev, picker) {
 
                     // Update Change Selection upon date widget close
                     var startDate = moment.utc(picker.startDate).toDate();
@@ -522,7 +522,7 @@ function program4(depth0,data) {
                 });
 
                 // Detect Cancel Action
-                this.$el.find(".datepicker").on('cancel.daterangepicker', function(ev, picker) {
+                this.$el.find("button").on('cancel.daterangepicker', function(ev, picker) {
                     if (me.parent) {
                         me.parent.cancelSelection(me);
                     }
@@ -1194,8 +1194,8 @@ function program4(depth0,data) {
                             }
                             // apply formatting
                             if (this.format) {
-                                endDateStr = moment.utc(endDateStr).format("YYYY-MM-DD");
-                                startDateStr = moment.utc(startDateStr).format("YYYY-MM-DD");
+                                endDateStr = moment.utc(endDateStr).format("MMM Do YYYY");
+                                startDateStr = moment.utc(startDateStr).format("MMM Do YYYY");
                             }
                         }
                         this.$el.find("#sq-startDate").text(startDateStr);

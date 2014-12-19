@@ -148,7 +148,7 @@
                 }
 
                 // Build Date Picker
-                this.$el.find(".datepicker").daterangepicker(
+                this.$el.find("button").daterangepicker(
                         {
                             opens: me.parent.datePickerPosition,
                             format: 'YYYY-MM-DD',
@@ -164,7 +164,7 @@
                 var dateItems;
 
                 // Detect Apply Action
-                this.$el.find(".datepicker").on('apply.daterangepicker', function(ev, picker) {
+                this.$el.find("button").on('apply.daterangepicker', function(ev, picker) {
 
                     // Update Change Selection upon date widget close
                     var startDate = moment.utc(picker.startDate).toDate();
@@ -179,7 +179,7 @@
                 });
 
                 // Detect Cancel Action
-                this.$el.find(".datepicker").on('cancel.daterangepicker', function(ev, picker) {
+                this.$el.find("button").on('cancel.daterangepicker', function(ev, picker) {
                     if (me.parent) {
                         me.parent.cancelSelection(me);
                     }

@@ -54,8 +54,8 @@
                             }
                             // apply formatting
                             if (this.format) {
-                                endDateStr = moment.utc(endDateStr).format("YYYY-MM-DD");
-                                startDateStr = moment.utc(startDateStr).format("YYYY-MM-DD");
+                                endDateStr = moment.utc(endDateStr).format("MMM Do YYYY");
+                                startDateStr = moment.utc(startDateStr).format("MMM Do YYYY");
                             }
                         }
                         this.$el.find("#sq-startDate").text(startDateStr);

@@ -57,6 +57,23 @@
                 this.ranges = options.ranges;
             }
             this.render();
+
+            // listen for global status change
+            squid_api.model.status.on('change:status', this.enable, this);
+        },
+
+        enable: function() {
+            var select = this.$el.find("button");
+            if (select) {
+                var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
+                if (running) {
+                    // computation is running : disable input
+                    this.$el.find(select).attr("disabled", true);
+                } else {
+                    // computation is done : enable input
+                    this.$el.find(select).attr("disabled", false);
+                }
+            }
         },
 
         setModel : function(model) {

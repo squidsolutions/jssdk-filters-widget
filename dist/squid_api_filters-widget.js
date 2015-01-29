@@ -527,6 +527,14 @@ function program4(depth0,data) {
                         me.parent.cancelSelection(me);
                     }
                 });
+
+                this.$el.find("button").on('change.daterangepickerLeft', function(ev) {
+                    $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
+                });
+
+                this.$el.find("button").on('change.daterangepickerRight', function(ev) {
+                    $('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
+                });
             }
         },
 

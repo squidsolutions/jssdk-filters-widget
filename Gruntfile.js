@@ -19,12 +19,22 @@ module.exports = function(grunt) {
                         }
                     }
                 },
+                sass: {
+                    dist: {
+                        files: {
+                            'dist/squid_api_filters-widgets.css': 'src/squid_api_filters_styles.scss'
+                        },
+                        options: {
+                            sourcemap: 'none'
+                        }
+                    }
+                },
                 concat : {
                     options : {
                         stripBanners : true,
                     },
                     css : {
-                        src : ['bower_components/jquery-ui/themes/ui-lightness/jquery-ui.min.css' ],
+                        src : ['bower_components/jquery-ui/themes/ui-lightness/jquery-ui.min.css', 'src/*.css' ],
                         dest : 'dist/squid_api_filters-widgets.css',
                     },
                     js : {
@@ -60,6 +70,7 @@ module.exports = function(grunt) {
                 }
             });
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-handlebars');
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -67,5 +78,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-wiredep');
 
-    grunt.registerTask('default', [ 'jshint', 'clean', 'handlebars', 'concat','wiredep']);
+    grunt.registerTask('default', [ 'jshint', 'clean', 'handlebars', 'concat', 'sass', 'wiredep']);
 };

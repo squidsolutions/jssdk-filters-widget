@@ -1,6 +1,15 @@
 this["squid_api"] = this["squid_api"] || {};
 this["squid_api"]["template"] = this["squid_api"]["template"] || {};
 
+this["squid_api"]["template"]["squid_api_filters_categorical_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "Hello From Template";
+  });
+
 this["squid_api"]["template"]["squid_api_filters_categorical_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -105,11 +114,11 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"panel panel-default filter-panel\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
+  buffer += "<div style=\"margin-top: 20px;\" class=\"panel panel-default filter-panel\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div id=\"filters\"></div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"selected\">\n					<h4>Currently Selected Filters</h4>\n				</div>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"search\">\n				<form action=\"#\" role=\"search\">\n                <div class=\"form-group\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"navbarInput-01\" type=\"search\" placeholder=\"Search\">\n                    <span class=\"input-group-btn\">\n                      <button type=\"submit\" class=\"btn\"><i class=\"fa fa-search\"></i></button>\n                    </span>\n                  </div>\n                </div>\n              </form>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n\n			</div>\n			<div class=\"col-md-4\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-4\">\n				<div id=\"pagination-container\">\n					<div class=\"pagination\">\n            			<ul>\n              				<li class=\"previous\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-left\"></i></a></li>\n              				<li class=\"active\"><a href=\"#fakelink\">1</a></li>\n              				<li><a href=\"#fakelink\">2</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">8</a></li>\n              				<li class=\"next\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-right\"></i></a></li>\n            			</ul>\n          			</div>\n				</div>\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -223,6 +232,206 @@ function program4(depth0,data) {
   buffer += "\n</div>";
   return buffer;
   });
+(function (root, factory) {
+    root.squid_api.view.CategoricalDisplayView = factory(root.Backbone, root.squid_api);
+}(this, function (Backbone, squid_api) {
+
+    var View = Backbone.View.extend({
+
+        model : null,
+        format : null,
+
+        initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+            if (options.filterStore) {
+                this.filterStore = options.filterStore;
+            }
+            if (options.format) {
+                this.format = options.format;
+            } else {
+                if (d3) {
+                    this.format = d3.time.format("%Y-%m-%d");
+                } else {
+                    this.format = function(val){return val;};
+                }
+            }
+
+            this.model.on("change", this.render, this);
+            this.filterStore.on("change", this.render, this);
+        },
+
+        events: {
+            // Dimension Sorting
+            "click li": function(item) {
+                if ($(item.currentTarget).attr("selected")) {
+                    $(item.currentTarget).removeAttr("selected");
+                    $(item.currentTarget).find("i").removeClass();
+                    $(item.currentTarget).find("i").addClass("fa fa-circle fa-5");
+                } else {
+                    $(item.currentTarget).attr("selected", true);
+                    $(item.currentTarget).find("i").removeClass();
+                    $(item.currentTarget).find("i").addClass("fa fa-check-circle");
+                }
+            },
+        },
+
+        render : function() {
+            if (this.model.get("status") === "DONE") {
+                if (this.model.get("selection")) {
+                    var facets = this.model.get("selection").facets;
+                    var selectedFacet = this.filterStore.get("selectedFilter");
+                    for (i=0; i<facets.length; i++) {
+                        if (facets[i].dimension.id.dimensionId === selectedFacet) {
+                            var facetItems = facets[i].items;
+                            this.$el.html("");
+                            var toAppend = "";
+                            if (facetItems.length === 0) {
+                                this.$el.append("No Items Available");
+                            } else {
+                                toAppend += "<ul>";
+                                for (ix=0; ix<facetItems.length; ix++) {
+                                    toAppend += "<li data-attr=" + facetItems[ix].id + "><i class='fa fa-circle fa-5'></i>" + facetItems[ix].value + "</li>";
+                                }
+                                toAppend += "</ul>";
+                                this.$el.append(toAppend);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    return View;
+}));
+
+(function (root, factory) {
+    root.squid_api.view.CategoricalSelectorView = factory(root.Backbone, root.squid_api);
+}(this, function (Backbone, squid_api) {
+
+    var View = Backbone.View.extend({
+
+        model : null,
+        filterStore : null,
+        format : null,
+
+        initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+            if (options.filterStore) {
+                this.filterStore = options.filterStore;
+            }
+
+            if (options.format) {
+                this.format = options.format;
+            } else {
+                if (d3) {
+                    this.format = d3.time.format("%Y-%m-%d");
+                } else {
+                    this.format = function(val){return val;};
+                }
+            }
+
+            this.model.on("change", this.render, this);
+        },
+
+        render : function() {
+            var me = this;
+
+            if (this.model.get("status") && this.model.get("status") !== "RUNNING") {
+                if (this.model.get("selection")) {
+                    var facets = this.model.get("selection").facets;
+                    var categoricalFacets = [];
+                    for (i=0; i<facets.length; i++) {
+                        if (facets[i].dimension.type !== "CONTINOUS") {
+                            this.$el.find(".btn-select-filter").append("<option value='" + facets[i].dimension.id.dimensionId + "'>" + facets[i].dimension.name + "</option>");
+                        }
+                    }
+                }
+                this.$el.find(".btn-select-filter").multiselect({
+                    onChange: function(option) {
+                        var filterValue = $(option).val();
+                        me.filterStore.set("selectedFilter", filterValue);
+                    }
+                });
+            }
+        }
+    });
+
+    return View;
+}));
+
+(function (root, factory) {
+    root.squid_api.view.CategoricalView = factory(root.Backbone, root.squid_api);
+}(this, function (Backbone, squid_api) {
+
+    var View = Backbone.View.extend({
+
+        filterPanelTemplate: null,
+        model : null,
+        format : null,
+        filterPanel : null,
+        filterSelected : null,
+
+        initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+            if (options.filterPanel) {
+                this.filterPanel = options.filterPanel;
+            }
+            if (options.filterSelected) {
+                this.filterSelected = options.filterSelected;
+            }
+
+            this.filterPanelTemplate = squid_api.template.squid_api_filters_selection_panel;
+
+            if (options.format) {
+                this.format = options.format;
+            } else {
+                if (d3) {
+                    this.format = d3.time.format("%Y-%m-%d");
+                } else {
+                    this.format = function(val){return val;};
+                }
+            }
+
+            this.filterStore = new Backbone.Model({selectedFilter : null});
+
+            this.render();
+        },
+
+        render : function() {
+
+            // Button which opens filter Panel
+            this.$el.html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target=" + this.filterPanel + ">Filters<span class='caret'></span></button>");
+            
+             // Print Base Filter Panel Layout
+            $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel").html(this.filterPanelTemplate({"data-target" : this.filterPanel}));
+
+            view = new api.view.CategoricalSelectorView({
+                el: $(this.filterPanel).find("#filter-selection"),
+                model: this.model,
+                filterStore : this.filterStore
+            });
+
+            view2 = new api.view.CategoricalDisplayView({
+                el: $(this.filterPanel).find("#filter-display-results"),
+                model: this.model,
+                filterStore : this.filterStore
+            });
+
+            // Print Base Result Panel
+            $(this.filterSelected).addClass("squid_api_filters_categorical_selected_filters").html("selected");
+        }
+    });
+
+    return View;
+}));
+
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD.

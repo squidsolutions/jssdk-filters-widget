@@ -32,13 +32,15 @@
             // Dimension Sorting
             "click li": function(item) {
                 if ($(item.currentTarget).attr("selected")) {
+                    $(item.currentTarget).removeClass("active");
                     $(item.currentTarget).removeAttr("selected");
                     $(item.currentTarget).find("i").removeClass();
-                    $(item.currentTarget).find("i").addClass("fa fa-circle fa-5");
+                    $(item.currentTarget).find("i").addClass("fa fa-square-o");
                 } else {
+                    $(item.currentTarget).addClass("active");
                     $(item.currentTarget).attr("selected", true);
                     $(item.currentTarget).find("i").removeClass();
-                    $(item.currentTarget).find("i").addClass("fa fa-check-circle");
+                    $(item.currentTarget).find("i").addClass("fa fa-check-square-o");
                 }
             },
         },
@@ -58,7 +60,10 @@
                             } else {
                                 toAppend += "<ul>";
                                 for (ix=0; ix<facetItems.length; ix++) {
-                                    toAppend += "<li data-attr=" + facetItems[ix].id + "><i class='fa fa-circle fa-5'></i>" + facetItems[ix].value + "</li>";
+                                    if (ix % 12 === 0 && ix !== 0) {
+                                        toAppend += "</ul><ul>";
+                                    }
+                                    toAppend += "<li data-attr=" + facetItems[ix].id + "><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
                                 }
                                 toAppend += "</ul>";
                                 this.$el.append(toAppend);

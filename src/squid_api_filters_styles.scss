@@ -31,6 +31,7 @@
 	#pagination-container {
 		float: left;
 		.pagination {
+			margin: 10px 0;
   			position: relative;
   			display: inline-block;
   			 ul {
@@ -147,25 +148,43 @@
 	}
 	#filter-display-results {
 		max-height: 287px;
+		padding-top: 20px;
 		overflow: hidden;
 		width: 100%;
 		ul {
 			padding-left: 0px;
 			list-style-type: none;
+			display: inline-block;
+			float: left;
+			min-width: 15%;
+			padding-right: 10px;
 			li {
 				position: relative;
-				padding: 18px 42px 21px 25px;
+				min-height: 20px;
+				display: inline-block;
 				margin-top: 2px;
 				font-size: 14px;
+				float: left;
+				clear: both;
 				line-height: 1.214;
 				cursor: pointer;
-				border-bottom: 1px solid #e4e7ea;
 				background-size: 20px 20px;
 				-webkit-transition: .25s;
 				transition: .25s;
 
 				i {
 					padding-right: 15px;
+					font-size: 15px;
+				}
+
+				&:hover, &.active {
+					i {
+						display: inline-block;
+					}
+				}
+
+				span {
+					float: right;
 				}
 			}
 		}

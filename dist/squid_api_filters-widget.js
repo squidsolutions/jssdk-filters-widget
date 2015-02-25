@@ -118,7 +118,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"selected\">\n					<h4>Currently Selected Filters</h4>\n				</div>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"search\">\n				<form action=\"#\" role=\"search\">\n                <div class=\"form-group\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"navbarInput-01\" type=\"search\" placeholder=\"Search\">\n                    <span class=\"input-group-btn\">\n                      <button type=\"submit\" class=\"btn\"><i class=\"fa fa-search\"></i></button>\n                    </span>\n                  </div>\n                </div>\n              </form>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n\n			</div>\n			<div class=\"col-md-4\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-4\">\n				<div id=\"pagination-container\">\n					<div class=\"pagination\">\n            			<ul>\n              				<li class=\"previous\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-left\"></i></a></li>\n              				<li class=\"active\"><a href=\"#fakelink\">1</a></li>\n              				<li><a href=\"#fakelink\">2</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">8</a></li>\n              				<li class=\"next\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-right\"></i></a></li>\n            			</ul>\n          			</div>\n				</div>\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"selected\">\n					<h4>Currently Selected Filters</h4>\n				</div>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-2\">\n				<div id=\"search\">\n				<form action=\"#\" role=\"search\">\n                <div class=\"form-group\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"navbarInput-01\" type=\"search\" placeholder=\"Search\">\n                    <span class=\"input-group-btn\">\n                      <button type=\"submit\" class=\"btn\"><i class=\"fa fa-search\"></i></button>\n                    </span>\n                  </div>\n                </div>\n              </form>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n\n			</div>\n			<div class=\"col-md-8\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				<div id=\"pagination-container\">\n					<div class=\"pagination\">\n            			<ul>\n              				<li class=\"previous\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-left\"></i></a></li>\n              				<li class=\"active\"><a href=\"#fakelink\">1</a></li>\n              				<li><a href=\"#fakelink\">2</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">8</a></li>\n              				<li class=\"next\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-right\"></i></a></li>\n            			</ul>\n          			</div>\n				</div>\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -266,13 +266,15 @@ function program4(depth0,data) {
             // Dimension Sorting
             "click li": function(item) {
                 if ($(item.currentTarget).attr("selected")) {
+                    $(item.currentTarget).removeClass("active");
                     $(item.currentTarget).removeAttr("selected");
                     $(item.currentTarget).find("i").removeClass();
-                    $(item.currentTarget).find("i").addClass("fa fa-circle fa-5");
+                    $(item.currentTarget).find("i").addClass("fa fa-square-o");
                 } else {
+                    $(item.currentTarget).addClass("active");
                     $(item.currentTarget).attr("selected", true);
                     $(item.currentTarget).find("i").removeClass();
-                    $(item.currentTarget).find("i").addClass("fa fa-check-circle");
+                    $(item.currentTarget).find("i").addClass("fa fa-check-square-o");
                 }
             },
         },
@@ -292,7 +294,10 @@ function program4(depth0,data) {
                             } else {
                                 toAppend += "<ul>";
                                 for (ix=0; ix<facetItems.length; ix++) {
-                                    toAppend += "<li data-attr=" + facetItems[ix].id + "><i class='fa fa-circle fa-5'></i>" + facetItems[ix].value + "</li>";
+                                    if (ix % 12 === 0 && ix !== 0) {
+                                        toAppend += "</ul><ul>";
+                                    }
+                                    toAppend += "<li data-attr=" + facetItems[ix].id + "><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
                                 }
                                 toAppend += "</ul>";
                                 this.$el.append(toAppend);

@@ -21,7 +21,7 @@
                 this.filterSelected = options.filterSelected;
             }
 
-            this.filterPanelTemplate = squid_api.template.squid_api_filters_selection_panel;
+            this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
 
             if (options.format) {
                 this.format = options.format;

@@ -4,10 +4,23 @@ this["squid_api"]["template"] = this["squid_api"]["template"] || {};
 this["squid_api"]["template"]["squid_api_filters_categorical_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  return "Hello From Template";
+  buffer += "<div style=\"margin-top: 20px;\" class=\"panel panel-default filter-panel\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"selected\">\n					<h4>Currently Selected Filters</h4>\n				</div>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-2\">\n				<div id=\"search\">\n				<form action=\"#\" role=\"search\">\n                <div class=\"form-group\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"navbarInput-01\" type=\"search\" placeholder=\"Search\">\n                    <span class=\"input-group-btn\">\n                      <button type=\"submit\" class=\"btn\"><i class=\"fa fa-search\"></i></button>\n                    </span>\n                  </div>\n                </div>\n              </form>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n\n			</div>\n			<div class=\"col-md-8\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				<div id=\"pagination-container\">\n					<div class=\"pagination\">\n            			<ul>\n              				<li class=\"previous\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-left\"></i></a></li>\n              				<li class=\"active\"><a href=\"#fakelink\">1</a></li>\n              				<li><a href=\"#fakelink\">2</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">8</a></li>\n              				<li class=\"next\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-right\"></i></a></li>\n            			</ul>\n          			</div>\n				</div>\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">Apply</button>\n		<button type=\"button\" class=\"btn btn-default\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\">Cancel</button>\n	</div>\n</div>";
+  return buffer;
   });
 
 this["squid_api"]["template"]["squid_api_filters_categorical_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -114,11 +127,11 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div style=\"margin-top: 20px;\" class=\"panel panel-default filter-panel\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
+  buffer += "<div class=\"panel panel-default filter-panel\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"selected\">\n					<h4>Currently Selected Filters</h4>\n				</div>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-2\">\n				<div id=\"search\">\n				<form action=\"#\" role=\"search\">\n                <div class=\"form-group\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"navbarInput-01\" type=\"search\" placeholder=\"Search\">\n                    <span class=\"input-group-btn\">\n                      <button type=\"submit\" class=\"btn\"><i class=\"fa fa-search\"></i></button>\n                    </span>\n                  </div>\n                </div>\n              </form>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n\n			</div>\n			<div class=\"col-md-8\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				<div id=\"pagination-container\">\n					<div class=\"pagination\">\n            			<ul>\n              				<li class=\"previous\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-left\"></i></a></li>\n              				<li class=\"active\"><a href=\"#fakelink\">1</a></li>\n              				<li><a href=\"#fakelink\">2</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">8</a></li>\n              				<li class=\"next\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-right\"></i></a></li>\n            			</ul>\n          			</div>\n				</div>\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div id=\"filters\"></div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -126,7 +139,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\">Cancel</button>\n	</div>\n</div>\n";
+    + "\" data-clavier=\"true\">Cancel</button>\n	</div>\n</div>\n\n";
   return buffer;
   });
 
@@ -392,7 +405,7 @@ function program4(depth0,data) {
                 this.filterSelected = options.filterSelected;
             }
 
-            this.filterPanelTemplate = squid_api.template.squid_api_filters_selection_panel;
+            this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
 
             if (options.format) {
                 this.format = options.format;

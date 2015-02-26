@@ -27,6 +27,7 @@
             }
 
             this.model.on("change", this.render, this);
+            this.render();
         },
 
         render : function() {
@@ -37,8 +38,8 @@
                     var facets = this.model.get("selection").facets;
                     var categoricalFacets = [];
                     for (i=0; i<facets.length; i++) {
-                        if (facets[i].dimension.type !== "CONTINOUS") {
-                            this.$el.find(".btn-select-filter").append("<option value='" + facets[i].dimension.id.dimensionId + "'>" + facets[i].dimension.name + "</option>");
+                        if (facets[i].dimension.type !== "CONTINUOUS") {
+                            this.$el.find(".btn-select-filter").append("<option value=\"" + facets[i].id + "\">" + facets[i].dimension.name + "</option>");
                         }
                     }
                 }

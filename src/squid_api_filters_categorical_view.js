@@ -33,9 +33,15 @@
                 }
             }
 
-            this.filterStore = new Backbone.Model({selectedFilter : null});
+            this.filterStore = new Backbone.Model( { 
+                selectedFilter : null,
+                pageIndex : 0,
+                items : []}
+            );
 
-            this.render();
+            this.model.on("change", this.render, this);
+            this.filterStore.on("change:selectedFilter", this.renderFacet, this);
+            this.filterStore.on("change:pageIndex", this.renderFacet, this);
         },
 
         render : function() {
@@ -52,16 +58,68 @@
                 filterStore : this.filterStore
             });
 
-            view2 = new api.view.CategoricalDisplayView({
+            view2 = new api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
-                model: this.model,
-                filterStore : this.filterStore
+                model: this.filterStore
             });
 
             // Print Base Result Panel
             $(this.filterSelected).addClass("squid_api_filters_categorical_selected_filters").html("selected");
+        }, 
+        
+        renderFacet : function() {
+            var me = this;
+            var maxResults = 30;
+            var startIndex = this.filterStore.get("pageIndex") * maxResults;
+            
+            if (this.model.get("status") === "DONE") {
+                if (this.model.get("selection")) {
+                    var facets = this.model.get("selection").facets;
+                    var selectedFacet = this.filterStore.get("selectedFilter");
+                    var facet;
+                    for (i=0; i<facets.length; i++) {
+                        if (facets[i].id === selectedFacet) {
+                            facet = facets[i];
+                        }
+                    }
+                    if (facet) {
+                        if ((facet.items.length < (startIndex + maxResults)) && (facet.hasMore === true)) {
+                            // poll for facet members
+                            this.$el.html("Retrieving items list...");
+                            var facetJob = new squid_api.model.ProjectFacetJobFacet();
+                            facetJob.set("id",this.model.get("id"));
+                            facetJob.set("oid", facet.id);
+                            if (startIndex) {
+                                facetJob.addParameter("startIndex", startIndex);
+                            }
+                            if (maxResults) {
+                                facetJob.addParameter("maxResults", maxResults);
+                            }
+                            // get the results from API
+                            facetJob.fetch({
+                                error: function(model, response) {
+                                    console.error(response);
+                                },
+                                success: function(model, response) {
+                                    me.filterStore.set("items", model.get("items"));
+                                }
+                            });
+                        } else {
+                            // display current facet members
+                            me.filterStore.set("items", facet.items);
+                        }
+                    }
+                }
+            }
+        },
+        
+        applyPaging : function(pageIndex) {
+            filterStore.set("pageIndex", pageIndex);
         }
+        
     });
+    
+    
 
     return View;
 }));

@@ -246,7 +246,7 @@ function program4(depth0,data) {
   return buffer;
   });
 (function (root, factory) {
-    root.squid_api.view.CategoricalDisplayView = factory(root.Backbone, root.squid_api);
+    root.squid_api.view.CategoricalFacetView = factory(root.Backbone, root.squid_api);
 }(this, function (Backbone, squid_api) {
 
     var View = Backbone.View.extend({
@@ -255,12 +255,6 @@ function program4(depth0,data) {
         format : null,
 
         initialize : function(options) {
-            if (!this.model) {
-                this.model = squid_api.model.filters;
-            }
-            if (options.filterStore) {
-                this.filterStore = options.filterStore;
-            }
             if (options.format) {
                 this.format = options.format;
             } else {
@@ -270,9 +264,7 @@ function program4(depth0,data) {
                     this.format = function(val){return val;};
                 }
             }
-
             this.model.on("change", this.render, this);
-            this.filterStore.on("change", this.render, this);
         },
 
         events: {
@@ -293,33 +285,25 @@ function program4(depth0,data) {
         },
 
         render : function() {
-            if (this.model.get("status") === "DONE") {
-                if (this.model.get("selection")) {
-                    var facets = this.model.get("selection").facets;
-                    var selectedFacet = this.filterStore.get("selectedFilter");
-                    for (i=0; i<facets.length; i++) {
-                        if (facets[i].dimension.id.dimensionId === selectedFacet) {
-                            var facetItems = facets[i].items;
-                            this.$el.html("");
-                            var toAppend = "";
-                            if (facetItems.length === 0) {
-                                this.$el.append("No Items Available");
-                            } else {
-                                toAppend += "<ul>";
-                                for (ix=0; ix<facetItems.length; ix++) {
-                                    if (ix % 12 === 0 && ix !== 0) {
-                                        toAppend += "</ul><ul>";
-                                    }
-                                    toAppend += "<li data-attr=" + facetItems[ix].id + "><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
-                                }
-                                toAppend += "</ul>";
-                                this.$el.append(toAppend);
-                            }
-                        }
+            var facetItems = this.model.get("items");
+            this.$el.html("");
+            var toAppend = "";
+            if (facetItems.length === 0) {
+                this.$el.append("No items");
+            } else {
+                // display current facet members
+                toAppend += "<ul>";
+                for (ix=0; ix<facetItems.length; ix++) {
+                    if (ix % 12 === 0 && ix !== 0) {
+                        toAppend += "</ul><ul>";
                     }
+                    toAppend += "<li data-attr=\"" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
                 }
+                toAppend += "</ul>";
             }
+            this.$el.append(toAppend);
         }
+
     });
 
     return View;
@@ -354,6 +338,7 @@ function program4(depth0,data) {
             }
 
             this.model.on("change", this.render, this);
+            this.render();
         },
 
         render : function() {
@@ -364,8 +349,8 @@ function program4(depth0,data) {
                     var facets = this.model.get("selection").facets;
                     var categoricalFacets = [];
                     for (i=0; i<facets.length; i++) {
-                        if (facets[i].dimension.type !== "CONTINOUS") {
-                            this.$el.find(".btn-select-filter").append("<option value='" + facets[i].dimension.id.dimensionId + "'>" + facets[i].dimension.name + "</option>");
+                        if (facets[i].dimension.type !== "CONTINUOUS") {
+                            this.$el.find(".btn-select-filter").append("<option value=\"" + facets[i].id + "\">" + facets[i].dimension.name + "</option>");
                         }
                     }
                 }
@@ -417,9 +402,15 @@ function program4(depth0,data) {
                 }
             }
 
-            this.filterStore = new Backbone.Model({selectedFilter : null});
+            this.filterStore = new Backbone.Model( { 
+                selectedFilter : null,
+                pageIndex : 0,
+                items : []}
+            );
 
-            this.render();
+            this.model.on("change", this.render, this);
+            this.filterStore.on("change:selectedFilter", this.renderFacet, this);
+            this.filterStore.on("change:pageIndex", this.renderFacet, this);
         },
 
         render : function() {
@@ -436,16 +427,68 @@ function program4(depth0,data) {
                 filterStore : this.filterStore
             });
 
-            view2 = new api.view.CategoricalDisplayView({
+            view2 = new api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
-                model: this.model,
-                filterStore : this.filterStore
+                model: this.filterStore
             });
 
             // Print Base Result Panel
             $(this.filterSelected).addClass("squid_api_filters_categorical_selected_filters").html("selected");
+        }, 
+        
+        renderFacet : function() {
+            var me = this;
+            var maxResults = 30;
+            var startIndex = this.filterStore.get("pageIndex") * maxResults;
+            
+            if (this.model.get("status") === "DONE") {
+                if (this.model.get("selection")) {
+                    var facets = this.model.get("selection").facets;
+                    var selectedFacet = this.filterStore.get("selectedFilter");
+                    var facet;
+                    for (i=0; i<facets.length; i++) {
+                        if (facets[i].id === selectedFacet) {
+                            facet = facets[i];
+                        }
+                    }
+                    if (facet) {
+                        if ((facet.items.length < (startIndex + maxResults)) && (facet.hasMore === true)) {
+                            // poll for facet members
+                            this.$el.html("Retrieving items list...");
+                            var facetJob = new squid_api.model.ProjectFacetJobFacet();
+                            facetJob.set("id",this.model.get("id"));
+                            facetJob.set("oid", facet.id);
+                            if (startIndex) {
+                                facetJob.addParameter("startIndex", startIndex);
+                            }
+                            if (maxResults) {
+                                facetJob.addParameter("maxResults", maxResults);
+                            }
+                            // get the results from API
+                            facetJob.fetch({
+                                error: function(model, response) {
+                                    console.error(response);
+                                },
+                                success: function(model, response) {
+                                    me.filterStore.set("items", model.get("items"));
+                                }
+                            });
+                        } else {
+                            // display current facet members
+                            me.filterStore.set("items", facet.items);
+                        }
+                    }
+                }
+            }
+        },
+        
+        applyPaging : function(pageIndex) {
+            filterStore.set("pageIndex", pageIndex);
         }
+        
     });
+    
+    
 
     return View;
 }));

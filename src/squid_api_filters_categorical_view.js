@@ -78,6 +78,20 @@
                 filterStore : this.filterStore
             });
 
+	    view3 = new api.view.CategoricalPagingView({
+                el: $(this.filterPanel).find("#pagination-container"),
+                model: this.model,
+                filterStore : this.filterStore
+            });
+
+            var me = this;
+            $(this.filterPanel).find(".apply-selection").click(function() {
+                me.applySelection();
+            });
+            $(this.filterPanel).find(".cancel-selection").click(function() {
+                me.cancelSelection();
+            });
+            
             // Print Base Result Panel
             $(this.filterSelected).addClass("squid_api_filters_categorical_selected_filters").html("selected");
         }, 

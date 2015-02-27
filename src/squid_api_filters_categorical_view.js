@@ -6,6 +6,7 @@
 
         filterPanelTemplate: null,
         model : null,
+        currentModel : null,
         format : null,
         filterPanel : null,
         filterSelected : null,
@@ -38,23 +39,37 @@
                 pageIndex : 0,
                 items : []}
             );
-
-            this.model.on("change", this.render, this);
+            this.currentModel = new squid_api.model.FiltersJob();
+            this.currentModel.on("change", this.render, this);
+            this.setCurrentModel();
+            
+            this.model.on("change", this.setCurrentModel, this);
             this.filterStore.on("change:selectedFilter", this.renderFacet, this);
             this.filterStore.on("change:pageIndex", this.renderFacet, this);
+        },
+        
+        setCurrentModel : function() {
+            // duplicate the filters model
+            var attributesClone = $.extend(true, {}, this.model.attributes);
+            this.currentModel.set(attributesClone);
         },
 
         render : function() {
 
             // Button which opens filter Panel
-            this.$el.html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target=" + this.filterPanel + ">Filters<span class='caret'></span></button>");
-            
-             // Print Base Filter Panel Layout
-            $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel").html(this.filterPanelTemplate({"data-target" : this.filterPanel}));
+            this.$el
+            .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + ">Filters<span class='caret'></span></button>");
+
+            // Print Base Filter Panel Layout
+            $(this.filterPanel)
+            .addClass("squid_api_filters_categorical_filter_panel")
+            .html(this.filterPanelTemplate({
+                        "data-target" : this.filterPanel
+                    }));
 
             view = new api.view.CategoricalSelectorView({
                 el: $(this.filterPanel).find("#filter-selection"),
-                model: this.model,
+                model: this.currentModel,
                 filterStore : this.filterStore
             });
 
@@ -72,9 +87,9 @@
             var maxResults = 30;
             var startIndex = this.filterStore.get("pageIndex") * maxResults;
             
-            if (this.model.get("status") === "DONE") {
-                if (this.model.get("selection")) {
-                    var facets = this.model.get("selection").facets;
+            if (this.currentModel.get("status") === "DONE") {
+                if (this.currentModel.get("selection")) {
+                    var facets = this.currentModel.get("selection").facets;
                     var selectedFacet = this.filterStore.get("selectedFilter");
                     var facet;
                     for (i=0; i<facets.length; i++) {
@@ -87,7 +102,7 @@
                             // poll for facet members
                             this.$el.html("Retrieving items list...");
                             var facetJob = new squid_api.model.ProjectFacetJobFacet();
-                            facetJob.set("id",this.model.get("id"));
+                            facetJob.set("id",this.currentModel.get("id"));
                             facetJob.set("oid", facet.id);
                             if (startIndex) {
                                 facetJob.addParameter("startIndex", startIndex);

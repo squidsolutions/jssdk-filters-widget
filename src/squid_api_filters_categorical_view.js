@@ -11,7 +11,6 @@
         filterPanel : null,
         filterSelected : null,
         nbPages : 10,
-        pageSize : 30,
 
         initialize : function(options) {
             if (!this.model) {
@@ -39,6 +38,7 @@
             this.filterStore = new Backbone.Model( { 
                 selectedFilter : null,
                 pageIndex : 0,
+                pageSize : 30,
                 facet : null,
                 itemIndex : 0
             }
@@ -49,8 +49,7 @@
             
             this.model.on("change", this.setCurrentModel, this);
             this.filterStore.on("change:selectedFilter", this.selectFacet, this);
-            this.filterStore.on("change:pageIndex", this.renderFacet, this);
-            this.filterStore.on("change:facet", this.renderPage, this);
+            this.filterStore.on("change:pageIndex", this.selectFacet, this);
         },
         
         setCurrentModel : function() {
@@ -78,9 +77,15 @@
                 filterStore : this.filterStore
             });
 
-	    view3 = new api.view.CategoricalPagingView({
+            view2 = new api.view.CategoricalFacetView({
+                el: $(this.filterPanel).find("#filter-display-results"),
+                model: this.filterStore,
+                filters: this.model
+            });
+
+            view3 = new api.view.CategoricalPagingView({
                 el: $(this.filterPanel).find("#pagination-container"),
-                model: this.model,
+                model: this.currentModel,
                 filterStore : this.filterStore
             });
 
@@ -98,8 +103,8 @@
         
         selectFacet : function() {
             var me = this;
-
-            var startIndex = this.filterStore.get("pageIndex") * this.pageSize;
+            var pageSize = this.filterStore.get("pageSize");
+            var startIndex = this.filterStore.get("pageIndex") * pageSize;
             
             if (this.currentModel.get("status") === "DONE") {
                 if (this.currentModel.get("selection")) {
@@ -124,8 +129,8 @@
                         if (startIndex) {
                             facetJob.addParameter("startIndex", startIndex);
                         }
-                        if (this.pageSize) {
-                            facetJob.addParameter("maxResults", this.nbPages * this.pageSize);
+                        if (pageSize) {
+                            facetJob.addParameter("maxResults", this.nbPages * pageSize);
                         }
                         // get the results from API
                         facetJob.fetch({
@@ -142,26 +147,12 @@
             }
         },
         
-        renderPage : function() {
-            var $el = $(this.filterPanel).find("#filter-display-results");
-            var facetItems = this.filterStore.get("facet").get("items");
-            var pageIndex = this.filterStore.get("pageIndex");
-            $el.html("");
-            var toAppend = "";
-            if (facetItems.length === 0) {
-                $el.append("No items");
-            } else {
-                // display current facet members
-                toAppend += "<ul>";
-                for (ix=(pageIndex * this.pageSize); ((ix<((pageIndex * this.pageSize) + this.pageSize)) && (ix<facetItems.length)); ix++) {
-                    if (ix % 10 === 0 && ix !== 0) {
-                        toAppend += "</ul><ul>";
-                    }
-                    toAppend += "<li data-attr=\"" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
-                }
-                toAppend += "</ul>";
-            }
-            $el.append(toAppend);
+        applySelection : function() {
+            console.log(this.model.get("selection"));
+        },
+
+        cancelSelection : function() {
+            console.log("Cancel");
         },
         
         applyPaging : function(pageIndex) {
@@ -169,8 +160,6 @@
         }
         
     });
-    
-    
 
     return View;
 }));

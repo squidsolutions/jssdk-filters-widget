@@ -56,7 +56,7 @@
                     for (i=0; i<facets.length; i++) {
                         if (facets[i].id === selectedFilter) {
                             facets[i].selectedItems.push(selectObj);
-                }
+                        }
                     }
 
                     // Set the updated filters model
@@ -67,23 +67,28 @@
         },
 
         render : function() {
-            var facetItems = this.model.get("items");
-            this.$el.html("");
-            var toAppend = "";
-            if (facetItems.length === 0) {
-                this.$el.append("No items");
-            } else {
-                // display current facet members
-                toAppend += "<ul>";
-                for (ix=0; ix<facetItems.length; ix++) {
-                    if (ix % 12 === 0 && ix !== 0) {
-                        toAppend += "</ul><ul>";
+            var facet = this.model.get("facet");
+            if (facet) {
+                var facetItems = facet.get("items");
+                var pageIndex = this.model.get("pageIndex");
+                var pageSize = this.model.get("pageSize");
+                this.$el.html("");
+                var toAppend = "";
+                if (facetItems.length === 0) {
+                    this.$el.append("No items");
+                } else {
+                    // display current facet members
+                    toAppend += "<ul>";
+                    for (ix=(pageIndex * pageSize); ((ix<((pageIndex * pageSize) + pageSize)) && (ix<facetItems.length)); ix++) {
+                        if (ix % 10 === 0 && ix !== 0) {
+                            toAppend += "</ul><ul>";
+                        }
+                        toAppend += "<li data-value=" + facetItems[ix].value + " data-type=" + facetItems[ix].type + " data-id=" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
                     }
-                    toAppend += "<li data-value=" + facetItems[ix].value + " data-type=" + facetItems[ix].type + " data-id=" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
+                    toAppend += "</ul>";
                 }
-                toAppend += "</ul>";
+                this.$el.append(toAppend);
             }
-            this.$el.append(toAppend);
         }
 
     });

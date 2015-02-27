@@ -5,6 +5,7 @@
     var View = Backbone.View.extend({
 
         model : null,
+        filters: null,
         format : null,
 
         initialize : function(options) {
@@ -17,6 +18,10 @@
                     this.format = function(val){return val;};
                 }
             }
+            if (options.filters) {
+                this.filters = options.filters;
+            }
+
             this.model.on("change", this.render, this);
         },
 
@@ -33,6 +38,30 @@
                     $(item.currentTarget).attr("selected", true);
                     $(item.currentTarget).find("i").removeClass();
                     $(item.currentTarget).find("i").addClass("fa fa-check-square-o");
+
+                    // Get selected Filter & Itekm
+                    var selectedFilter = this.model.get("selectedFilter");
+                    var selectedItem = $(item.currentTarget).attr("data-attr");
+                    
+                    // Get clicked filter value & create object
+                    var value = $(item.currentTarget).attr("data-id");
+                    var type = $(item.currentTarget).attr("data-type");
+                    var id = parseInt($(item.currentTarget).attr("data-id"));
+                    var selectObj = {id : id, type : type, value : value};
+
+                    // Get selected Filters
+                    var facets = this.filters.get("selection").facets;
+
+                    // Push new filters to selectedItems array
+                    for (i=0; i<facets.length; i++) {
+                        if (facets[i].id === selectedFilter) {
+                            facets[i].selectedItems.push(selectObj);
+                        }
+                    }
+
+                    // Set the updated filters model
+                    var selection = {facets:facets};
+                    this.filters.set("selection", selection);
                 }
             },
         },
@@ -50,7 +79,7 @@
                     if (ix % 12 === 0 && ix !== 0) {
                         toAppend += "</ul><ul>";
                     }
-                    toAppend += "<li data-attr=\"" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
+                    toAppend += "<li data-value=" + facetItems[ix].value + " data-type=" + facetItems[ix].type + " data-id=" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
                 }
                 toAppend += "</ul>";
             }

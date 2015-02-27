@@ -60,7 +60,22 @@
 
             view2 = new api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
-                model: this.filterStore
+                model: this.filterStore,
+                filters: this.model
+            });
+
+            view3 = new api.view.CategoricalPagingView({
+                el: $(this.filterPanel).find("#pagination-container"),
+                model: this.model,
+                filterStore : this.filterStore
+            });
+
+            var me = this;
+            $(this.filterPanel).find(".apply-selection").click(function() {
+                me.applySelection();
+            });
+            $(this.filterPanel).find(".cancel-selection").click(function() {
+                me.cancelSelection();
             });
 
             // Print Base Result Panel
@@ -112,14 +127,20 @@
                 }
             }
         },
+
+        applySelection : function() {
+            console.log(this.model.get("selection"));
+        },
+
+        cancelSelection : function() {
+            console.log("Cancel");
+        },
         
         applyPaging : function(pageIndex) {
             filterStore.set("pageIndex", pageIndex);
         }
         
     });
-    
-    
 
     return View;
 }));

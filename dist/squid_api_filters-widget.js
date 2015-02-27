@@ -7,15 +7,15 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div style=\"margin-top: 20px;\" class=\"panel panel-default filter-panel\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
+  buffer += "<div style=\"margin-top: 20px;\" class=\"panel panel-default filter-panel squid_api_filters-categorical-view\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"selected\">\n					<h4>Currently Selected Filters</h4>\n				</div>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-2\">\n				<div id=\"search\">\n				<form action=\"#\" role=\"search\">\n                <div class=\"form-group\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"navbarInput-01\" type=\"search\" placeholder=\"Search\">\n                    <span class=\"input-group-btn\">\n                      <button type=\"submit\" class=\"btn\"><i class=\"fa fa-search\"></i></button>\n                    </span>\n                  </div>\n                </div>\n              </form>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n\n			</div>\n			<div class=\"col-md-8\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				<div id=\"pagination-container\">\n					<div class=\"pagination\">\n            			<ul>\n              				<li class=\"previous\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-left\"></i></a></li>\n              				<li class=\"active\"><a href=\"#fakelink\">1</a></li>\n              				<li><a href=\"#fakelink\">2</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">8</a></li>\n              				<li class=\"next\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-right\"></i></a></li>\n            			</ul>\n          			</div>\n				</div>\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"collapse\"\n			data-target=\"";
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"selected\">\n					<h4>Currently Selected Filters</h4>\n				</div>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-2\">\n				<div id=\"search\">\n				<form action=\"#\" role=\"search\">\n                <div class=\"form-group\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"navbarInput-01\" type=\"search\" placeholder=\"Search\">\n                    <span class=\"input-group-btn\">\n                      <button type=\"submit\" class=\"btn\"><i class=\"fa fa-search\"></i></button>\n                    </span>\n                  </div>\n                </div>\n              </form>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n\n			</div>\n			<div class=\"col-md-8\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				<div id=\"pagination-container\">\n					<div class=\"pagination\">\n            			<ul>\n              				<li class=\"previous\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-left\"></i></a></li>\n              				<li class=\"active\"><a href=\"#fakelink\">1</a></li>\n              				<li><a href=\"#fakelink\">2</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">8</a></li>\n              				<li class=\"next\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-right\"></i></a></li>\n            			</ul>\n          			</div>\n				</div>\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\">Apply</button>\n		<button type=\"button\" class=\"btn btn-default\" data-toggle=\"collapse\"\n			data-target=\"";
+    + "\" data-clavier=\"true\">Apply</button>\n		<button type=\"button\" class=\"btn btn-default cancel-selection\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -252,6 +252,7 @@ function program4(depth0,data) {
     var View = Backbone.View.extend({
 
         model : null,
+        filters: null,
         format : null,
 
         initialize : function(options) {
@@ -264,6 +265,10 @@ function program4(depth0,data) {
                     this.format = function(val){return val;};
                 }
             }
+            if (options.filters) {
+                this.filters = options.filters;
+            }
+
             this.model.on("change", this.render, this);
         },
 
@@ -276,10 +281,32 @@ function program4(depth0,data) {
                     $(item.currentTarget).find("i").removeClass();
                     $(item.currentTarget).find("i").addClass("fa fa-square-o");
                 } else {
+                    // Style
                     $(item.currentTarget).addClass("active");
                     $(item.currentTarget).attr("selected", true);
                     $(item.currentTarget).find("i").removeClass();
                     $(item.currentTarget).find("i").addClass("fa fa-check-square-o");
+
+                    // Get selected Filter
+                    var selectedFilter = this.model.get("selectedFilter");
+                    var selectedItem = $(item.currentTarget).attr("data-attr");
+                    
+                    // Get clicked filter value
+                    var value = $(item.currentTarget).attr("data-id");
+                    var type = $(item.currentTarget).attr("data-type");
+                    var id = parseInt($(item.currentTarget).attr("data-id"));
+                    var selectObj = {id : id, type : type, value : value};
+
+                    // Get selected Filters
+                    var facets = this.filters.get("selection").facets;
+
+                    for (i=0; i<facets.length; i++) {
+                        if (facets[i].id === selectedFilter) {
+                            facets[i].selectedItems.push(selectObj);
+                        }
+                    }
+                    var selection = {facets:facets};
+                    this.filters.set("selection", selection);
                 }
             },
         },
@@ -297,13 +324,53 @@ function program4(depth0,data) {
                     if (ix % 12 === 0 && ix !== 0) {
                         toAppend += "</ul><ul>";
                     }
-                    toAppend += "<li data-attr=\"" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
+                    toAppend += "<li data-value=" + facetItems[ix].value + " data-type=" + facetItems[ix].type + " data-id=" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
                 }
                 toAppend += "</ul>";
             }
             this.$el.append(toAppend);
         }
 
+    });
+
+    return View;
+}));
+
+(function (root, factory) {
+    root.squid_api.view.CategoricalPagingView = factory(root.Backbone, root.squid_api);
+}(this, function (Backbone, squid_api) {
+
+    var View = Backbone.View.extend({
+
+        model : null,
+        filterStore : null,
+        format : null,
+
+        initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+            if (options.filterStore) {
+                this.filterStore = options.filterStore;
+            }
+
+            if (options.format) {
+                this.format = options.format;
+            } else {
+                if (d3) {
+                    this.format = d3.time.format("%Y-%m-%d");
+                } else {
+                    this.format = function(val){return val;};
+                }
+            }
+
+            this.model.on("change", this.render, this);
+            this.render();
+        },
+
+        render : function() {
+            
+        }
     });
 
     return View;
@@ -429,7 +496,22 @@ function program4(depth0,data) {
 
             view2 = new api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
-                model: this.filterStore
+                model: this.filterStore,
+                filters: this.model
+            });
+
+            view3 = new api.view.CategoricalPagingView({
+                el: $(this.filterPanel).find("#pagination-container"),
+                model: this.model,
+                filterStore : this.filterStore
+            });
+
+            var me = this;
+            $(this.filterPanel).find(".apply-selection").click(function() {
+                me.applySelection();
+            });
+            $(this.filterPanel).find(".cancel-selection").click(function() {
+                me.cancelSelection();
             });
 
             // Print Base Result Panel
@@ -481,14 +563,20 @@ function program4(depth0,data) {
                 }
             }
         },
+
+        applySelection : function() {
+            console.log(this.model.get("selection"));
+        },
+
+        cancelSelection : function() {
+            console.log("Cancel");
+        },
         
         applyPaging : function(pageIndex) {
             filterStore.set("pageIndex", pageIndex);
         }
         
     });
-    
-    
 
     return View;
 }));

@@ -10,6 +10,8 @@
         format : null,
         filterPanel : null,
         filterSelected : null,
+        nbPages : 10,
+        pageSize : 30,
 
         initialize : function(options) {
             if (!this.model) {
@@ -37,15 +39,18 @@
             this.filterStore = new Backbone.Model( { 
                 selectedFilter : null,
                 pageIndex : 0,
-                items : []}
+                facet : null,
+                itemIndex : 0
+            }
             );
             this.currentModel = new squid_api.model.FiltersJob();
             this.currentModel.on("change", this.render, this);
             this.setCurrentModel();
             
             this.model.on("change", this.setCurrentModel, this);
-            this.filterStore.on("change:selectedFilter", this.renderFacet, this);
+            this.filterStore.on("change:selectedFilter", this.selectFacet, this);
             this.filterStore.on("change:pageIndex", this.renderFacet, this);
+            this.filterStore.on("change:facet", this.renderPage, this);
         },
         
         setCurrentModel : function() {
@@ -73,59 +78,76 @@
                 filterStore : this.filterStore
             });
 
-            view2 = new api.view.CategoricalFacetView({
-                el: $(this.filterPanel).find("#filter-display-results"),
-                model: this.filterStore
-            });
-
             // Print Base Result Panel
             $(this.filterSelected).addClass("squid_api_filters_categorical_selected_filters").html("selected");
         }, 
         
-        renderFacet : function() {
+        selectFacet : function() {
             var me = this;
-            var maxResults = 30;
-            var startIndex = this.filterStore.get("pageIndex") * maxResults;
+
+            var startIndex = this.filterStore.get("pageIndex") * this.pageSize;
             
             if (this.currentModel.get("status") === "DONE") {
                 if (this.currentModel.get("selection")) {
-                    var facets = this.currentModel.get("selection").facets;
-                    var selectedFacet = this.filterStore.get("selectedFilter");
-                    var facet;
-                    for (i=0; i<facets.length; i++) {
-                        if (facets[i].id === selectedFacet) {
-                            facet = facets[i];
+                    var selectedFacetId = this.filterStore.get("selectedFilter");
+                    var facet = this.filterStore.get("facet");
+                    var fetch = false;
+                    if ((facet) && (facet.get("id") == selectedFacetId)) {
+                        var currentMaxIndex = this.filterStore.get("itemIndex") + facet.get("items").length;
+                        if ((startIndex > currentMaxIndex) && (facet.hasMore === true)) {
+                            fetch = true;
                         }
+                    } else {
+                        fetch = true;
                     }
-                    if (facet) {
-                        if ((facet.items.length < (startIndex + maxResults)) && (facet.hasMore === true)) {
-                            // poll for facet members
-                            this.$el.html("Retrieving items list...");
-                            var facetJob = new squid_api.model.ProjectFacetJobFacet();
-                            facetJob.set("id",this.currentModel.get("id"));
-                            facetJob.set("oid", facet.id);
-                            if (startIndex) {
-                                facetJob.addParameter("startIndex", startIndex);
-                            }
-                            if (maxResults) {
-                                facetJob.addParameter("maxResults", maxResults);
-                            }
-                            // get the results from API
-                            facetJob.fetch({
-                                error: function(model, response) {
-                                    console.error(response);
-                                },
-                                success: function(model, response) {
-                                    me.filterStore.set("items", model.get("items"));
-                                }
-                            });
-                        } else {
-                            // display current facet members
-                            me.filterStore.set("items", facet.items);
+                    
+                    if (fetch === true) {
+                        // pre-fetch some pages of facet members
+                        this.$el.html("Retrieving items list...");
+                        var facetJob = new squid_api.model.ProjectFacetJobFacet();
+                        facetJob.set("id",this.currentModel.get("id"));
+                        facetJob.set("oid", selectedFacetId);
+                        if (startIndex) {
+                            facetJob.addParameter("startIndex", startIndex);
                         }
+                        if (this.pageSize) {
+                            facetJob.addParameter("maxResults", this.nbPages * this.pageSize);
+                        }
+                        // get the results from API
+                        facetJob.fetch({
+                            error: function(model, response) {
+                                console.error(response);
+                            },
+                            success: function(model, response) {
+                                me.filterStore.set("itemIndex", startIndex);
+                                me.filterStore.set("facet", model);
+                            }
+                        });
                     }
                 }
             }
+        },
+        
+        renderPage : function() {
+            var $el = $(this.filterPanel).find("#filter-display-results");
+            var facetItems = this.filterStore.get("facet").get("items");
+            var pageIndex = this.filterStore.get("pageIndex");
+            $el.html("");
+            var toAppend = "";
+            if (facetItems.length === 0) {
+                $el.append("No items");
+            } else {
+                // display current facet members
+                toAppend += "<ul>";
+                for (ix=(pageIndex * this.pageSize); ((ix<((pageIndex * this.pageSize) + this.pageSize)) && (ix<facetItems.length)); ix++) {
+                    if (ix % 10 === 0 && ix !== 0) {
+                        toAppend += "</ul><ul>";
+                    }
+                    toAppend += "<li data-attr=\"" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
+                }
+                toAppend += "</ul>";
+            }
+            $el.append(toAppend);
         },
         
         applyPaging : function(pageIndex) {

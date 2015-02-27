@@ -1,6 +1,37 @@
 this["squid_api"] = this["squid_api"] || {};
 this["squid_api"]["template"] = this["squid_api"]["template"] || {};
 
+this["squid_api"]["template"]["squid_api_filters_categorical_selected_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n    <li attr-id=\"";
+  if (helper = helpers.facetItemId) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.facetItemId); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" attr-name=\"";
+  if (helper = helpers.facetNameId) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.facetNameId); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">\n        <div class=\"facet-name\">\n            "
+    + escapeExpression(((stack1 = (depth0 && depth0.facetName)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\n        </div>\n        <div class=\"facet-value\">\n            "
+    + escapeExpression(((stack1 = (depth0 && depth0.facetItem)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\n        </div>\n        <div class=\"facet-remove\">\n            <i class=\"glyphicon glyphicon-remove\"></i>\n        </div>\n    </li>\n  ";
+  return buffer;
+  }
+
+  buffer += "<ul class=\"facets\">\n  ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.facets), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</ul>";
+  return buffer;
+  });
+
 this["squid_api"]["template"]["squid_api_filters_categorical_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -246,6 +277,50 @@ function program4(depth0,data) {
   return buffer;
   });
 (function (root, factory) {
+    root.squid_api.view.CategoricalExternalSelectedView = factory(root.Backbone, root.squid_api);
+}(this, function (Backbone, squid_api) {
+
+    var View = Backbone.View.extend({
+
+        model : null,
+        filterStore : null,
+        format : null,
+
+        initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+            if (options.filterStore) {
+                this.filterStore = options.filterStore;
+            }
+
+            this.filterPanelTemplate = squid_api.template.squid_api_selection_widget;
+
+            if (options.format) {
+                this.format = options.format;
+            } else {
+                if (d3) {
+                    this.format = d3.time.format("%Y-%m-%d");
+                } else {
+                    this.format = function(val){return val;};
+                }
+            }
+
+            this.model.on("change", this.render, this);
+            this.render();
+        },
+
+        render : function() {
+            var me = this;
+
+            this.$el.html(this.filterPanelTemplate());
+        }
+    });
+
+    return View;
+}));
+
+(function (root, factory) {
     root.squid_api.view.CategoricalFacetView = factory(root.Backbone, root.squid_api);
 }(this, function (Backbone, squid_api) {
 
@@ -293,7 +368,7 @@ function program4(depth0,data) {
                     // Get clicked filter value & create object
                     var value = $(item.currentTarget).attr("data-id");
                     var type = $(item.currentTarget).attr("data-type");
-                    var id = parseInt($(item.currentTarget).attr("data-id"));
+                    var id = $(item.currentTarget).attr("data-id");
                     var selectObj = {id : id, type : type, value : value};
 
                     // Get selected Filters
@@ -309,6 +384,7 @@ function program4(depth0,data) {
                     // Set the updated filters model
                     var selection = {facets:facets};
                     this.filters.set("selection", selection);
+                    this.filters.trigger("change");
                 }
             },
         },
@@ -330,7 +406,7 @@ function program4(depth0,data) {
                         if (ix % 10 === 0 && ix !== 0) {
                             toAppend += "</ul><ul>";
                         }
-                        toAppend += "<li data-value=" + facetItems[ix].value + " data-type=" + facetItems[ix].type + " data-id=" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
+                        toAppend += "<li data-value=" + facetItems[ix].value + " data-type=" + facetItems[ix].type + " data-id=" + facetItems[ix].id + "><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
                     }
                     toAppend += "</ul>";
                 }
@@ -339,6 +415,92 @@ function program4(depth0,data) {
         }
 
     });
+
+    return View;
+}));
+
+(function (root, factory) {
+    root.squid_api.view.CategoricalInternalSelectedView = factory(root.Backbone, root.squid_api);
+}(this, function (Backbone, squid_api) {
+
+    var View = Backbone.View.extend({
+
+        model : null,
+        filterStore : null,
+        format : null,
+
+        initialize : function(options) {
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+            if (options.filterStore) {
+                this.filterStore = options.filterStore;
+            }
+
+            this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
+
+            if (options.format) {
+                this.format = options.format;
+            } else {
+                if (d3) {
+                    this.format = d3.time.format("%Y-%m-%d");
+                } else {
+                    this.format = function(val){return val;};
+                }
+            }
+
+            this.render();
+        },
+
+        events: {
+            "click .facet-remove": function(event) {
+                // Obtain facet name / value
+                var facetName = $(event.currentTarget).parent("li").attr("attr-name");
+                var facetId = $(event.currentTarget).parent("li").attr("attr-id");
+
+                var selection = this.model.get("selection");
+                if (selection) {
+                    if (selection.facets) {
+                        var facets = selection.facets;
+                        var updatedFacets = {facets:[]};
+                        for (i=0; i<facets.length; i++) {
+                            var selectedItems = facets[i].selectedItems;
+                            for (ix=0; ix<selectedItems.length; ix++) {
+                                if (facets[i].id !== facetName) {
+                                    updatedFacets.facets.push(facets[i]);
+                                }
+                            }
+                        }
+                    this.model.set("selection", updatedFacets);
+                    }
+                }
+            }
+        },
+
+        render : function() {
+            var selection = this.model.get("selection");
+            var selFacets = [];
+            if (selection) {
+                 if (selection.facets) {
+                    var facets = selection.facets;
+                    for (i=0; i<facets.length; i++) {
+                        var selectedItems = facets[i].selectedItems;
+                            if (facets[i].dimension.type !== "CONTINUOUS") {
+                                for (ix=0; ix<selectedItems.length; ix++) {
+                                    var obj = {};
+                                    obj.facetItem = selectedItems[ix].value;
+                                    obj.facetItemId = selectedItems[ix].id;
+                                    obj.facetName = facets[i].dimension.name;
+                                    obj.facetNameId = facets[i].id;
+                                    selFacets.push(obj);
+                                }
+                            }
+                        }
+                    }
+                }
+                this.$el.html(this.filterPanelTemplate({facets: selFacets}));
+            }
+        });
 
     return View;
 }));
@@ -523,13 +685,23 @@ function program4(depth0,data) {
             view2 = new api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
                 model: this.filterStore,
-                filters: this.model
+                filters: this.currentModel,
             });
 
             view3 = new api.view.CategoricalPagingView({
                 el: $(this.filterPanel).find("#pagination-container"),
                 model: this.currentModel,
                 filterStore : this.filterStore
+            });
+
+            view4 = new api.view.CategoricalInternalSelectedView({
+                el: $(this.filterPanel).find("#selected"),
+                model: this.currentModel
+            });
+
+            view5 = new api.view.CategoricalExternalSelectedView({
+                el: this.filterSelected,
+                model: this.model
             });
 
             var me = this;
@@ -539,7 +711,7 @@ function program4(depth0,data) {
             $(this.filterPanel).find(".cancel-selection").click(function() {
                 me.cancelSelection();
             });
-            
+
             // Print Base Result Panel
             $(this.filterSelected).addClass("squid_api_filters_categorical_selected_filters").html("selected");
         }, 
@@ -565,7 +737,7 @@ function program4(depth0,data) {
                     
                     if (fetch === true) {
                         // pre-fetch some pages of facet members
-                        this.$el.html("Retrieving items list...");
+                        // this.$el.html("Retrieving items list...");
                         var facetJob = new squid_api.model.ProjectFacetJobFacet();
                         facetJob.set("id",this.currentModel.get("id"));
                         facetJob.set("oid", selectedFacetId);
@@ -591,7 +763,8 @@ function program4(depth0,data) {
         },
         
         applySelection : function() {
-            console.log(this.model.get("selection"));
+            var currentModelSelection = this.currentModel.get("selection");
+            this.model.set("selection", currentModelSelection);
         },
 
         cancelSelection : function() {

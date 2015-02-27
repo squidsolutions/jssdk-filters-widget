@@ -46,7 +46,7 @@
                     // Get clicked filter value & create object
                     var value = $(item.currentTarget).attr("data-id");
                     var type = $(item.currentTarget).attr("data-type");
-                    var id = parseInt($(item.currentTarget).attr("data-id"));
+                    var id = $(item.currentTarget).attr("data-id");
                     var selectObj = {id : id, type : type, value : value};
 
                     // Get selected Filters
@@ -62,6 +62,7 @@
                     // Set the updated filters model
                     var selection = {facets:facets};
                     this.filters.set("selection", selection);
+                    this.filters.trigger("change");
                 }
             },
         },
@@ -83,7 +84,7 @@
                         if (ix % 10 === 0 && ix !== 0) {
                             toAppend += "</ul><ul>";
                         }
-                        toAppend += "<li data-value=" + facetItems[ix].value + " data-type=" + facetItems[ix].type + " data-id=" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
+                        toAppend += "<li data-value=" + facetItems[ix].value + " data-type=" + facetItems[ix].type + " data-id=" + facetItems[ix].id + "><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
                     }
                     toAppend += "</ul>";
                 }

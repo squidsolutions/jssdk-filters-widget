@@ -1,0 +1,15 @@
+<ul class="facets">
+  {{#each facets}}
+    <li attr-id="{{facetItemId}}" attr-name="{{facetNameId}}">
+        <div class="facet-name">
+            {{this.facetName}}
+        </div>
+        <div class="facet-value">
+            {{this.facetItem}}
+        </div>
+        <div class="facet-remove">
+            <i class="glyphicon glyphicon-remove"></i>
+        </div>
+    </li>
+  {{/each}}
+</ul>

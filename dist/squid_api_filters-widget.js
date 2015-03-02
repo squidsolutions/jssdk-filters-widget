@@ -623,7 +623,7 @@ function program4(depth0,data) {
                 }
             }
 
-            this.render();
+            this.model.on("change", this.render, this);
         },
 
         events: {

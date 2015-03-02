@@ -617,7 +617,7 @@ function program4(depth0,data) {
                 }
             }
 
-            this.render();
+            this.model.on("change", this.render, this);
         },
 
         events: {
@@ -899,7 +899,6 @@ function program4(depth0,data) {
             }
             );
             this.currentModel = new squid_api.model.FiltersJob();
-            this.currentModel.on("change", this.render, this);
             this.setCurrentModel();
             
             this.model.on("change", this.setCurrentModel, this);
@@ -908,6 +907,8 @@ function program4(depth0,data) {
                 this.filterStore.trigger("change:pageIndex", this.filterStore);
             }, this);
             this.filterStore.on("change:pageIndex", this.renderFacet, this);
+
+            this.render();
         },
         
         setCurrentModel : function() {

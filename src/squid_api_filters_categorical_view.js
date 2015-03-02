@@ -51,7 +51,6 @@
             }
             );
             this.currentModel = new squid_api.model.FiltersJob();
-            this.currentModel.on("change", this.render, this);
             this.setCurrentModel();
             
             this.model.on("change", this.setCurrentModel, this);
@@ -60,6 +59,8 @@
                 this.filterStore.trigger("change:pageIndex", this.filterStore);
             }, this);
             this.filterStore.on("change:pageIndex", this.renderFacet, this);
+
+            this.render();
         },
         
         setCurrentModel : function() {

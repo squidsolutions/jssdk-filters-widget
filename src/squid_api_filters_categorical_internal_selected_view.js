@@ -28,7 +28,7 @@
                 }
             }
 
-            this.render();
+            this.model.on("change", this.render, this);
         },
 
         events: {

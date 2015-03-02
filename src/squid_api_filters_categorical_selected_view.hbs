@@ -1,15 +1,20 @@
-<ul class="facets">
-  {{#each facets}}
-    <li attr-id="{{facetItemId}}" attr-name="{{facetNameId}}">
-        <div class="facet-name">
-            {{this.facetName}}
-        </div>
-        <div class="facet-value">
-            {{this.facetItem}}
-        </div>
-        <div class="facet-remove">
-            <i class="glyphicon glyphicon-remove"></i>
-        </div>
-    </li>
-  {{/each}}
-</ul>
+{{#if noData}}
+    {{noDataMessage}}
+{{else}}
+    <ul class="facets" id="squid_api_filters_categorical_selected_view">
+        {{#each facets}}
+            <li attr-id="{{facetItemId}}" attr-name="{{facetNameId}}">
+                <div class="facet-name">
+                    {{this.facetName}}
+                </div>
+                <div class="facet-value">
+                    {{this.facetItem}}
+                </div>
+                <div class="facet-remove">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </div>
+            </li>
+        {{/each}}
+    </ul>
+{{/if}}
+

@@ -44,13 +44,23 @@
                         var updatedFacets = {facets:[]};
                         for (i=0; i<facets.length; i++) {
                             var selectedItems = facets[i].selectedItems;
-                            for (ix=0; ix<selectedItems.length; ix++) {
-                                if (facets[i].id !== facetName) {
-                                    updatedFacets.facets.push(facets[i]);
+                            if (selectedItems.length > 0) {
+                                var arr = [];
+                                for (ix=0; ix<selectedItems.length; ix++) {
+                                    if (selectedItems[ix].id) {
+                                        if (facetId !== selectedItems[ix].id) {
+                                            arr.push(selectedItems[ix]);
+                                        }
+                                    }
                                 }
+                                facets[i].selectedItems = arr;
+                                updatedFacets.facets.push(facets[i]);
+                            } else {
+                                updatedFacets.facets.push(facets[i]);
                             }
                         }
-                    this.model.set("selection", updatedFacets);
+                        this.model.set("selection", updatedFacets);
+                        this.model.trigger("change");             
                     }
                 }
             }
@@ -59,6 +69,8 @@
         render : function() {
             var selection = this.model.get("selection");
             var selFacets = [];
+            var noData = true;
+            var noDataMessage = "No Filters Selected";
             if (selection) {
                  if (selection.facets) {
                     var facets = selection.facets;
@@ -66,6 +78,7 @@
                         var selectedItems = facets[i].selectedItems;
                             if (facets[i].dimension.type !== "CONTINUOUS") {
                                 for (ix=0; ix<selectedItems.length; ix++) {
+                                    noData = false;
                                     var obj = {};
                                     obj.facetItem = selectedItems[ix].value;
                                     obj.facetItemId = selectedItems[ix].id;
@@ -77,7 +90,7 @@
                         }
                     }
                 }
-                this.$el.html(this.filterPanelTemplate({facets: selFacets}));
+                this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: noDataMessage}));
             }
         });
 

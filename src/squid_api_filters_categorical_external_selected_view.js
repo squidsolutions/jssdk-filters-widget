@@ -16,7 +16,7 @@
                 this.filterStore = options.filterStore;
             }
 
-            this.filterPanelTemplate = squid_api.template.squid_api_selection_widget;
+            this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
 
             if (options.format) {
                 this.format = options.format;
@@ -32,12 +32,68 @@
             this.render();
         },
 
-        render : function() {
-            var me = this;
+        events: {
+            "click .facet-remove": function(event) {
+                // Obtain facet name / value
+                var facetName = $(event.currentTarget).parent("li").attr("attr-name");
+                var facetId = $(event.currentTarget).parent("li").attr("attr-id");
 
-            this.$el.html(this.filterPanelTemplate());
-        }
-    });
+                var selection = this.model.get("selection");
+                if (selection) {
+                    if (selection.facets) {
+                        var facets = selection.facets;
+                        var updatedFacets = {facets:[]};
+                        for (i=0; i<facets.length; i++) {
+                            var selectedItems = facets[i].selectedItems;
+                            if (selectedItems.length > 0) {
+                                var arr = [];
+                                for (ix=0; ix<selectedItems.length; ix++) {
+                                    if (selectedItems[ix].id) {
+                                        if (facetId !== selectedItems[ix].id) {
+                                            arr.push(selectedItems[ix]);
+                                        }
+                                    }
+                                }
+                                facets[i].selectedItems = arr;
+                                updatedFacets.facets.push(facets[i]);
+                            } else {
+                                updatedFacets.facets.push(facets[i]);
+                            }
+                        }
+                        this.model.set("selection", updatedFacets);  
+                        this.model.trigger("change");
+                    }
+                }
+            }
+        },
+
+        render : function() {
+            var selection = this.model.get("selection");
+            var selFacets = [];
+            var noData = true;
+            var noDataMessage = "All";
+            if (selection) {
+                 if (selection.facets) {
+                    var facets = selection.facets;
+                    for (i=0; i<facets.length; i++) {
+                        var selectedItems = facets[i].selectedItems;
+                            if (facets[i].dimension.type !== "CONTINUOUS") {
+                                for (ix=0; ix<selectedItems.length; ix++) {
+                                    noData = false;
+                                    var obj = {};
+                                    obj.facetItem = selectedItems[ix].value;
+                                    obj.facetItemId = selectedItems[ix].id;
+                                    obj.facetName = facets[i].dimension.name;
+                                    obj.facetNameId = facets[i].id;
+                                    selFacets.push(obj);
+                                }
+                            }
+                        }
+                    }
+                }
+                this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: noDataMessage}));
+            }
+        });
 
     return View;
 }));

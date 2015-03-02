@@ -59,6 +59,7 @@
                 this.filterStore.trigger("change:pageIndex", this.filterStore);
             }, this);
             this.filterStore.on("change:pageIndex", this.renderFacet, this);
+
             this.render();
         },
         

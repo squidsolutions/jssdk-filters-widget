@@ -914,6 +914,7 @@ function program4(depth0,data) {
                 this.filterStore.trigger("change:pageIndex", this.filterStore);
             }, this);
             this.filterStore.on("change:pageIndex", this.renderFacet, this);
+
             this.render();
         },
         

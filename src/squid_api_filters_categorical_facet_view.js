@@ -22,7 +22,8 @@
                 this.filters = options.filters;
             }
 
-            this.model.on("change", this.render, this);
+            this.model.on("change:pageIndex", this.render, this);
+            this.model.on("change:facet", this.render, this);
         },
 
         events: {
@@ -69,7 +70,6 @@
 
         render : function() {
             var facet = this.model.get("facet");
-            var html = "";
             if (facet) {
                 var facetItems = facet.get("items");
                 var pageIndex = this.model.get("pageIndex");
@@ -77,24 +77,30 @@
                 var itemIndex = this.model.get("itemIndex");
 
                 if (facetItems.length === 0) {
-                    html = "No Items";
+                    this.$el.html("No Items");
                 } else {
                     // display current facet members
                     var startIndex = (pageIndex * pageSize) - itemIndex;
-                    var endIndex = (pageIndex * pageSize) + pageSize;
-                    if (endIndex > (itemIndex + facetItems.length)) {
-                        endIndex = itemIndex + facetItems.length;
+                    var endIndex = startIndex + pageSize;
+                    if (endIndex > facetItems.length) {
+                        endIndex = facetItems.length;
                     }
                     var items = [];
                     for (ix=startIndex; ix<endIndex; ix++) {
                         items.push(facetItems[ix]);
                     }
-                    html = squid_api.template.squid_api_filters_categorical_facet_view({
-                        "items" : items
-                    });
+                    if (items.length>0) {
+                        var html = squid_api.template.squid_api_filters_categorical_facet_view({
+                            "items" : items
+                        });
+                        this.$el.html(html);
+                    } else {
+                        // computing in progress
+                    }
                 }
+                
             }
-            this.$el.html(html);
+            
         }
 
     });

@@ -507,7 +507,8 @@ function program4(depth0,data) {
                 this.filters = options.filters;
             }
 
-            this.model.on("change", this.render, this);
+            this.model.on("change:pageIndex", this.render, this);
+            this.model.on("change:facet", this.render, this);
         },
 
         events: {
@@ -554,7 +555,6 @@ function program4(depth0,data) {
 
         render : function() {
             var facet = this.model.get("facet");
-            var html = "";
             if (facet) {
                 var facetItems = facet.get("items");
                 var pageIndex = this.model.get("pageIndex");
@@ -562,24 +562,30 @@ function program4(depth0,data) {
                 var itemIndex = this.model.get("itemIndex");
 
                 if (facetItems.length === 0) {
-                    html = "No Items";
+                    this.$el.html("No Items");
                 } else {
                     // display current facet members
                     var startIndex = (pageIndex * pageSize) - itemIndex;
-                    var endIndex = (pageIndex * pageSize) + pageSize;
-                    if (endIndex > (itemIndex + facetItems.length)) {
-                        endIndex = itemIndex + facetItems.length;
+                    var endIndex = startIndex + pageSize;
+                    if (endIndex > facetItems.length) {
+                        endIndex = facetItems.length;
                     }
                     var items = [];
                     for (ix=startIndex; ix<endIndex; ix++) {
                         items.push(facetItems[ix]);
                     }
-                    html = squid_api.template.squid_api_filters_categorical_facet_view({
-                        "items" : items
-                    });
+                    if (items.length>0) {
+                        var html = squid_api.template.squid_api_filters_categorical_facet_view({
+                            "items" : items
+                        });
+                        this.$el.html(html);
+                    } else {
+                        // computing in progress
+                    }
                 }
+                
             }
-            this.$el.html(html);
+            
         }
 
     });
@@ -710,7 +716,8 @@ function program4(depth0,data) {
                 }
             }
 
-            this.model.on("change", this.render, this);
+            this.model.on("change:pageIndex", this.render, this);
+            this.model.on("change:facet", this.render, this);
             this.render();
         },
         
@@ -899,7 +906,6 @@ function program4(depth0,data) {
             }
             );
             this.currentModel = new squid_api.model.FiltersJob();
-            this.currentModel.on("change", this.render, this);
             this.setCurrentModel();
             
             this.model.on("change", this.setCurrentModel, this);
@@ -908,6 +914,7 @@ function program4(depth0,data) {
                 this.filterStore.trigger("change:pageIndex", this.filterStore);
             }, this);
             this.filterStore.on("change:pageIndex", this.renderFacet, this);
+            this.render();
         },
         
         setCurrentModel : function() {

@@ -787,6 +787,8 @@ function program4(depth0,data) {
                         "pages" : pages,
                         "next" : next
                     }));
+                } else {
+                    this.$el.html("");
                 }
             }
         }
@@ -910,7 +912,7 @@ function program4(depth0,data) {
             
             this.model.on("change", this.setCurrentModel, this);
             this.filterStore.on("change:selectedFilter", function() {
-                this.filterStore.set("pageIndex", 0);
+                this.filterStore.set({"pageIndex": 0}, {"silent" : true});
                 this.filterStore.trigger("change:pageIndex", this.filterStore);
             }, this);
             this.filterStore.on("change:pageIndex", this.renderFacet, this);

@@ -93,6 +93,8 @@
                         "pages" : pages,
                         "next" : next
                     }));
+                } else {
+                    this.$el.html("");
                 }
             }
         }

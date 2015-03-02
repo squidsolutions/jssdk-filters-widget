@@ -46,7 +46,7 @@
                     // Get clicked filter value & create object
                     var value = $(item.currentTarget).attr("data-id");
                     var type = $(item.currentTarget).attr("data-type");
-                    var id = parseInt($(item.currentTarget).attr("data-id"));
+                    var id = $(item.currentTarget).attr("data-id");
                     var selectObj = {id : id, type : type, value : value};
 
                     // Get selected Filters
@@ -62,6 +62,7 @@
                     // Set the updated filters model
                     var selection = {facets:facets};
                     this.filters.set("selection", selection);
+                    this.filters.trigger("change");
                 }
             },
         },

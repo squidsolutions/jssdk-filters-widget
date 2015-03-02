@@ -1,6 +1,26 @@
 .squid_api_filters_categorical_button {
   margin-bottom: 10px; }
 
+#squid_api_filters_categorical_selected_view {
+  list-style-type: none;
+  padding-left: 0px; }
+  #squid_api_filters_categorical_selected_view li {
+    background: #fff;
+    position: relative;
+    min-width: 150px;
+    display: inline-block;
+    margin: 0px 20px 0px 0px;
+    border-radius: 4px;
+    border: 1px solid #95a5a6;
+    padding: 5px !important; }
+    #squid_api_filters_categorical_selected_view li .facet-name, #squid_api_filters_categorical_selected_view li .facet-value {
+      text-align: left; }
+    #squid_api_filters_categorical_selected_view li .facet-remove {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      cursor: pointer; }
+
 .squid_api_filters_categorical_filter_panel #selected {
   text-align: center; }
 .squid_api_filters_categorical_filter_panel #filter-selection .btn-group {

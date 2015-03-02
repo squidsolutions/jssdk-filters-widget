@@ -90,12 +90,22 @@
             view2 = new api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
                 model: this.filterStore,
-                filters: this.model
+                filters: this.currentModel,
             });
 
             view3 = new api.view.CategoricalPagingView({
                 el: $(this.filterPanel).find("#pagination-container"),
                 model: this.filterStore
+            });
+
+            view4 = new api.view.CategoricalInternalSelectedView({
+                el: $(this.filterPanel).find("#selected"),
+                model: this.currentModel
+            });
+
+            view5 = new api.view.CategoricalExternalSelectedView({
+                el: this.filterSelected,
+                model: this.model
             });
 
             var me = this;
@@ -105,9 +115,6 @@
             $(this.filterPanel).find(".cancel-selection").click(function() {
                 me.cancelSelection();
             });
-            
-            // Print Base Result Panel
-            $(this.filterSelected).addClass("squid_api_filters_categorical_selected_filters").html("selected");
         }, 
         
         renderFacet : function() {
@@ -144,7 +151,7 @@
                     
                     if (fetch === true) {
                         // pre-fetch some pages of facet members
-                        this.$el.html("Retrieving items list...");
+                        // this.$el.html("Retrieving items list...");
                         var facetJob = new squid_api.model.ProjectFacetJobFacet();
                         facetJob.set("id",this.currentModel.get("id"));
                         facetJob.set("oid", selectedFacetId);
@@ -171,7 +178,8 @@
         },
         
         applySelection : function() {
-            console.log(this.model.get("selection"));
+            var currentModelSelection = this.currentModel.get("selection");
+            this.model.set("selection", currentModelSelection);
         },
 
         cancelSelection : function() {

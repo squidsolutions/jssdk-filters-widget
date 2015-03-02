@@ -1,10 +1,10 @@
 .squid_api_filters_categorical_button {
   margin-bottom: 10px; }
 
-#squid_api_filters_categorical_selected_view {
+#squid_api_filters_categorical_selected_view, #squid_api_filters-categorical-panel-view {
   list-style-type: none;
   padding-left: 0px; }
-  #squid_api_filters_categorical_selected_view li {
+  #squid_api_filters_categorical_selected_view li, #squid_api_filters-categorical-panel-view li {
     background: #fff;
     position: relative;
     min-width: 150px;
@@ -13,16 +13,29 @@
     border-radius: 4px;
     border: 1px solid #95a5a6;
     padding: 5px !important; }
-    #squid_api_filters_categorical_selected_view li .facet-name, #squid_api_filters_categorical_selected_view li .facet-value {
+    #squid_api_filters_categorical_selected_view li .facet-name, #squid_api_filters_categorical_selected_view li .facet-value, #squid_api_filters-categorical-panel-view li .facet-name, #squid_api_filters-categorical-panel-view li .facet-value {
       text-align: left; }
-    #squid_api_filters_categorical_selected_view li .facet-remove {
+    #squid_api_filters_categorical_selected_view li .facet-remove, #squid_api_filters-categorical-panel-view li .facet-remove {
       position: absolute;
       right: 5px;
       top: 5px;
       cursor: pointer; }
 
-.squid_api_filters_categorical_filter_panel #selected {
+.squid_api_filters_categorical_filter_panel #squid_api_filters_categorical_selected_view li {
+  width: 100%;
+  margin-bottom: 10px; }
+.squid_api_filters_categorical_filter_panel .panel-body {
+  padding: 0px; }
+.squid_api_filters_categorical_filter_panel .row {
+  padding-left: 20px;
+  padding-right: 20px; }
+  .squid_api_filters_categorical_filter_panel .row:first-of-type {
+    padding-top: 20px; }
+.squid_api_filters_categorical_filter_panel h4 {
   text-align: center; }
+.squid_api_filters_categorical_filter_panel #selected {
+  text-align: center;
+  padding-bottom: 20px; }
 .squid_api_filters_categorical_filter_panel #filter-selection .btn-group {
   width: 100%; }
   .squid_api_filters_categorical_filter_panel #filter-selection .btn-group button {
@@ -123,14 +136,18 @@
     padding-left: 0px;
     list-style-type: none;
     display: inline-block;
+    width: 100%;
     float: left;
     min-width: 15%;
     padding-right: 10px; }
     .squid_api_filters_categorical_filter_panel #filter-display-results ul li {
       position: relative;
       min-height: 20px;
+      border-radius: 8px;
+      width: 100%;
+      padding: 5px;
+      margin: 5px;
       display: inline-block;
-      margin-top: 2px;
       font-size: 14px;
       float: left;
       clear: both;
@@ -140,9 +157,20 @@
       -webkit-transition: .25s;
       transition: .25s; }
       .squid_api_filters_categorical_filter_panel #filter-display-results ul li i {
-        padding-right: 15px;
-        font-size: 15px; }
-      .squid_api_filters_categorical_filter_panel #filter-display-results ul li:hover i, .squid_api_filters_categorical_filter_panel #filter-display-results ul li.active i {
+        font-size: 15px;
+        width: 25px;
+        position: relative;
+        top: 2px;
+        left: 3px; }
+        .squid_api_filters_categorical_filter_panel #filter-display-results ul li i:before {
+          content: ""; }
+      .squid_api_filters_categorical_filter_panel #filter-display-results ul li:hover {
+        background: #f9f9f9; }
+        .squid_api_filters_categorical_filter_panel #filter-display-results ul li:hover i {
+          display: inline-block; }
+          .squid_api_filters_categorical_filter_panel #filter-display-results ul li:hover i:before {
+            content: "\f096"; }
+      .squid_api_filters_categorical_filter_panel #filter-display-results ul li.active i {
         display: inline-block; }
-      .squid_api_filters_categorical_filter_panel #filter-display-results ul li span {
-        float: right; }
+        .squid_api_filters_categorical_filter_panel #filter-display-results ul li.active i:before {
+          content: "\f046"; }

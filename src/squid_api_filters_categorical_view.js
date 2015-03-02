@@ -36,11 +36,18 @@
             }
 
             this.filterStore = new Backbone.Model( { 
-                selectedFilter : null,
-                pageIndex : 0,
-                pageSize : 30,
-                facet : null,
-                itemIndex : 0
+                // selected dimension
+                selectedFilter : null,  
+                // current selected page
+                pageIndex : 0,          
+                // nb of items in a page
+                pageSize : 10,          
+                // nb of pages to display
+                nbPages : 10,
+                // current facet retrieved from API
+                facet : null,           
+                // index id of the first item of facet
+                itemIndex : 0           
             }
             );
             this.currentModel = new squid_api.model.FiltersJob();
@@ -48,8 +55,11 @@
             this.setCurrentModel();
             
             this.model.on("change", this.setCurrentModel, this);
-            this.filterStore.on("change:selectedFilter", this.selectFacet, this);
-            this.filterStore.on("change:pageIndex", this.selectFacet, this);
+            this.filterStore.on("change:selectedFilter", function() {
+                this.filterStore.set("pageIndex", 0);
+                this.filterStore.trigger("change:pageIndex", this.filterStore);
+            }, this);
+            this.filterStore.on("change:pageIndex", this.renderFacet, this);
         },
         
         setCurrentModel : function() {
@@ -85,8 +95,7 @@
 
             view3 = new api.view.CategoricalPagingView({
                 el: $(this.filterPanel).find("#pagination-container"),
-                model: this.currentModel,
-                filterStore : this.filterStore
+                model: this.filterStore
             });
 
             var me = this;
@@ -101,19 +110,32 @@
             $(this.filterSelected).addClass("squid_api_filters_categorical_selected_filters").html("selected");
         }, 
         
-        selectFacet : function() {
+        renderFacet : function() {
             var me = this;
-            var pageSize = this.filterStore.get("pageSize");
-            var startIndex = this.filterStore.get("pageIndex") * pageSize;
             
             if (this.currentModel.get("status") === "DONE") {
                 if (this.currentModel.get("selection")) {
                     var selectedFacetId = this.filterStore.get("selectedFilter");
+                    var pageIndex = this.filterStore.get("pageIndex");
+                    var pageSize = this.filterStore.get("pageSize");
                     var facet = this.filterStore.get("facet");
+                    var nbPages = this.filterStore.get("nbPages");
+                    
+                    // compute required index range
+                    var startIndex = pageIndex * pageSize;
+                    var endIndex = startIndex + pageSize;
+                    
+                    // check if we need to fetch more items
                     var fetch = false;
                     if ((facet) && (facet.get("id") == selectedFacetId)) {
-                        var currentMaxIndex = this.filterStore.get("itemIndex") + facet.get("items").length;
-                        if ((startIndex > currentMaxIndex) && (facet.hasMore === true)) {
+                        var itemIndex = this.filterStore.get("itemIndex");
+
+                        // compute what's the max index
+                        var maxItem = itemIndex + facet.get("items").length;     
+                        if (startIndex < itemIndex) {
+                            fetch = true;
+                        }
+                        if ((endIndex > maxItem) && (facet.get("hasMore") === true)) {
                             fetch = true;
                         }
                     } else {
@@ -130,7 +152,8 @@
                             facetJob.addParameter("startIndex", startIndex);
                         }
                         if (pageSize) {
-                            facetJob.addParameter("maxResults", this.nbPages * pageSize);
+                            // +1 because the API returns -1 items
+                            facetJob.addParameter("maxResults", (nbPages * pageSize) + 1);
                         }
                         // get the results from API
                         facetJob.fetch({

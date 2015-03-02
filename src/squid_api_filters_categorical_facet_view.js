@@ -68,27 +68,32 @@
 
         render : function() {
             var facet = this.model.get("facet");
+            var html = "";
             if (facet) {
                 var facetItems = facet.get("items");
                 var pageIndex = this.model.get("pageIndex");
                 var pageSize = this.model.get("pageSize");
-                this.$el.html("");
-                var toAppend = "";
+                var itemIndex = this.model.get("itemIndex");
+
                 if (facetItems.length === 0) {
-                    this.$el.append("No items");
+                    html = "No Items";
                 } else {
                     // display current facet members
-                    toAppend += "<ul>";
-                    for (ix=(pageIndex * pageSize); ((ix<((pageIndex * pageSize) + pageSize)) && (ix<facetItems.length)); ix++) {
-                        if (ix % 10 === 0 && ix !== 0) {
-                            toAppend += "</ul><ul>";
-                        }
-                        toAppend += "<li data-value=" + facetItems[ix].value + " data-type=" + facetItems[ix].type + " data-id=" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
+                    var startIndex = (pageIndex * pageSize) - itemIndex;
+                    var endIndex = (pageIndex * pageSize) + pageSize;
+                    if (endIndex > (itemIndex + facetItems.length)) {
+                        endIndex = itemIndex + facetItems.length;
                     }
-                    toAppend += "</ul>";
+                    var items = [];
+                    for (ix=startIndex; ix<endIndex; ix++) {
+                        items.push(facetItems[ix]);
+                    }
+                    html = squid_api.template.squid_api_filters_categorical_facet_view({
+                        "items" : items
+                    });
                 }
-                this.$el.append(toAppend);
             }
+            this.$el.html(html);
         }
 
     });

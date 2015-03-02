@@ -1,6 +1,94 @@
 this["squid_api"] = this["squid_api"] || {};
 this["squid_api"]["template"] = this["squid_api"]["template"] || {};
 
+this["squid_api"]["template"]["squid_api_filters_categorical_facet_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n    <li data-value=\"";
+  if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-type=\"";
+  if (helper = helpers.type) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.type); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-id=\"";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"><i class=\"fa fa-square-o\"></i><span>";
+  if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span></li>\n	";
+  return buffer;
+  }
+
+  buffer += "<ul>\n	";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.items), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</ul>";
+  return buffer;
+  });
+
+this["squid_api"]["template"]["squid_api_filters_categorical_paging_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  
+  return "\n		<li class=\"previous\" data-id=\"prev\"><a href=\"#\"><i class=\"fa fa-arrow-left\"></i></a></li>\n		";
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n		<li data-id=\"";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "><a  href=\"#\">";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</a></li>\n		";
+  return buffer;
+  }
+function program4(depth0,data) {
+  
+  
+  return " class=\"active\" ";
+  }
+
+function program6(depth0,data) {
+  
+  
+  return "\n		<li class=\"next\"  data-id=\"next\"><a  href=\"#\"><i class=\"fa fa-arrow-right\"></i></a></li>\n		";
+  }
+
+  buffer += "<div class=\"pagination\">\n	<ul>\n		";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.prev), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n		";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.pages), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n		";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.next), {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n	</ul>\n</div>";
+  return buffer;
+  });
+
 this["squid_api"]["template"]["squid_api_filters_categorical_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -11,7 +99,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"selected\">\n					<h4>Currently Selected Filters</h4>\n				</div>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-2\">\n				<div id=\"search\">\n				<form action=\"#\" role=\"search\">\n                <div class=\"form-group\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"navbarInput-01\" type=\"search\" placeholder=\"Search\">\n                    <span class=\"input-group-btn\">\n                      <button type=\"submit\" class=\"btn\"><i class=\"fa fa-search\"></i></button>\n                    </span>\n                  </div>\n                </div>\n              </form>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n\n			</div>\n			<div class=\"col-md-8\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				<div id=\"pagination-container\">\n					<div class=\"pagination\">\n            			<ul>\n              				<li class=\"previous\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-left\"></i></a></li>\n              				<li class=\"active\"><a href=\"#fakelink\">1</a></li>\n              				<li><a href=\"#fakelink\">2</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">3</a></li>\n              				<li><a href=\"#fakelink\">8</a></li>\n              				<li class=\"next\"><a href=\"#fakelink\"><i class=\"fa fa-arrow-right\"></i></a></li>\n            			</ul>\n          			</div>\n				</div>\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n			data-target=\"";
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"selected\">\n					<h4>Currently Selected Filters</h4>\n				</div>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-2\">\n				<div id=\"search\">\n				<form action=\"#\" role=\"search\">\n                <div class=\"form-group\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"navbarInput-01\" type=\"search\" placeholder=\"Search\">\n                    <span class=\"input-group-btn\">\n                      <button type=\"submit\" class=\"btn\"><i class=\"fa fa-search\"></i></button>\n                    </span>\n                  </div>\n                </div>\n              </form>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n\n			</div>\n			<div class=\"col-md-8\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				<div id=\"pagination-container\">\n					\n				</div>\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -315,27 +403,32 @@ function program4(depth0,data) {
 
         render : function() {
             var facet = this.model.get("facet");
+            var html = "";
             if (facet) {
                 var facetItems = facet.get("items");
                 var pageIndex = this.model.get("pageIndex");
                 var pageSize = this.model.get("pageSize");
-                this.$el.html("");
-                var toAppend = "";
+                var itemIndex = this.model.get("itemIndex");
+
                 if (facetItems.length === 0) {
-                    this.$el.append("No items");
+                    html = "No Items";
                 } else {
                     // display current facet members
-                    toAppend += "<ul>";
-                    for (ix=(pageIndex * pageSize); ((ix<((pageIndex * pageSize) + pageSize)) && (ix<facetItems.length)); ix++) {
-                        if (ix % 10 === 0 && ix !== 0) {
-                            toAppend += "</ul><ul>";
-                        }
-                        toAppend += "<li data-value=" + facetItems[ix].value + " data-type=" + facetItems[ix].type + " data-id=" + facetItems[ix].id + "\"><i class='fa fa-square-o'></i><span>" + facetItems[ix].value + "</span></li>";
+                    var startIndex = (pageIndex * pageSize) - itemIndex;
+                    var endIndex = (pageIndex * pageSize) + pageSize;
+                    if (endIndex > (itemIndex + facetItems.length)) {
+                        endIndex = itemIndex + facetItems.length;
                     }
-                    toAppend += "</ul>";
+                    var items = [];
+                    for (ix=startIndex; ix<endIndex; ix++) {
+                        items.push(facetItems[ix]);
+                    }
+                    html = squid_api.template.squid_api_filters_categorical_facet_view({
+                        "items" : items
+                    });
                 }
-                this.$el.append(toAppend);
             }
+            this.$el.html(html);
         }
 
     });
@@ -350,15 +443,11 @@ function program4(depth0,data) {
     var View = Backbone.View.extend({
 
         model : null,
-        filterStore : null,
         format : null,
 
         initialize : function(options) {
             if (!this.model) {
                 this.model = squid_api.model.filters;
-            }
-            if (options.filterStore) {
-                this.filterStore = options.filterStore;
             }
 
             if (options.format) {
@@ -374,9 +463,75 @@ function program4(depth0,data) {
             this.model.on("change", this.render, this);
             this.render();
         },
+        
+        events : { 
+            "click li" : function(event) {
+                event.preventDefault();
+                var pageId = $(event.currentTarget).data("id");
+                var pageIndex = this.model.get("pageIndex");
+                var nbPages = this.model.get("nbPages");
+                var itemIndex = this.model.get("itemIndex");
+                var pageSize = this.model.get("pageSize");
+                var firstPageIndex = Math.round(itemIndex / pageSize);
+                if (pageId == "prev") {
+                    if (pageIndex > (firstPageIndex - nbPages)) {
+                        // previous page
+                        this.model.set("pageIndex", pageIndex-1);
+                    } else {
+                        // previous page group
+                        this.model.set("pageIndex", firstPageIndex - nbPages);
+                    }
+                } else if (pageId == "next") {
+                    if (pageIndex < (firstPageIndex + nbPages)) {
+                        // next page
+                        this.model.set("pageIndex", pageIndex+1);
+                    } else {
+                        // next page group
+                        this.model.set("pageIndex", firstPageIndex + nbPages);
+                    }
+                } else {
+                    this.model.set("pageIndex", pageId-1);
+                }
+            }
+        },
 
         render : function() {
-            // Paging Logic to come
+            var facet = this.model.get("facet");
+            if (facet) {
+                var facetItems = facet.get("items");
+                var pageIndex = this.model.get("pageIndex");
+                var pageSize = this.model.get("pageSize");
+                var nbPages = this.model.get("nbPages");
+                var itemIndex = this.model.get("itemIndex");
+                
+                var firstPageIndex = Math.round(itemIndex / pageSize);
+                
+                var pages = [];
+                var pageCount = facetItems.length / pageSize;
+                if (pageCount>1) {
+                    if (pageCount>nbPages) {
+                        pageCount = nbPages;
+                    }
+                    var prev = (firstPageIndex === 0) ? null : true;
+                    for (var i=firstPageIndex; i<(firstPageIndex+pageCount); i++) {
+                        var selected = null;
+                        if (i == pageIndex) {
+                            selected = true;
+                        }
+                        pages.push({ "id" : i+1, "selected" :  selected});
+                    }
+                    var next = null;
+                    if (facet.get("hasMore")) {
+                        next = true;
+                    }
+                    
+                    this.$el.html(squid_api.template.squid_api_filters_categorical_paging_view({
+                        "prev" : prev,
+                        "pages" : pages,
+                        "next" : next
+                    }));
+                }
+            }
         }
     });
 
@@ -479,11 +634,18 @@ function program4(depth0,data) {
             }
 
             this.filterStore = new Backbone.Model( { 
-                selectedFilter : null,
-                pageIndex : 0,
-                pageSize : 30,
-                facet : null,
-                itemIndex : 0
+                // selected dimension
+                selectedFilter : null,  
+                // current selected page
+                pageIndex : 0,          
+                // nb of items in a page
+                pageSize : 10,          
+                // nb of pages to display
+                nbPages : 10,
+                // current facet retrieved from API
+                facet : null,           
+                // index id of the first item of facet
+                itemIndex : 0           
             }
             );
             this.currentModel = new squid_api.model.FiltersJob();
@@ -491,8 +653,11 @@ function program4(depth0,data) {
             this.setCurrentModel();
             
             this.model.on("change", this.setCurrentModel, this);
-            this.filterStore.on("change:selectedFilter", this.selectFacet, this);
-            this.filterStore.on("change:pageIndex", this.selectFacet, this);
+            this.filterStore.on("change:selectedFilter", function() {
+                this.filterStore.set("pageIndex", 0);
+                this.filterStore.trigger("change:pageIndex", this.filterStore);
+            }, this);
+            this.filterStore.on("change:pageIndex", this.renderFacet, this);
         },
         
         setCurrentModel : function() {
@@ -528,8 +693,7 @@ function program4(depth0,data) {
 
             view3 = new api.view.CategoricalPagingView({
                 el: $(this.filterPanel).find("#pagination-container"),
-                model: this.currentModel,
-                filterStore : this.filterStore
+                model: this.filterStore
             });
 
             var me = this;
@@ -544,19 +708,32 @@ function program4(depth0,data) {
             $(this.filterSelected).addClass("squid_api_filters_categorical_selected_filters").html("selected");
         }, 
         
-        selectFacet : function() {
+        renderFacet : function() {
             var me = this;
-            var pageSize = this.filterStore.get("pageSize");
-            var startIndex = this.filterStore.get("pageIndex") * pageSize;
             
             if (this.currentModel.get("status") === "DONE") {
                 if (this.currentModel.get("selection")) {
                     var selectedFacetId = this.filterStore.get("selectedFilter");
+                    var pageIndex = this.filterStore.get("pageIndex");
+                    var pageSize = this.filterStore.get("pageSize");
                     var facet = this.filterStore.get("facet");
+                    var nbPages = this.filterStore.get("nbPages");
+                    
+                    // compute required index range
+                    var startIndex = pageIndex * pageSize;
+                    var endIndex = startIndex + pageSize;
+                    
+                    // check if we need to fetch more items
                     var fetch = false;
                     if ((facet) && (facet.get("id") == selectedFacetId)) {
-                        var currentMaxIndex = this.filterStore.get("itemIndex") + facet.get("items").length;
-                        if ((startIndex > currentMaxIndex) && (facet.hasMore === true)) {
+                        var itemIndex = this.filterStore.get("itemIndex");
+
+                        // compute what's the max index
+                        var maxItem = itemIndex + facet.get("items").length;     
+                        if (startIndex < itemIndex) {
+                            fetch = true;
+                        }
+                        if ((endIndex > maxItem) && (facet.get("hasMore") === true)) {
                             fetch = true;
                         }
                     } else {
@@ -573,7 +750,8 @@ function program4(depth0,data) {
                             facetJob.addParameter("startIndex", startIndex);
                         }
                         if (pageSize) {
-                            facetJob.addParameter("maxResults", this.nbPages * pageSize);
+                            // +1 because the API returns -1 items
+                            facetJob.addParameter("maxResults", (nbPages * pageSize) + 1);
                         }
                         // get the results from API
                         facetJob.fetch({

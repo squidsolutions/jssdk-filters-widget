@@ -628,27 +628,34 @@ function program4(depth0,data) {
                     if (endIndex > facetItems.length) {
                         endIndex = facetItems.length;
                     }
+                    // Store Items to Display
                     var items = [];
                     for (ix=startIndex; ix<endIndex; ix++) {
-                        var facetItem = facetItems[ix];
-                        facetItem.selected = false;
-
-                        for (ix1=0; ix1<facets.length; ix1++) {
-                            if (selectedFilter === facets[ix1].id) {
-                                var selectedItems = facets[ix1].selectedItems;
-                                // Set selected facet to true if already selected
-                                for (ix2=0; ix2<selectedItems.length; ix2++) {
-                                    if (facetItem.id === selectedItems[ix2].id) {
-                                        facetItem.selected = true;
-                                    }
-                                }
-                            }
-                        }
                         items.push(facetItems[ix]);
                     }
+                    
+                    // Manipulate items to add a selected or not attribute
+                    var updatedItems = [];
+                    for (ix=0; ix<facets.length; ix++) {
+                        if (selectedFilter === facets[ix].id) {
+                            var selectedItems = facets[ix].selectedItems;
+                            for (ix1=0; ix1<items.length; ix1++) {
+                                var obj = items[ix1];
+                                obj.selected = false;
+                                for (ix2=0; ix2<selectedItems.length; ix2++) {
+                                    if (items[ix1].id === selectedItems[ix2].id) {
+                                        obj.selected = true;
+                                        break;
+                                    }
+                                }
+                                updatedItems.push(obj);
+                            }
+                        }
+                    }
+
                     if (items.length>0) {
                         var html = squid_api.template.squid_api_filters_categorical_facet_view({
-                            "items" : items
+                            "items" : updatedItems
                         });
                         this.$el.html(html);
                     } else {

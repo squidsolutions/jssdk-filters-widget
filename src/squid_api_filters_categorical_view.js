@@ -55,19 +55,35 @@
             }
             );
             this.currentModel = new squid_api.model.FiltersJob();
-            this.setCurrentModel();
             
             this.model.on("change", this.setCurrentModel, this);
+            
             this.filterStore.on("change:selectedFilter", function() {
-                this.filterStore.set({"pageIndex": 0}, {"silent" : true});
-                this.filterStore.trigger("change:pageIndex", this.filterStore);
+                this.filterStore.set({
+                    "searchPrevious" : null,
+                    "search" : null,
+                    "pageIndex" : 0
+                }, {
+                    "silent" : true
+                });
+                // reset the search box
+                $(this.filterPanel).find("#searchbox").val("");
+                // re-compute the filters
+                squid_api.controller.facetjob.compute(this.currentModel);
+                
             }, this);
             this.filterStore.on("change:search", function() {
                 this.filterStore.set({"pageIndex": 0}, {"silent" : true});
                 this.filterStore.trigger("change:pageIndex", this.filterStore);
             }, this);
             this.filterStore.on("change:pageIndex", this.renderFacet, this);
+            
+            this.currentModel.on("change", function() {
+                // trigger render
+                this.filterStore.trigger("change:pageIndex", this.filterStore);
+            }, this);
 
+            this.setCurrentModel();
             this.render();
         },
         
@@ -129,7 +145,7 @@
                 me.cancelSelection();
             });
             
-            $(this.filterPanel).find("#search").keyup(_.bind(this.search, this));
+            $(this.filterPanel).find("#searchbox").keyup(_.bind(this.search, this));
         }, 
         
         renderFacet : function() {
@@ -170,7 +186,7 @@
                         fetch = true;
                     }
                     
-                    if (fetch === true) {
+                    if ((fetch === true) && (selectedFacetId)) {
                         // pre-fetch some pages of facet members
                         // this.$el.html("Retrieving items list...");
                         var facetJob = new squid_api.model.ProjectFacetJobFacet();

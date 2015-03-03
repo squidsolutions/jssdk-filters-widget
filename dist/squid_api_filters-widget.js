@@ -636,7 +636,7 @@ function program4(depth0,data) {
                         for (ix1=0; ix1<facets.length; ix1++) {
                             if (selectedFilter === facets[ix1].id) {
                                 var selectedItems = facets[ix1].selectedItems;
-
+                                // Set selected facet to true if already selected
                                 for (ix2=0; ix2<selectedItems.length; ix2++) {
                                     if (facetItem.id === selectedItems[ix2].id) {
                                         facetItem.selected = true;

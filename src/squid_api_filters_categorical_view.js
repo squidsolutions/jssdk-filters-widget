@@ -180,8 +180,7 @@
                             facetJob.addParameter("startIndex", startIndex);
                         }
                         if (pageSize) {
-                            // +1 because the API returns -1 items
-                            facetJob.addParameter("maxResults", (nbPages * pageSize) + 1);
+                            facetJob.addParameter("maxResults", (nbPages * pageSize));
                         }
                         if (search) {
                             facetJob.addParameter("filter", search);

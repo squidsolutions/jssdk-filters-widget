@@ -1,5 +1,10 @@
 <ul>
 	{{#each items}}
-    <li data-value="{{value}}" data-type="{{type}}" data-id="{{id}}"><i class="fa fa-square-o"></i><span>{{value}}</span></li>
+		{{#if selected}}
+			<li class="active" selected="true" data-value="{{value}}" data-type="{{type}}" data-id="{{id}}"><i class="fa fa-square-o"></i><span>{{value}}</span></li>
+
+		{{else}}
+			<li data-value="{{value}}" data-type="{{type}}" data-id="{{id}}"><i class="fa fa-square-o"></i><span>{{value}}</span></li>
+		{{/if}}
 	{{/each}}
 </ul>

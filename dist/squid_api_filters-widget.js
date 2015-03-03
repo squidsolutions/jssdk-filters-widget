@@ -8,8 +8,17 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 function program1(depth0,data) {
   
+  var buffer = "", stack1;
+  buffer += "\n		";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n	";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
   var buffer = "", stack1, helper;
-  buffer += "\n    <li data-value=\"";
+  buffer += "\n			<li class=\"active\" selected=\"true\" data-value=\"";
   if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -25,7 +34,30 @@ function program1(depth0,data) {
   if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span></li>\n	";
+    + "</span></li>\n\n		";
+  return buffer;
+  }
+
+function program4(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n			<li data-value=\"";
+  if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-type=\"";
+  if (helper = helpers.type) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.type); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-id=\"";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"><i class=\"fa fa-square-o\"></i><span>";
+  if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span></li>\n		";
   return buffer;
   }
 
@@ -509,34 +541,56 @@ function program4(depth0,data) {
 
             this.model.on("change:pageIndex", this.render, this);
             this.model.on("change:facet", this.render, this);
+            this.filters.on("change", this.render, this);
         },
 
         events: {
             // Dimension Sorting
             "click li": function(item) {
+                // Get selected Filter & Item
+                var selectedFilter = this.model.get("selectedFilter");
+                var selectedItem = $(item.currentTarget).attr("data-attr");
+
+                // Get clicked filter value & create object
+                var value = $(item.currentTarget).attr("data-id");
+                var type = $(item.currentTarget).attr("data-type");
+                var id = $(item.currentTarget).attr("data-id");
+
+                // Get selected Filters
+                var facets = this.filters.get("selection").facets;
+
+                // Set up new object to update facet model
+                var selection = {facets: []};
+
                 if ($(item.currentTarget).attr("selected")) {
+                    // Style manipulation
                     $(item.currentTarget).removeClass("active");
                     $(item.currentTarget).removeAttr("selected");
-                    $(item.currentTarget).find("i").removeClass();
-                    $(item.currentTarget).find("i").addClass("fa fa-square-o");
+
+                    // Remove selected item from facet 
+                    for (i=0; i<facets.length; i++) {
+                        if (facets[i].id === selectedFilter) {
+                            var selectedItems = facets[i].selectedItems;
+                            var updatedSelectedItems = [];
+                            for (ix=0; ix<selectedItems.length; ix++) {
+                                if (id !== selectedItems[ix].id) {
+                                    var obj = {};
+                                    obj.id = selectedItems[ix].id;
+                                    obj.type = selectedItems[ix].type;
+                                    obj.value = selectedItems[ix].value;
+                                    updatedSelectedItems.push(obj);
+                                }
+                            }
+                            facets[i].selectedItems = updatedSelectedItems;
+                        }
+                    }
                 } else {
+                    // style manipulation
                     $(item.currentTarget).addClass("active");
                     $(item.currentTarget).attr("selected", true);
-                    $(item.currentTarget).find("i").removeClass();
-                    $(item.currentTarget).find("i").addClass("fa fa-check-square-o");
-
-                    // Get selected Filter & Itekm
-                    var selectedFilter = this.model.get("selectedFilter");
-                    var selectedItem = $(item.currentTarget).attr("data-attr");
                     
-                    // Get clicked filter value & create object
-                    var value = $(item.currentTarget).attr("data-id");
-                    var type = $(item.currentTarget).attr("data-type");
-                    var id = $(item.currentTarget).attr("data-id");
+                    // set up object to add a new selected item
                     var selectObj = {id : id, type : type, value : value};
-
-                    // Get selected Filters
-                    var facets = this.filters.get("selection").facets;
 
                     // Push new filters to selectedItems array
                     for (i=0; i<facets.length; i++) {
@@ -544,12 +598,12 @@ function program4(depth0,data) {
                             facets[i].selectedItems.push(selectObj);
                         }
                     }
-
-                    // Set the updated filters model
-                    var selection = {facets:facets};
-                    this.filters.set("selection", selection);
-                    this.filters.trigger("change");
                 }
+
+                // Set the updated filters model
+                selection.facets = facets;
+                this.filters.set("selection", selection);
+                this.filters.trigger("change");
             },
         },
 
@@ -567,11 +621,29 @@ function program4(depth0,data) {
                     // display current facet members
                     var startIndex = (pageIndex * pageSize) - itemIndex;
                     var endIndex = startIndex + pageSize;
+                    // Store selected Filter
+                    var selectedFilter = this.model.get("selectedFilter");
+                    // Store facets
+                    var facets = this.filters.get("selection").facets;
                     if (endIndex > facetItems.length) {
                         endIndex = facetItems.length;
                     }
                     var items = [];
                     for (ix=startIndex; ix<endIndex; ix++) {
+                        var facetItem = facetItems[ix];
+                        facetItem.selected = false;
+
+                        for (ix1=0; ix1<facets.length; ix1++) {
+                            if (selectedFilter === facets[ix1].id) {
+                                var selectedItems = facets[ix1].selectedItems;
+
+                                for (ix2=0; ix2<selectedItems.length; ix2++) {
+                                    if (facetItem.id === selectedItems[ix2].id) {
+                                        facetItem.selected = true;
+                                    }
+                                }
+                            }
+                        }
                         items.push(facetItems[ix]);
                     }
                     if (items.length>0) {

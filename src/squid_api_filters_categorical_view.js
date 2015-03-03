@@ -47,7 +47,11 @@
                 // current facet retrieved from API
                 facet : null,           
                 // index id of the first item of facet
-                itemIndex : 0           
+                itemIndex : 0,
+                // previous search query
+                searchPrevious : null,
+                // current search query
+                search : null
             }
             );
             this.currentModel = new squid_api.model.FiltersJob();
@@ -55,6 +59,10 @@
             
             this.model.on("change", this.setCurrentModel, this);
             this.filterStore.on("change:selectedFilter", function() {
+                this.filterStore.set({"pageIndex": 0}, {"silent" : true});
+                this.filterStore.trigger("change:pageIndex", this.filterStore);
+            }, this);
+            this.filterStore.on("change:search", function() {
                 this.filterStore.set({"pageIndex": 0}, {"silent" : true});
                 this.filterStore.trigger("change:pageIndex", this.filterStore);
             }, this);
@@ -67,6 +75,10 @@
             // duplicate the filters model
             var attributesClone = $.extend(true, {}, this.model.attributes);
             this.currentModel.set(attributesClone);
+        },
+        
+        search : function(event) {
+                this.filterStore.set("search", event.target.value);
         },
 
         render : function() {
@@ -116,6 +128,8 @@
             $(this.filterPanel).find(".cancel-selection").click(function() {
                 me.cancelSelection();
             });
+            
+            $(this.filterPanel).find("#search").keyup(_.bind(this.search, this));
         }, 
         
         renderFacet : function() {
@@ -135,7 +149,13 @@
                     
                     // check if we need to fetch more items
                     var fetch = false;
-                    if ((facet) && (facet.get("id") == selectedFacetId)) {
+                    var searchStale =  false;
+                    var searchPrevious = this.filterStore.get("searchPrevious");
+                    var search = this.filterStore.get("search");
+                    if ((search !== null) && (search != searchPrevious)) {
+                        searchStale = true;
+                    }
+                    if ((facet) && (facet.get("id") == selectedFacetId) && (!searchStale)) {
                         var itemIndex = this.filterStore.get("itemIndex");
 
                         // compute what's the max index
@@ -162,6 +182,10 @@
                         if (pageSize) {
                             // +1 because the API returns -1 items
                             facetJob.addParameter("maxResults", (nbPages * pageSize) + 1);
+                        }
+                        if (search) {
+                            facetJob.addParameter("filter", search);
+                            this.filterStore.set("searchPrevious", search);
                         }
                         // get the results from API
                         facetJob.fetch({

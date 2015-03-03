@@ -149,7 +149,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<h4>Filter Store</h4>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-2\">\n				<div id=\"search\">\n				<form action=\"#\" role=\"search\">\n                <div class=\"form-group\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"navbarInput-01\" type=\"search\" placeholder=\"Search\">\n                    <span class=\"input-group-btn\">\n                      <button type=\"submit\" class=\"btn\"><i class=\"fa fa-search\"></i></button>\n                    </span>\n                  </div>\n                </div>\n              </form>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"selected\">\n					\n				</div>\n			</div>\n			<div class=\"col-md-8\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			<div id=\"pagination-container\">\n					\n			</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n			data-target=\"";
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<h4>Filter Store</h4>\n			</div>\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-2\">\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                  	<span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                    <input class=\"form-control\" id=\"search\" type=\"search\" placeholder=\"Filter\">\n                  </div>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"selected\">\n					\n				</div>\n			</div>\n			<div class=\"col-md-8\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			<div id=\"pagination-container\">\n					\n			</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -904,7 +904,11 @@ function program4(depth0,data) {
                 // current facet retrieved from API
                 facet : null,           
                 // index id of the first item of facet
-                itemIndex : 0           
+                itemIndex : 0,
+                // previous search query
+                searchPrevious : null,
+                // current search query
+                search : null
             }
             );
             this.currentModel = new squid_api.model.FiltersJob();
@@ -912,6 +916,10 @@ function program4(depth0,data) {
             
             this.model.on("change", this.setCurrentModel, this);
             this.filterStore.on("change:selectedFilter", function() {
+                this.filterStore.set({"pageIndex": 0}, {"silent" : true});
+                this.filterStore.trigger("change:pageIndex", this.filterStore);
+            }, this);
+            this.filterStore.on("change:search", function() {
                 this.filterStore.set({"pageIndex": 0}, {"silent" : true});
                 this.filterStore.trigger("change:pageIndex", this.filterStore);
             }, this);
@@ -924,6 +932,10 @@ function program4(depth0,data) {
             // duplicate the filters model
             var attributesClone = $.extend(true, {}, this.model.attributes);
             this.currentModel.set(attributesClone);
+        },
+        
+        search : function(event) {
+                this.filterStore.set("search", event.target.value);
         },
 
         render : function() {
@@ -973,6 +985,8 @@ function program4(depth0,data) {
             $(this.filterPanel).find(".cancel-selection").click(function() {
                 me.cancelSelection();
             });
+            
+            $(this.filterPanel).find("#search").keyup(_.bind(this.search, this));
         }, 
         
         renderFacet : function() {
@@ -992,7 +1006,13 @@ function program4(depth0,data) {
                     
                     // check if we need to fetch more items
                     var fetch = false;
-                    if ((facet) && (facet.get("id") == selectedFacetId)) {
+                    var searchStale =  false;
+                    var searchPrevious = this.filterStore.get("searchPrevious");
+                    var search = this.filterStore.get("search");
+                    if ((search !== null) && (search != searchPrevious)) {
+                        searchStale = true;
+                    }
+                    if ((facet) && (facet.get("id") == selectedFacetId) && (!searchStale)) {
                         var itemIndex = this.filterStore.get("itemIndex");
 
                         // compute what's the max index
@@ -1019,6 +1039,10 @@ function program4(depth0,data) {
                         if (pageSize) {
                             // +1 because the API returns -1 items
                             facetJob.addParameter("maxResults", (nbPages * pageSize) + 1);
+                        }
+                        if (search) {
+                            facetJob.addParameter("filter", search);
+                            this.filterStore.set("searchPrevious", search);
                         }
                         // get the results from API
                         facetJob.fetch({

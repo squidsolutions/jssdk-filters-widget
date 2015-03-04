@@ -22,11 +22,19 @@
       cursor: pointer; }
 
 .squid_api_filters_categorical_filter_panel #squid_api_filters_categorical_selected_view li {
-  width: 100%;
+  float: left;
   margin-bottom: 10px; }
-.squid_api_filters_categorical_filter_panel #search .input-group {
+.squid_api_filters_categorical_filter_panel #search .input-group input {
+  height: 40px;
+  border-radius: 0px;
   position: relative;
-  top: 6px; }
+  left: -2px;
+  box-shadow: none; }
+.squid_api_filters_categorical_filter_panel #search .input-group span.input-group-addon {
+  left: -2px;
+  position: relative;
+  background: #ecf0f1;
+  color: #777; }
 .squid_api_filters_categorical_filter_panel .panel-body {
   padding: 0px; }
 .squid_api_filters_categorical_filter_panel .row {
@@ -36,20 +44,24 @@
     padding-top: 20px; }
 .squid_api_filters_categorical_filter_panel h4 {
   text-align: center; }
-.squid_api_filters_categorical_filter_panel #selected {
-  text-align: center;
-  padding-bottom: 20px; }
-.squid_api_filters_categorical_filter_panel #filter-selection .btn-group {
-  width: 100%; }
+.squid_api_filters_categorical_filter_panel #filter-selection {
+  float: left; }
   .squid_api_filters_categorical_filter_panel #filter-selection .btn-group button {
-    background: #bdc3c7;
-    height: 50px;
-    font-size: 15px;
-    color: #fff;
-    width: 100%; }
+    background: #ecf0f1;
+    height: 40px;
+    font-size: 14px;
+    color: #777;
+    min-width: 175px; }
     .squid_api_filters_categorical_filter_panel #filter-selection .btn-group button .caret {
       right: 9px !important;
-      top: 24px !important; }
+      top: 19px !important; }
+.squid_api_filters_categorical_filter_panel #selected {
+  position: relative;
+  top: -50px; }
+  .squid_api_filters_categorical_filter_panel #selected .noData {
+    position: relative;
+    top: 20px;
+    text-align: center; }
 .squid_api_filters_categorical_filter_panel #pagination-container {
   float: left; }
   .squid_api_filters_categorical_filter_panel #pagination-container .pagination {
@@ -63,7 +75,7 @@
       color: #fff;
       word-spacing: -.5px;
       background: #d6dbdf;
-      border-radius: 6px; }
+      border-radius: 4px; }
     .squid_api_filters_categorical_filter_panel #pagination-container .pagination li {
       display: inline-block;
       margin-right: -3px;
@@ -80,13 +92,13 @@
         background-color: #1abc9c; }
       .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:first-child a, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:first-child span {
         border-left: none;
-        border-radius: 6px 0 0 6px; }
+        border-radius: 4px 0 0 4px; }
       .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:first-child.previous + li a, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:first-child.previous + li span {
         border-left-width: 0; }
       .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:last-child {
         margin-right: 0; }
         .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:last-child a, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:last-child span, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:last-child a:hover, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:last-child span:hover, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:last-child a:focus, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:last-child span:focus {
-          border-radius: 0 6px 6px 0; }
+          border-radius: 0 4px 4px 0; }
       .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.previous a, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.previous span, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.next a, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.next span {
         min-width: auto;
         font-size: 16px;
@@ -168,8 +180,6 @@
         background: #f9f9f9; }
         .squid_api_filters_categorical_filter_panel #filter-display-results ul li:hover i {
           display: inline-block; }
-          .squid_api_filters_categorical_filter_panel #filter-display-results ul li:hover i:before {
-            content: "\f096"; }
       .squid_api_filters_categorical_filter_panel #filter-display-results ul li.active i {
         display: inline-block; }
         .squid_api_filters_categorical_filter_panel #filter-display-results ul li.active i:before {

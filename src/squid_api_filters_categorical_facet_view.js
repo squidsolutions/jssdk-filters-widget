@@ -24,7 +24,6 @@
 
             this.model.on("change:pageIndex", this.render, this);
             this.model.on("change:facet", this.render, this);
-            this.filters.on("change", this.render, this);
         },
 
         events: {

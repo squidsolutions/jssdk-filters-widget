@@ -129,11 +129,11 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n    ";
+  buffer += "\n    <div class=\"noData\">";
   if (helper = helpers.noDataMessage) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.noDataMessage); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\n";
+    + "</div>\n";
   return buffer;
   }
 
@@ -181,7 +181,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n			</div>\n			<div class=\"col-md-3\">\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                  	<span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Filter\">\n                  </div>\n				</div>\n			</div>\n			<div class=\"col-md-5\">\n				<h4>Filter Store</h4>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			<div id=\"pagination-container\">\n					\n			</div>\n			</div>\n			<div class=\"col-md-3\">\n			</div>\n			<div class=\"col-md-5\">\n				<div id=\"selected\">\n					\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n			data-target=\"";
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Filter\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n			<div class=\"col-md-3\">\n				\n			</div>\n			<div class=\"col-md-5\">\n				\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			<div id=\"pagination-container\">\n					\n			</div>\n			</div>\n			<div class=\"col-md-8\">\n				<div id=\"selected\">\n					\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -541,7 +541,6 @@ function program4(depth0,data) {
 
             this.model.on("change:pageIndex", this.render, this);
             this.model.on("change:facet", this.render, this);
-            this.filters.on("change", this.render, this);
         },
 
         events: {

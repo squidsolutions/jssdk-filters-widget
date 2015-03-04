@@ -33,14 +33,25 @@
 .squid_api_filters_categorical_filter_panel {
   #squid_api_filters_categorical_selected_view {
     li {
-      width: 100%;
+      float: left;
       margin-bottom: 10px;
     }
   }
   #search {
     .input-group {
-      position: relative;
-      top: 6px;
+      input {
+            height: 40px;
+            border-radius: 0px;
+            position: relative;
+            left: -2px;
+            box-shadow: none;
+      }
+      span.input-group-addon {
+          left: -2px;
+          position: relative; 
+          background: #ecf0f1;
+          color: #777;
+      }
     }
   }
   .panel-body {
@@ -56,27 +67,32 @@
   h4 {
     text-align: center;
   }
-  #selected {
-    text-align: center;
-    padding-bottom: 20px;
-  }
   #filter-selection {
+    float: left;
     .btn-group {
-      width: 100%;
 
       button {
-        background: #bdc3c7;
-        height: 50px;
-        font-size: 15px;
-        color: #fff;
-        width: 100%;
+        background: #ecf0f1;
+        height: 40px;
+        font-size: 14px;
+        color: #777;
+        min-width: 175px;
 
         .caret {
           right: 9px !important;
-          top: 24px !important;
+          top: 19px !important;
         }
       }
     }
+  }
+  #selected {
+        position: relative;
+        top: -50px;
+      .noData {
+        position: relative;
+        top: 20px;
+        text-align: center;
+      }
   }
   #pagination-container {
     float: left;
@@ -91,7 +107,7 @@
           color: #fff;
           word-spacing: -.5px;
           background: #d6dbdf;
-          border-radius: 6px;
+          border-radius: 4px;
         }
         li {
           display: inline-block;
@@ -120,7 +136,7 @@
           &:first-child {
             a, span {
               border-left: none;
-              border-radius: 6px 0 0 6px;
+              border-radius: 4px 0 0 4px;
             }
           }
           &:first-child.previous + li {
@@ -132,7 +148,7 @@
             margin-right: 0;
 
             a, span, a:hover, span:hover, a:focus, span:focus {
-              border-radius: 0 6px 6px 0;
+              border-radius: 0 4px 4px 0;
             }
           }
           &.previous, &.next {
@@ -238,9 +254,6 @@
           background: #f9f9f9;
           i {
             display: inline-block;
-            &:before {
-              content: "\f096";
-            }
           }
         }
 

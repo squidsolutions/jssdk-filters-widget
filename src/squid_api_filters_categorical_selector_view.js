@@ -36,14 +36,19 @@
             if (this.model.get("status") && this.model.get("status") !== "RUNNING") {
                 if (this.model.get("selection")) {
                     var facets = this.model.get("selection").facets;
-                    var categoricalFacets = [];
+                    var items = [];
                     for (i=0; i<facets.length; i++) {
                         if (facets[i].dimension.type !== "CONTINUOUS") {
-                            this.$el.find(".btn-select-filter").append("<option value=\"" + facets[i].id + "\">" + facets[i].dimension.name + "</option>");
+                            items.push(facets[i]);
                         }
                     }
+                    var html = squid_api.template.squid_api_filters_categorical_selector_view({
+                        "items" : items
+                    });
+                    this.$el.find(".btn-select-filter").html(html);
                 }
                 this.$el.find(".btn-select-filter").multiselect({
+                    nonSelectedText: 'Select a Dimension',
                     onChange: function(option) {
                         var filterValue = $(option).val();
                         me.filterStore.set("selectedFilter", filterValue);

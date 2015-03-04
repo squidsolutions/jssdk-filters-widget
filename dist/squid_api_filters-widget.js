@@ -171,6 +171,30 @@ function program4(depth0,data) {
   return buffer;
   });
 
+this["squid_api"]["template"]["squid_api_filters_categorical_selector_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n	<option value=\"";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.dimension)),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</option>\n";
+  return buffer;
+  }
+
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.items), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n";
+  return buffer;
+  });
+
 this["squid_api"]["template"]["squid_api_filters_categorical_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -181,7 +205,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Filter\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n			<div class=\"col-md-3\">\n				\n			</div>\n			<div class=\"col-md-5\">\n				\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			<div id=\"pagination-container\">\n					\n			</div>\n			</div>\n			<div class=\"col-md-8\">\n				<div id=\"selected\">\n					\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n			data-target=\"";
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select type=\"button\" class=\"btn btn-select-filter\" size=\"2\">Choose Filter<span class=\"caret\"></span></select>\n				</div>\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Filter\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n			<div class=\"col-md-3\">\n				\n			</div>\n			<div class=\"col-md-5\">\n				\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-4\">\n			<div id=\"filter-display-results\">\n\n			</div>\n			<div id=\"pagination-container\">\n					\n			</div>\n			</div>\n			<div class=\"col-md-8\">\n				<div id=\"selected\">\n					\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -913,14 +937,19 @@ function program4(depth0,data) {
             if (this.model.get("status") && this.model.get("status") !== "RUNNING") {
                 if (this.model.get("selection")) {
                     var facets = this.model.get("selection").facets;
-                    var categoricalFacets = [];
+                    var items = [];
                     for (i=0; i<facets.length; i++) {
                         if (facets[i].dimension.type !== "CONTINUOUS") {
-                            this.$el.find(".btn-select-filter").append("<option value=\"" + facets[i].id + "\">" + facets[i].dimension.name + "</option>");
+                            items.push(facets[i]);
                         }
                     }
+                    var html = squid_api.template.squid_api_filters_categorical_selector_view({
+                        "items" : items
+                    });
+                    this.$el.find(".btn-select-filter").html(html);
                 }
                 this.$el.find(".btn-select-filter").multiselect({
+                    nonSelectedText: 'Select a Dimension',
                     onChange: function(option) {
                         var filterValue = $(option).val();
                         me.filterStore.set("selectedFilter", filterValue);

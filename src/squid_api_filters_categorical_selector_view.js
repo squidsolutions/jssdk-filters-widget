@@ -49,12 +49,17 @@
 
             if (this.model.get("status") && this.model.get("status") !== "RUNNING") {
                 if (this.model.get("selection")) {
+                    var selectedFilter = me.filterStore.get("selectedFilter");
                     var facets = this.model.get("selection").facets;
                     var items = [];
                     for (i=0; i<facets.length; i++) {
                         var facet = facets[i];
                         if (facet.dimension.type !== "CONTINUOUS") {
-                            items.push({label: facet.dimension.name, title: facet.dimension.name, value: facet.id});
+                            var selected = false;
+                            if (facet.id == selectedFilter) {
+                                selected = true;
+                            }
+                            items.push({label: facet.dimension.name, title: facet.dimension.name, value: facet.id, selected: selected});
                         }
                     }
 

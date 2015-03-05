@@ -127,14 +127,16 @@
                 model: this.filterStore
             });
 
-            view4 = new api.view.CategoricalInternalSelectedView({
+            view4 = new api.view.CategoricalSelectedView({
                 el: $(this.filterPanel).find("#selected"),
-                model: this.currentModel
+                model: this.currentModel,
+                noDataMessage: "No Filters Selected"
             });
 
-            view5 = new api.view.CategoricalExternalSelectedView({
+            view5 = new api.view.CategoricalSelectedView({
                 el: this.filterSelected,
-                model: this.model
+                model: this.model,
+                noDataMessage: "All"
             });
 
             var me = this;

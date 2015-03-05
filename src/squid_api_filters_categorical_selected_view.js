@@ -1,5 +1,5 @@
 (function (root, factory) {
-    root.squid_api.view.CategoricalExternalSelectedView = factory(root.Backbone, root.squid_api);
+    root.squid_api.view.CategoricalSelectedView = factory(root.Backbone, root.squid_api);
 }(this, function (Backbone, squid_api) {
 
     var View = Backbone.View.extend({
@@ -15,6 +15,9 @@
             if (options.filterStore) {
                 this.filterStore = options.filterStore;
             }
+            if (options.noDataMessage) {
+                this.noDataMessage = options.noDataMessage;
+            }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
 
@@ -29,7 +32,6 @@
             }
 
             this.model.on("change", this.render, this);
-            this.render();
         },
 
         events: {
@@ -38,7 +40,9 @@
                 var facetName = $(event.currentTarget).parent("li").attr("attr-name");
                 var facetId = $(event.currentTarget).parent("li").attr("attr-id");
 
-                var selection = this.model.get("selection");
+                // Copy model selection object properties to remove object reference
+                var selection = $.extend(true, {}, this.model.get("selection"));
+
                 if (selection) {
                     if (selection.facets) {
                         var facets = selection.facets;
@@ -61,7 +65,6 @@
                             }
                         }
                         this.model.set("selection", updatedFacets);  
-                        this.model.trigger("change");
                     }
                 }
             }
@@ -71,7 +74,7 @@
             var selection = this.model.get("selection");
             var selFacets = [];
             var noData = true;
-            var noDataMessage = "All";
+
             if (selection) {
                  if (selection.facets) {
                     var facets = selection.facets;
@@ -91,7 +94,7 @@
                         }
                     }
                 }
-                this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: noDataMessage}));
+                this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: this.noDataMessage}));
             }
         });
 

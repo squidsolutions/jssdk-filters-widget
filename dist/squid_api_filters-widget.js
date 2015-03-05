@@ -177,7 +177,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div style=\"margin-top: 20px;\" class=\"panel panel-default filter-panel squid_api_filters-categorical-panel-view\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
+  buffer += "<div class=\"panel panel-default filter-panel squid_api_filters-categorical-panel-view\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -561,9 +561,9 @@ function program4(depth0,data) {
                         // computing in progress
                     }
                 }
-                
+            } else {
+                this.$el.html("<span class='no-items'>No Dimension Selected</span>");
             }
-            
         }
 
     });
@@ -1008,7 +1008,7 @@ function program4(depth0,data) {
             view5 = new api.view.CategoricalSelectedView({
                 el: this.filterSelected,
                 model: this.model,
-                noDataMessage: "All"
+                noDataMessage: "No Filters Selected"
             });
 
             var me = this;

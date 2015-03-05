@@ -144,9 +144,9 @@
                         // computing in progress
                     }
                 }
-                
+            } else {
+                this.$el.html("<span class='no-items'>No Dimension Selected</span>");
             }
-            
         }
 
     });

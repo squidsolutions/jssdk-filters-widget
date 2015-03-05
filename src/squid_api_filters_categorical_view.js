@@ -152,7 +152,7 @@
             view5 = new api.view.CategoricalSelectedView({
                 el: this.filterSelected,
                 model: this.model,
-                noDataMessage: "All"
+                noDataMessage: "No Filters Selected"
             });
 
             var me = this;

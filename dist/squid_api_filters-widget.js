@@ -918,7 +918,8 @@ function program4(depth0,data) {
                 this.filterStore.set({
                     "searchPrevious" : null,
                     "search" : null,
-                    "pageIndex" : 0
+                    "pageIndex" : 0,
+                    "itemIndex" : 0
                 }, {
                     "silent" : true
                 });

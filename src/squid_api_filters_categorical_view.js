@@ -84,7 +84,22 @@
             }, this);
 
             this.setCurrentModel();
+
+            // listen for global status change
+            squid_api.model.status.on('change:status', this.statusUpdate, this);
+
             this.render();
+        },
+
+        statusUpdate : function() {
+            var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
+            if (running) {
+                // computation is running : disable input
+                this.$el.find("button").attr("disabled","disabled");
+            } else {
+                // computation is done : enable input
+                this.$el.find("button").removeAttr("disabled");
+            }
         },
         
         setCurrentModel : function() {

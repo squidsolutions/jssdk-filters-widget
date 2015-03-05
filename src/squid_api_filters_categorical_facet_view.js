@@ -98,7 +98,7 @@
                 var itemIndex = this.model.get("itemIndex");
 
                 if (facetItems.length === 0) {
-                    this.$el.html("No Items");
+                    this.$el.html("<span class='no-items'>No Items</span>");
                 } else {
                     // display current facet members
                     var startIndex = (pageIndex * pageSize) - itemIndex;

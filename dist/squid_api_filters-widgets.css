@@ -24,6 +24,10 @@
 .squid_api_filters_categorical_filter_panel #squid_api_filters_categorical_selected_view li {
   float: left;
   margin-bottom: 10px; }
+.squid_api_filters_categorical_filter_panel .no-items {
+  display: inline-block;
+  height: 40px;
+  margin-left: 24px; }
 .squid_api_filters_categorical_filter_panel #search .input-group input {
   height: 40px;
   border-radius: 0px;
@@ -65,7 +69,7 @@
 .squid_api_filters_categorical_filter_panel #pagination-container {
   float: left; }
   .squid_api_filters_categorical_filter_panel #pagination-container .pagination {
-    margin: 10px 0;
+    margin: 8px 0 21px 16px;
     position: relative;
     display: inline-block; }
     .squid_api_filters_categorical_filter_panel #pagination-container .pagination ul {

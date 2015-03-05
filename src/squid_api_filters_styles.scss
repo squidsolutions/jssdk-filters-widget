@@ -37,6 +37,11 @@
       margin-bottom: 10px;
     }
   }
+  .no-items {
+    display: inline-block;
+    height: 40px;
+    margin-left: 24px;
+  }
   #search {
     .input-group {
       input {
@@ -97,7 +102,7 @@
   #pagination-container {
     float: left;
     .pagination {
-      margin: 10px 0;
+        margin: 8px 0 21px 16px;
         position: relative;
         display: inline-block;
          ul {

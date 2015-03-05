@@ -40,7 +40,12 @@
   background: #ecf0f1;
   color: #777; }
 .squid_api_filters_categorical_filter_panel .panel-body {
-  padding: 0px; }
+  padding: 0px;
+  background: #f3f3f3; }
+.squid_api_filters_categorical_filter_panel .panel-footer {
+  background: #fff; }
+  .squid_api_filters_categorical_filter_panel .panel-footer button.btn-primary {
+    background: #3498db; }
 .squid_api_filters_categorical_filter_panel .row {
   padding-left: 20px;
   padding-right: 20px; }
@@ -51,10 +56,10 @@
 .squid_api_filters_categorical_filter_panel #filter-selection {
   float: left; }
   .squid_api_filters_categorical_filter_panel #filter-selection .btn-group button {
-    background: #ecf0f1;
+    background: #3498db;
     height: 40px;
     font-size: 14px;
-    color: #777;
+    color: #fff;
     min-width: 175px; }
     .squid_api_filters_categorical_filter_panel #filter-selection .btn-group button .caret {
       right: 9px !important;
@@ -87,13 +92,13 @@
       vertical-align: middle; }
       .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active a, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active span {
         color: #fff;
-        background-color: #1abc9c;
+        background-color: #3498db;
         border-color: #dfe2e5; }
       .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.previous a, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.previous span {
         margin: 0; }
       .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.previous a, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.previous span, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.previous a:hover, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.previous span:hover, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.previous a:focus, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.previous span:focus, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.next a, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.next span, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.next a:hover, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.next span:hover, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.next a:focus, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li.active.next span:focus {
         color: #fff;
-        background-color: #1abc9c; }
+        background-color: #3498db; }
       .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:first-child a, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li:first-child span {
         border-left: none;
         border-radius: 4px 0 0 4px; }
@@ -135,7 +140,7 @@
         transition: .25s ease-out; }
         .squid_api_filters_categorical_filter_panel #pagination-container .pagination li a:hover, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li a:focus, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li a:active, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li span:hover, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li span:focus, .squid_api_filters_categorical_filter_panel #pagination-container .pagination li span:active {
           color: #fff;
-          background-color: #1abc9c; }
+          background-color: #3498db; }
     .squid_api_filters_categorical_filter_panel #pagination-container .pagination .btn-previous, .squid_api_filters_categorical_filter_panel #pagination-container .pagination .btn-next {
       padding-right: 23px;
       padding-left: 23px;
@@ -181,7 +186,7 @@
         .squid_api_filters_categorical_filter_panel #filter-display-results ul li i:before {
           content: ""; }
       .squid_api_filters_categorical_filter_panel #filter-display-results ul li:hover {
-        background: #f9f9f9; }
+        background: #fff; }
         .squid_api_filters_categorical_filter_panel #filter-display-results ul li:hover i {
           display: inline-block; }
       .squid_api_filters_categorical_filter_panel #filter-display-results ul li.active i {

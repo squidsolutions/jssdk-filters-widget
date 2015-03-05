@@ -61,6 +61,13 @@
   }
   .panel-body {
     padding: 0px;
+    background: #f3f3f3;
+  }
+  .panel-footer {
+    background: #fff;
+    button.btn-primary {
+      background: #3498db;
+    }
   }
   .row {
     &:first-of-type {
@@ -77,10 +84,10 @@
     .btn-group {
 
       button {
-        background: #ecf0f1;
+        background: #3498db;
         height: 40px;
         font-size: 14px;
-        color: #777;
+        color: #fff;
         min-width: 175px;
 
         .caret {
@@ -123,7 +130,7 @@
           &.active {
             a, span {
               color: #fff;
-              background-color: #1abc9c;
+              background-color: #3498db;
               border-color: #dfe2e5;
             }
           }
@@ -135,7 +142,7 @@
           &.active.previous, &.active.next {
             a, span, a:hover, span:hover, a:focus, span:focus {
               color: #fff;
-              background-color: #1abc9c
+              background-color: #3498db;
             }
           }
           &:first-child {
@@ -199,7 +206,7 @@
 
                 &:hover, &:focus, &:active {
                   color: #fff;
-                  background-color: #1abc9c;
+                  background-color: #3498db;
                 }
           }
         }
@@ -256,7 +263,7 @@
         }
 
         &:hover {
-          background: #f9f9f9;
+          background: #fff;
           i {
             display: inline-block;
           }

@@ -26,11 +26,25 @@
                 }
             }
 
-            this.model.on("change", this.render, this);
+            this.model.on("change", this.renderSelection, this);
             this.render();
+            this.renderSelection();
+        },
+        
+        render : function() {
+            var me = this;
+
+            this.$el.find(".btn-select-filter").multiselect({
+                nonSelectedText: 'Select a Dimension',
+                onChange: function(option) {
+                    var filterValue = $(option).val();
+                    me.filterStore.set("selectedFilter", filterValue);
+                }
+            });
+
         },
 
-        render : function() {
+        renderSelection : function() {
             var me = this;
 
             if (this.model.get("status") && this.model.get("status") !== "RUNNING") {
@@ -38,22 +52,15 @@
                     var facets = this.model.get("selection").facets;
                     var items = [];
                     for (i=0; i<facets.length; i++) {
-                        if (facets[i].dimension.type !== "CONTINUOUS") {
-                            items.push(facets[i]);
+                        var facet = facets[i];
+                        if (facet.dimension.type !== "CONTINUOUS") {
+                            items.push({label: facet.dimension.name, title: facet.dimension.name, value: facet.id});
                         }
                     }
-                    var html = squid_api.template.squid_api_filters_categorical_selector_view({
-                        "items" : items
-                    });
-                    this.$el.find(".btn-select-filter").html(html);
+
+                    var select = this.$el.find(".btn-select-filter");
+                    select.multiselect('dataprovider', items);
                 }
-                this.$el.find(".btn-select-filter").multiselect({
-                    nonSelectedText: 'Select a Dimension',
-                    onChange: function(option) {
-                        var filterValue = $(option).val();
-                        me.filterStore.set("selectedFilter", filterValue);
-                    }
-                });
             }
         }
     });

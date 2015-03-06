@@ -54,12 +54,17 @@
                     var items = [];
                     for (i=0; i<facets.length; i++) {
                         var facet = facets[i];
-                        if (facet.dimension.type !== "CONTINUOUS") {
+                        if (facet.dimension.type == "CATEGORICAL") {
                             var selected = false;
                             if (facet.id == selectedFilter) {
                                 selected = true;
                             }
-                            items.push({label: facet.dimension.name, title: facet.dimension.name, value: facet.id, selected: selected});
+                            items.push({
+                                label : facet.dimension.name,
+                                title : facet.dimension.name,
+                                value : facet.id,
+                                selected : selected
+                            });
                         }
                     }
 

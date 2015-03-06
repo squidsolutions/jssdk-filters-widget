@@ -56,12 +56,25 @@
             );
             this.currentModel = new squid_api.model.FiltersJob();
             
-            this.model.on("change", this.setCurrentModel, this);
+            this.model.on("change", function() {
+                this.filterStore.set({
+                    "searchPrevious" : null,
+                    "search" : null,
+                    "facet" : null,
+                    "pageIndex" : 0,
+                    "itemIndex" : 0
+                }, {
+                    "silent" : true
+                });
+                this.setCurrentModel();
+                
+            }, this);
             
             this.filterStore.on("change:selectedFilter", function() {
                 this.filterStore.set({
                     "searchPrevious" : null,
                     "search" : null,
+                    "facet" : null,
                     "pageIndex" : 0,
                     "itemIndex" : 0
                 }, {
@@ -77,12 +90,10 @@
                 this.filterStore.set({"pageIndex": 0}, {"silent" : true});
                 this.filterStore.trigger("change:pageIndex", this.filterStore);
             }, this);
+            
             this.filterStore.on("change:pageIndex", this.renderFacet, this);
             
-            this.currentModel.on("change", function() {
-                // trigger render
-                this.filterStore.trigger("change:pageIndex", this.filterStore);
-            }, this);
+            this.currentModel.on("change", this.renderFacet, this);
 
             this.setCurrentModel();
 

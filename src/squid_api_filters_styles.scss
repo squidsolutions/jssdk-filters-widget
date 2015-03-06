@@ -37,6 +37,19 @@
       margin-bottom: 10px;
     }
   }
+  .open > .dropdown-menu {
+      display: block;
+      left: 173px;
+      top: 0px;
+      min-width: 400px;
+      input[type="radio"], input[type="checkbox"] {
+        display: none;
+      }
+      li {
+        width: 50%;
+        display: inline-block;
+      }
+  }
   .no-items {
       display: inline-block;
       margin-bottom: 20px;

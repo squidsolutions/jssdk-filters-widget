@@ -41,13 +41,18 @@
       display: block;
       left: 173px;
       top: 0px;
-      min-width: 400px;
+      min-width: 600px;
       input[type="radio"], input[type="checkbox"] {
         display: none;
       }
       li {
         min-width: 50%;
         display: inline-block;
+      }
+      label {
+        max-width: 250px;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
   }
   .no-items {

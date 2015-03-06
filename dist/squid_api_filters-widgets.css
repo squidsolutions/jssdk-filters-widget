@@ -32,7 +32,7 @@
   .squid_api_filters_categorical_filter_panel .open > .dropdown-menu input[type="radio"], .squid_api_filters_categorical_filter_panel .open > .dropdown-menu input[type="checkbox"] {
     display: none; }
   .squid_api_filters_categorical_filter_panel .open > .dropdown-menu li {
-    width: 50%;
+    min-width: 50%;
     display: inline-block; }
 .squid_api_filters_categorical_filter_panel .no-items {
   display: inline-block;

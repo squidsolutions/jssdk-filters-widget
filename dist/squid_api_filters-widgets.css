@@ -28,12 +28,16 @@
   display: block;
   left: 173px;
   top: 0px;
-  min-width: 400px; }
+  min-width: 600px; }
   .squid_api_filters_categorical_filter_panel .open > .dropdown-menu input[type="radio"], .squid_api_filters_categorical_filter_panel .open > .dropdown-menu input[type="checkbox"] {
     display: none; }
   .squid_api_filters_categorical_filter_panel .open > .dropdown-menu li {
-    width: 50%;
+    min-width: 50%;
     display: inline-block; }
+  .squid_api_filters_categorical_filter_panel .open > .dropdown-menu label {
+    max-width: 230px;
+    text-overflow: ellipsis;
+    overflow: hidden; }
 .squid_api_filters_categorical_filter_panel .no-items {
   display: inline-block;
   margin-bottom: 20px;

@@ -217,7 +217,6 @@
                     
                     if ((fetch === true) && (selectedFacetId)) {
                         // pre-fetch some pages of facet members
-                        // this.$el.html("Retrieving items list...");
                         var facetJob = new squid_api.model.ProjectFacetJobFacet();
                         facetJob.set("id",this.currentModel.get("id"));
                         facetJob.set("oid", selectedFacetId);
@@ -237,8 +236,15 @@
                                 console.error(response);
                             },
                             success: function(model, response) {
-                                me.filterStore.set("itemIndex", startIndex);
-                                me.filterStore.set("facet", model);
+                                if (model.get("apiError") && (model.get("apiError") == "COMPUTING_IN_PROGRESS")) {
+                                    // set a fake facet
+                                    var f = new squid_api.model.ProjectFacetJobFacet();
+                                    f.set("items", []);
+                                    me.filterStore.set("facet", f);
+                                } else {
+                                    me.filterStore.set("itemIndex", startIndex);
+                                    me.filterStore.set("facet", model);
+                                }
                             }
                         });
                     }

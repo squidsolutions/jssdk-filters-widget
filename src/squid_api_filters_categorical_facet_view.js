@@ -97,7 +97,9 @@
                 var pageSize = this.model.get("pageSize");
                 var itemIndex = this.model.get("itemIndex");
 
-                if (facetItems.length === 0) {
+                if (!facetItems) {
+                    this.$el.html("<span class='no-items'>Computing in progress</span>");
+                } else if (facetItems.length === 0) {
                     this.$el.html("<span class='no-items'>No Items</span>");
                 } else {
                     // display current facet members

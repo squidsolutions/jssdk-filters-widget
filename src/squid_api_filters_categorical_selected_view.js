@@ -86,7 +86,11 @@
                                     var obj = {};
                                     obj.facetItem = selectedItems[ix].value;
                                     obj.facetItemId = selectedItems[ix].id;
-                                    obj.facetName = facets[i].dimension.name;
+                                    if (facets[i].name) {
+                                        obj.facetName = facets[i].name;
+                                    } else {
+                                        obj.facetName = facets[i].dimension.name;
+                                    }
                                     obj.facetNameId = facets[i].id;
                                     selFacets.push(obj);
                                 }

@@ -514,7 +514,9 @@ function program4(depth0,data) {
                 var pageSize = this.model.get("pageSize");
                 var itemIndex = this.model.get("itemIndex");
 
-                if (facetItems.length === 0) {
+                if (!facetItems) {
+                    this.$el.html("<span class='no-items'>Computing in progress</span>");
+                } else if (facetItems.length === 0) {
                     this.$el.html("<span class='no-items'>No Items</span>");
                 } else {
                     // display current facet members
@@ -764,7 +766,11 @@ function program4(depth0,data) {
                                     var obj = {};
                                     obj.facetItem = selectedItems[ix].value;
                                     obj.facetItemId = selectedItems[ix].id;
-                                    obj.facetName = facets[i].dimension.name;
+                                    if (facets[i].name) {
+                                        obj.facetName = facets[i].name;
+                                    } else {
+                                        obj.facetName = facets[i].dimension.name;
+                                    }
                                     obj.facetNameId = facets[i].id;
                                     selFacets.push(obj);
                                 }
@@ -1078,7 +1084,6 @@ function program4(depth0,data) {
                     
                     if ((fetch === true) && (selectedFacetId)) {
                         // pre-fetch some pages of facet members
-                        // this.$el.html("Retrieving items list...");
                         var facetJob = new squid_api.model.ProjectFacetJobFacet();
                         facetJob.set("id",this.currentModel.get("id"));
                         facetJob.set("oid", selectedFacetId);
@@ -1098,8 +1103,15 @@ function program4(depth0,data) {
                                 console.error(response);
                             },
                             success: function(model, response) {
-                                me.filterStore.set("itemIndex", startIndex);
-                                me.filterStore.set("facet", model);
+                                if (model.get("apiError") && (model.get("apiError") == "COMPUTING_IN_PROGRESS")) {
+                                    // set a fake facet
+                                    var f = new squid_api.model.ProjectFacetJobFacet();
+                                    f.set("items", []);
+                                    me.filterStore.set("facet", f);
+                                } else {
+                                    me.filterStore.set("itemIndex", startIndex);
+                                    me.filterStore.set("facet", model);
+                                }
                             }
                         });
                     }

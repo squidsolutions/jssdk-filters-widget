@@ -60,8 +60,8 @@
                                 selected = true;
                             }
                             items.push({
-                                label : facet.dimension.name,
-                                title : facet.dimension.name,
+                                label : facet.name,
+                                title : facet.name,
                                 value : facet.id,
                                 selected : selected
                             });

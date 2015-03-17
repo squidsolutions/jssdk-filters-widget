@@ -847,8 +847,8 @@ function program4(depth0,data) {
                                 selected = true;
                             }
                             items.push({
-                                label : facet.dimension.name,
-                                title : facet.dimension.name,
+                                label : facet.name,
+                                title : facet.name,
                                 value : facet.id,
                                 selected : selected
                             });
@@ -1206,7 +1206,7 @@ function program4(depth0,data) {
             if (this.model && this.model.get('dimension')) {
                 var items = this.model.get('items');
                 var selItems = this.model.get('selectedItems');
-                var name = this.model.get('dimension').name;
+                var name = this.model.get('name');
                 var facetId = this.model.get('facetId');
 
                 var selAvailable = false;

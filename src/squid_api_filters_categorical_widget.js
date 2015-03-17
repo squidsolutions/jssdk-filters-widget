@@ -67,7 +67,7 @@
             if (this.model && this.model.get('dimension')) {
                 var items = this.model.get('items');
                 var selItems = this.model.get('selectedItems');
-                var name = this.model.get('dimension').name;
+                var name = this.model.get('name');
                 var facetId = this.model.get('facetId');
 
                 var selAvailable = false;

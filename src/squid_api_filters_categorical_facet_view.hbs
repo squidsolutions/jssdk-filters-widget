@@ -1,10 +1,18 @@
-<ul>
-	{{#each items}}
-		{{#if selected}}
-			<li class="active" selected="true" data-value="{{value}}" data-type="{{type}}" data-id="{{id}}"><i class="fa fa-square-o"></i><span>{{value}}</span></li>
-
-		{{else}}
-			<li data-value="{{value}}" data-type="{{type}}" data-id="{{id}}"><i class="fa fa-square-o"></i><span>{{value}}</span></li>
-		{{/if}}
-	{{/each}}
-</ul>
+{{#if items}}
+	<ul>
+		{{#each items}}
+			{{#if selected}}
+				<li class="active" selected="true" data-value="{{value}}" data-type="{{type}}" data-id="{{id}}">
+					<i class="fa fa-square-o"></i><span>{{value}}</span>
+				</li>
+			{{else}}
+				<li data-value="{{value}}" data-type="{{type}}" data-id="{{id}}">
+					<i class="fa fa-square-o"></i><span>{{value}}</span>
+				</li>
+			{{/if}}
+		{{/each}}
+	</ul>
+{{/if}}
+{{#if message}}
+	<span class='no-items'>{{message}}</span>
+{{/if}}

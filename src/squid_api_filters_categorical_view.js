@@ -247,6 +247,9 @@
                                 }
                             }
                         });
+                    } else {
+                        // trigger facet render
+                        me.filterStore.trigger("change:facet");
                     }
                 }
             }

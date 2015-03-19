@@ -92,7 +92,7 @@
         render : function() {
             var facet = this.model.get("facet");
             var message = null;
-            var updatedItems;
+            var updatedItems = [];
             
             if (facet) {
                 var facetItems = facet.get("items");
@@ -103,36 +103,41 @@
                 // display current facet members
                 var startIndex = (pageIndex * pageSize) - itemIndex;
                 var endIndex = startIndex + pageSize;
-                // Store selected Filter
+
                 var selectedFilter = this.model.get("selectedFilter");
-                // Store facets
                 var facets = this.filters.get("selection").facets;
                 if (endIndex > facetItems.length) {
                     endIndex = facetItems.length;
                 }
-                // Store Items to Display
-                var items = [];
-                for (ix=startIndex; ix<endIndex; ix++) {
-                    items.push(facetItems[ix]);
-                }
                 
-                // Manipulate items to add a selected or not attribute
-                for (ix=0; ix<facets.length; ix++) {
-                    if (selectedFilter === facets[ix].id) {
-                        var selectedItems = facets[ix].selectedItems;
-                        for (ix1=0; ix1<items.length; ix1++) {
-                            var obj = items[ix1];
-                            obj.selected = false;
-                            for (ix2=0; ix2<selectedItems.length; ix2++) {
-                                if (items[ix1].id === selectedItems[ix2].id) {
-                                    obj.selected = true;
-                                    break;
+                if (startIndex >= 0) {
+                    var items = [];
+                    for (ix=startIndex; ix<endIndex; ix++) {
+                        items.push(facetItems[ix]);
+                    }
+                    
+                    // Manipulate items to add a selected or not attribute
+                    for (ix=0; ix<facets.length; ix++) {
+                        if (selectedFilter === facets[ix].id) {
+                            var selectedItems = facets[ix].selectedItems;
+                            for (ix1=0; ix1<items.length; ix1++) {
+                                var obj = items[ix1];
+                                obj.selected = false;
+                                for (ix2=0; ix2<selectedItems.length; ix2++) {
+                                    if (items[ix1].id === selectedItems[ix2].id) {
+                                        obj.selected = true;
+                                        break;
+                                    }
                                 }
+                                updatedItems.push(obj);
                             }
-                            updatedItems = updatedItems || [];
-                            updatedItems.push(obj);
                         }
                     }
+                }
+                
+                // fill updatedItems
+                while (updatedItems.length<pageSize) {
+                    updatedItems.push({"id" : null});
                 }
                 
                 // set the message
@@ -149,6 +154,7 @@
             } else {
                 message = "No Dimension Selected";
             }
+
             var html = squid_api.template.squid_api_filters_categorical_facet_view({
                 "items" : updatedItems, "message" : message
             });

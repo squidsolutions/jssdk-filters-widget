@@ -19,38 +19,24 @@ function program2(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\n			";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.id), {hash:{},inverse:self.program(8, program8, data),fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n		";
   return buffer;
   }
 function program3(depth0,data) {
   
-  var buffer = "", stack1, helper;
-  buffer += "\n				<li class=\"active\" selected=\"true\" data-value=\"";
-  if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "\" data-type=\"";
-  if (helper = helpers.type) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.type); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "\" data-id=\"";
-  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "\">\n					<i class=\"fa fa-square-o\"></i><span>";
-  if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span>\n				</li>\n			";
+  var buffer = "", stack1;
+  buffer += "\n				";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n			";
   return buffer;
   }
-
-function program5(depth0,data) {
+function program4(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n				<li data-value=\"";
+  buffer += "\n					<li class=\"active\" selected=\"true\" data-value=\"";
   if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -62,15 +48,44 @@ function program5(depth0,data) {
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\">\n					<i class=\"fa fa-square-o\"></i><span>";
+    + "\">\n						<i class=\"fa fa-square-o\"></i><span>";
   if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span>\n				</li>\n			";
+    + "</span>\n					</li>\n				";
   return buffer;
   }
 
-function program7(depth0,data) {
+function program6(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n					<li data-value=\"";
+  if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-type=\"";
+  if (helper = helpers.type) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.type); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-id=\"";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">\n						<i class=\"fa fa-square-o\"></i><span>";
+  if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n					</li>\n				";
+  return buffer;
+  }
+
+function program8(depth0,data) {
+  
+  
+  return "\n				<li></li>\n			";
+  }
+
+function program10(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += "\n	<span class='no-items'>";
@@ -84,7 +99,7 @@ function program7(depth0,data) {
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.items), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.message), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.message), {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n";
   return buffer;
@@ -531,7 +546,7 @@ function program4(depth0,data) {
         render : function() {
             var facet = this.model.get("facet");
             var message = null;
-            var updatedItems;
+            var updatedItems = [];
             
             if (facet) {
                 var facetItems = facet.get("items");
@@ -542,36 +557,41 @@ function program4(depth0,data) {
                 // display current facet members
                 var startIndex = (pageIndex * pageSize) - itemIndex;
                 var endIndex = startIndex + pageSize;
-                // Store selected Filter
+
                 var selectedFilter = this.model.get("selectedFilter");
-                // Store facets
                 var facets = this.filters.get("selection").facets;
                 if (endIndex > facetItems.length) {
                     endIndex = facetItems.length;
                 }
-                // Store Items to Display
-                var items = [];
-                for (ix=startIndex; ix<endIndex; ix++) {
-                    items.push(facetItems[ix]);
-                }
                 
-                // Manipulate items to add a selected or not attribute
-                for (ix=0; ix<facets.length; ix++) {
-                    if (selectedFilter === facets[ix].id) {
-                        var selectedItems = facets[ix].selectedItems;
-                        for (ix1=0; ix1<items.length; ix1++) {
-                            var obj = items[ix1];
-                            obj.selected = false;
-                            for (ix2=0; ix2<selectedItems.length; ix2++) {
-                                if (items[ix1].id === selectedItems[ix2].id) {
-                                    obj.selected = true;
-                                    break;
+                if (startIndex >= 0) {
+                    var items = [];
+                    for (ix=startIndex; ix<endIndex; ix++) {
+                        items.push(facetItems[ix]);
+                    }
+                    
+                    // Manipulate items to add a selected or not attribute
+                    for (ix=0; ix<facets.length; ix++) {
+                        if (selectedFilter === facets[ix].id) {
+                            var selectedItems = facets[ix].selectedItems;
+                            for (ix1=0; ix1<items.length; ix1++) {
+                                var obj = items[ix1];
+                                obj.selected = false;
+                                for (ix2=0; ix2<selectedItems.length; ix2++) {
+                                    if (items[ix1].id === selectedItems[ix2].id) {
+                                        obj.selected = true;
+                                        break;
+                                    }
                                 }
+                                updatedItems.push(obj);
                             }
-                            updatedItems = updatedItems || [];
-                            updatedItems.push(obj);
                         }
                     }
+                }
+                
+                // fill updatedItems
+                while (updatedItems.length<pageSize) {
+                    updatedItems.push({"id" : null});
                 }
                 
                 // set the message
@@ -588,6 +608,7 @@ function program4(depth0,data) {
             } else {
                 message = "No Dimension Selected";
             }
+
             var html = squid_api.template.squid_api_filters_categorical_facet_view({
                 "items" : updatedItems, "message" : message
             });

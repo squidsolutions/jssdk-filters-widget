@@ -34,7 +34,7 @@
                 var selectedItem = $(item.currentTarget).attr("data-attr");
 
                 // Get clicked filter value & create object
-                var value = $(item.currentTarget).attr("data-id");
+                var value = $(item.currentTarget).attr("data-value");
                 var type = $(item.currentTarget).attr("data-type");
                 var id = $(item.currentTarget).attr("data-id");
 

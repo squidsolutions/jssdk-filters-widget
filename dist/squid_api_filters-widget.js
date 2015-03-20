@@ -488,7 +488,7 @@ function program4(depth0,data) {
                 var selectedItem = $(item.currentTarget).attr("data-attr");
 
                 // Get clicked filter value & create object
-                var value = $(item.currentTarget).attr("data-id");
+                var value = $(item.currentTarget).attr("data-value");
                 var type = $(item.currentTarget).attr("data-type");
                 var id = $(item.currentTarget).attr("data-id");
 
@@ -888,7 +888,7 @@ function program4(depth0,data) {
                     var items = [];
                     for (i=0; i<facets.length; i++) {
                         var facet = facets[i];
-                        if (facet.dimension.type == "CATEGORICAL") {
+                        if ((facet.dimension.type == "CATEGORICAL") || (facet.dimension.type == "SEGMENTS")) {
                             var selected = false;
                             if (facet.id == selectedFilter) {
                                 selected = true;

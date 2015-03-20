@@ -54,7 +54,7 @@
                     var items = [];
                     for (i=0; i<facets.length; i++) {
                         var facet = facets[i];
-                        if (facet.dimension.type == "CATEGORICAL") {
+                        if ((facet.dimension.type == "CATEGORICAL") || (facet.dimension.type == "SEGMENTS")) {
                             var selected = false;
                             if (facet.id == selectedFilter) {
                                 selected = true;

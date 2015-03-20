@@ -1969,11 +1969,13 @@ function program4(depth0,data) {
                                 viewIdx++;
                             }
                             // set view model
+                            var facetName = facet2.name || facet2.dimension.name;
                             model.set({
                                 facetId: facet2.id,
                                 dimension: facet2.dimension,
                                 items: facet2.items,
-                                selectedItems: facet2.selectedItems
+                                selectedItems: facet2.selectedItems,
+                                name: facetName
                             },{silent:true});
                             model.trigger("change");
                         }

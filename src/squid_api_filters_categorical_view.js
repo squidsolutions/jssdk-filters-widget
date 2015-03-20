@@ -16,6 +16,9 @@
             if (!this.model) {
                 this.model = squid_api.model.filters;
             }
+            // force using the non-blocking engine
+            this.model.set("engineVersion", "2");
+            
             if (options.filterPanel) {
                 this.filterPanel = options.filterPanel;
             }

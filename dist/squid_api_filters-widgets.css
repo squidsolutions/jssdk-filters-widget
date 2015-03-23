@@ -84,11 +84,6 @@
   top: -50px; }
   .squid_api_filters_categorical_filter_panel #selected .noData {
     position: relative;
-    top: 20px;
-    font-size: 14px;
-    padding: 0px !important;
-    color: #b9b9b9;
-    font-family: "Avenir Regular","Montserrat",Arial,sans-serif;
     text-align: center; }
 .squid_api_filters_categorical_filter_panel #pagination-container {
   float: left; }

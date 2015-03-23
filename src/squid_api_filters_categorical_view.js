@@ -140,30 +140,30 @@
                         "data-target" : this.filterPanel
                     }));
 
-            view = new api.view.CategoricalSelectorView({
+            view = new squid_api.view.CategoricalSelectorView({
                 el: $(this.filterPanel).find("#filter-selection"),
                 model: this.currentModel,
                 filterStore : this.filterStore
             });
 
-            view2 = new api.view.CategoricalFacetView({
+            view2 = new squid_api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
                 model: this.filterStore,
                 filters: this.currentModel,
             });
 
-            view3 = new api.view.CategoricalPagingView({
+            view3 = new squid_api.view.CategoricalPagingView({
                 el: $(this.filterPanel).find("#pagination-container"),
                 model: this.filterStore
             });
 
-            view4 = new api.view.CategoricalSelectedView({
+            view4 = new squid_api.view.CategoricalSelectedView({
                 el: $(this.filterPanel).find("#selected"),
                 model: this.currentModel,
                 noDataMessage: "No Filters Selected"
             });
 
-            view5 = new api.view.CategoricalSelectedView({
+            view5 = new squid_api.view.CategoricalSelectedView({
                 el: this.filterSelected,
                 model: this.model,
                 noDataMessage: "No Filters Selected"

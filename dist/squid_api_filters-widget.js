@@ -589,11 +589,6 @@ function program4(depth0,data) {
                     }
                 }
                 
-                // fill updatedItems
-                while (updatedItems.length<pageSize) {
-                    updatedItems.push({"id" : null});
-                }
-                
                 // set the message
                 if (facet.get("done") === true) {
                     if ((facet.get("hasMore") === true) && (updatedItems < pageSize)) {

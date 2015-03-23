@@ -62,7 +62,9 @@
       margin-left: 3px;
   }
   #search {
+    min-width: 350px;
     .input-group {
+      width: 50%;
       input {
             height: 40px;
             border-radius: 0px;
@@ -108,6 +110,7 @@
         font-size: 14px;
         color: #fff;
         min-width: 175px;
+        width: 50%;
 
         .caret {
           right: 9px !important;

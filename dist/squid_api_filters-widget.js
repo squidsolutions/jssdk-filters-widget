@@ -257,7 +257,7 @@ function program7(depth0,data) {
   buffer += "\n	<div class=\"panel-body\">\n		";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n			<div class=\"col-md-3\">\n				<div id=\"filter-selection\">\n					<select class=\"btn btn-select-filter\" size=\"2\"></select>\n				</div>\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Filter\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n			<div class=\"col-md-3\">\n				\n			</div>\n			<div class=\"col-md-5\">\n				\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-6\">\n				<div id=\"filter-display-results\">\n				</div>\n			</div>\n			<div class=\"col-md-6\">\n				<div id=\"selected\">\n					\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div id=\"pagination-container\">\n					\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n\n	";
+  buffer += "\n			<div class=\"col-md-3\">\n				<div id=\"filter-selection\">\n					<select class=\"btn btn-select-filter\" size=\"2\"></select>\n				</div>\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Search for\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n			<div class=\"col-md-3\">\n				\n			</div>\n			<div class=\"col-md-5\">\n				\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-6\">\n				<div id=\"filter-display-results\">\n				</div>\n			</div>\n			<div class=\"col-md-6\">\n				<div id=\"selected\">\n					\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div id=\"pagination-container\">\n					\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n\n	";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n</div>";
@@ -913,7 +913,7 @@ function program4(depth0,data) {
             var me = this;
 
             this.$el.find(".btn-select-filter").multiselect({
-                nonSelectedText: 'Select a Dimension',
+                nonSelectedText: 'Select Filter',
                 onChange: function(option) {
                     var filterValue = $(option).val();
                     me.filterStore.set("selectedFilter", filterValue);

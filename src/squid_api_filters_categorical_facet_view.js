@@ -6,7 +6,9 @@
 
         model : null,
         filters: null,
+        filterModel: null,
         format : null,
+        panelButtons : true,
 
         initialize : function(options) {
             if (options.format) {
@@ -20,6 +22,12 @@
             }
             if (options.filters) {
                 this.filters = options.filters;
+            }
+            if (options.filterModel) {
+                this.filterModel = options.filterModel;
+            }
+            if (! options.panelButtons) {
+                this.panelButtons = options.panelButtons;
             }
 
             this.model.on("change:pageIndex", this.render, this);
@@ -86,6 +94,10 @@
                 selection.facets = facets;
                 this.filters.set("selection", selection);
                 this.filters.trigger("change");
+
+                if (! this.panelButtons) {
+                    this.filterModel.set("selection", selection);
+                }
             },
         },
 

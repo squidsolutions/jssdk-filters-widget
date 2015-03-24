@@ -1,13 +1,18 @@
 <div class="panel panel-default filter-panel squid_api_filters-categorical-panel-view">
+	{{#unless panel-buttons}}
 	<div class="panel-heading">
 		<button type="button" class="close" data-toggle="collapse"
 			data-target="{{data-target}}" data-clavier="true" aria-hidden="true">
 			<i class="glyphicon glyphicon-chevron-up"></i>
 		</button>
-		<h4 class="panel-title" id="myModalLabel">Filters</h4>
 	</div>
+	{{/unless}}
 	<div class="panel-body">
-		<div class="row">
+		{{#if panel-buttons}}
+			<div class="row">
+		{{else}}
+			<div class="row no-padding">
+		{{/if}}
 			<div class="col-md-3">
 				<div id="filter-selection">
 					<select class="btn btn-select-filter" size="2"></select>
@@ -51,10 +56,13 @@
 				
 			</div>
 	</div>
-	<div class="panel-footer">
-		<button type="button" class="btn btn-primary apply-selection" data-toggle="collapse"
-			data-target="{{data-target}}" data-clavier="true">Apply</button>
-		<button type="button" class="btn btn-default cancel-selection" data-toggle="collapse"
-			data-target="{{data-target}}" data-clavier="true">Cancel</button>
-	</div>
+
+	{{#if panel-buttons}}
+		<div class="panel-footer">
+			<button type="button" class="btn btn-primary apply-selection" data-toggle="collapse"
+				data-target="{{data-target}}" data-clavier="true">Apply</button>
+			<button type="button" class="btn btn-default cancel-selection" data-toggle="collapse"
+				data-target="{{data-target}}" data-clavier="true">Cancel</button>
+		</div>
+	{{/if}}
 </div>

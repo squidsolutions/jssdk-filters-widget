@@ -24,6 +24,8 @@
 .squid_api_filters_categorical_filter_panel #squid_api_filters_categorical_selected_view li {
   float: left;
   margin-bottom: 10px; }
+.squid_api_filters_categorical_filter_panel .panel-heading {
+  border: 0px; }
 .squid_api_filters_categorical_filter_panel .open > .dropdown-menu {
   display: block;
   left: 173px;
@@ -70,6 +72,8 @@
   padding-right: 20px; }
   .squid_api_filters_categorical_filter_panel .row:first-of-type {
     padding-top: 20px; }
+  .squid_api_filters_categorical_filter_panel .row.no-padding {
+    padding-top: 0px; }
 .squid_api_filters_categorical_filter_panel h4 {
   text-align: center; }
 .squid_api_filters_categorical_filter_panel #filter-selection {

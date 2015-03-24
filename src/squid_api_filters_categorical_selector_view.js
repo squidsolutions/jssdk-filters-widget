@@ -15,7 +15,6 @@
             if (options.filterStore) {
                 this.filterStore = options.filterStore;
             }
-
             if (options.format) {
                 this.format = options.format;
             } else {

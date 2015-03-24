@@ -595,6 +595,8 @@ function program4(depth0,data) {
             var updatedItems = [];
 
             if (facet) {
+                this.$el.addClass("min-filter-height");
+
                 var facetItems = facet.get("items");
                 var pageIndex = this.model.get("pageIndex");
                 var pageSize = this.model.get("pageSize");
@@ -634,10 +636,9 @@ function program4(depth0,data) {
                         }
                     }
                 }
-                this.$el.addClass("min-filter-height");
 
                 // set the message
-                if (facet.get("done")) {
+                if (facet.get("done") === true) {
                     if ((facet.get("hasMore") === true) && (updatedItems < pageSize)) {
                         message = "Partial results (computation pending)";
                     } else if (!facetItems || facetItems.length === 0) {

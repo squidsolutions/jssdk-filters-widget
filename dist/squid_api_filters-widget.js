@@ -593,7 +593,7 @@ function program4(depth0,data) {
             var facet = this.model.get("facet");
             var message = null;
             var updatedItems = [];
-            
+
             if (facet) {
                 var facetItems = facet.get("items");
                 var pageIndex = this.model.get("pageIndex");
@@ -634,13 +634,15 @@ function program4(depth0,data) {
                         }
                     }
                 }
-                
+                this.$el.addClass("min-filter-height");
+
                 // set the message
-                if (facet.get("done") === true) {
+                if (facet.get("done")) {
                     if ((facet.get("hasMore") === true) && (updatedItems < pageSize)) {
                         message = "Partial results (computation pending)";
                     } else if (!facetItems || facetItems.length === 0) {
                         message = "No Items";
+                        this.$el.removeClass("min-filter-height");
                     }
                 } else {
                     message = "Computing in progress";
@@ -648,11 +650,13 @@ function program4(depth0,data) {
                 
             } else {
                 message = "No Dimension Selected";
+                this.$el.removeClass("min-filter-height");
             }
 
             var html = squid_api.template.squid_api_filters_categorical_facet_view({
                 "items" : updatedItems, "message" : message
             });
+
             this.$el.html(html);
         }
 

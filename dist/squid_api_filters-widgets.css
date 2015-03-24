@@ -177,9 +177,10 @@
   padding-top: 20px;
   overflow: hidden;
   width: 100%; }
+  .squid_api_filters_categorical_filter_panel #filter-display-results.min-filter-height {
+    min-height: 230px; }
   .squid_api_filters_categorical_filter_panel #filter-display-results ul {
     padding-left: 0px;
-    min-height: 200px;
     list-style-type: none;
     display: inline-block;
     width: 100%;

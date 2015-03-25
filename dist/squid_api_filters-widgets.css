@@ -14,7 +14,8 @@
     border: 1px solid #ccc;
     padding: 5px !important; }
     #squid_api_filters_categorical_selected_view li .facet-name, #squid_api_filters_categorical_selected_view li .facet-value, #squid_api_filters-categorical-panel-view li .facet-name, #squid_api_filters-categorical-panel-view li .facet-value {
-      text-align: left; }
+      text-align: left;
+      padding-right: 20px; }
     #squid_api_filters_categorical_selected_view li .facet-remove, #squid_api_filters-categorical-panel-view li .facet-remove {
       position: absolute;
       right: 5px;

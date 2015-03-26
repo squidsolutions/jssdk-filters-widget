@@ -31,7 +31,7 @@
                 }
             }
 
-            this.model.on("change", this.render, this);
+            this.model.on("change:selection", this.render, this);
         },
 
         events: {
@@ -56,6 +56,9 @@
                                         if (facetId !== selectedItems[ix].id) {
                                             arr.push(selectedItems[ix]);
                                         }
+                                    } else {
+                                        // probably an interval
+                                        arr.push(selectedItems[ix]);
                                     }
                                 }
                                 facets[i].selectedItems = arr;

@@ -40,21 +40,21 @@
                 var itemId = $(event.currentTarget).parent("li").attr("attr-id");
 
                 // Copy model selection object properties to remove object reference
-                var selection = $.extend(true, {}, this.model.get("selection"));
-
-                if (selection) {
-                    if (selection.facets) {
-                        var facets = selection.facets;
-                        var updatedFacets = {facets:[]};
+                var selectionClone = $.extend(true, {}, this.model.get("selection"));
+                if (selectionClone) {
+                    var facets = selectionClone.facets;
+                    if (facets) {
                         for (i=0; i<facets.length; i++) {
                             var facet = facets[i];
-                            var selectedItems = facet.selectedItems;
-                            if ((facetName === facet.id) && (selectedItems.length > 0)) {
+                            var selectedItems = facets[i].selectedItems;
+                            if ((facetName === facets[i].id) && (selectedItems.length > 0)) {
                                 var arr = [];
                                 for (ix=0; ix<selectedItems.length; ix++) {
                                     if (selectedItems[ix].id) {
                                         if (itemId !== selectedItems[ix].id) {
                                             arr.push(selectedItems[ix]);
+                                        } else {
+                                            // ignore this item
                                         }
                                     } else {
                                         // probably an interval
@@ -62,12 +62,9 @@
                                     }
                                 }
                                 facet.selectedItems = arr;
-                                updatedFacets.facets.push(facet);
-                            } else {
-                                updatedFacets.facets.push(facet);
                             }
                         }
-                        this.model.set("selection", updatedFacets);  
+                        this.model.set("selection", selectionClone);  
                     }
                 }
             }

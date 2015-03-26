@@ -25,9 +25,8 @@
                 }
             }
 
-            this.model.on("change", this.renderSelection, this);
+            this.model.on("change:selection", this.renderSelection, this);
             this.render();
-            this.renderSelection();
         },
         
         render : function() {
@@ -46,30 +45,28 @@
         renderSelection : function() {
             var me = this;
 
-            if (this.model.get("status") && this.model.get("status") !== "RUNNING") {
-                if (this.model.get("selection")) {
-                    var selectedFilter = me.filterStore.get("selectedFilter");
-                    var facets = this.model.get("selection").facets;
-                    var items = [];
-                    for (i=0; i<facets.length; i++) {
-                        var facet = facets[i];
-                        if ((facet.dimension.type == "CATEGORICAL") || (facet.dimension.type == "SEGMENTS")) {
-                            var selected = false;
-                            if (facet.id == selectedFilter) {
-                                selected = true;
-                            }
-                            items.push({
-                                label : facet.name,
-                                title : facet.name,
-                                value : facet.id,
-                                selected : selected
-                            });
+            if (this.model.get("selection")) {
+                var selectedFilter = me.filterStore.get("selectedFilter");
+                var facets = this.model.get("selection").facets;
+                var items = [];
+                for (i=0; i<facets.length; i++) {
+                    var facet = facets[i];
+                    if ((facet.dimension.type == "CATEGORICAL") || (facet.dimension.type == "SEGMENTS")) {
+                        var selected = false;
+                        if (facet.id == selectedFilter) {
+                            selected = true;
                         }
+                        items.push({
+                            label : facet.name,
+                            title : facet.name,
+                            value : facet.id,
+                            selected : selected
+                        });
                     }
-
-                    var select = this.$el.find(".btn-select-filter");
-                    select.multiselect('dataprovider', items);
                 }
+
+                var select = this.$el.find(".btn-select-filter");
+                select.multiselect('dataprovider', items);
             }
         }
     });

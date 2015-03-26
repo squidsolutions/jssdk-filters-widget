@@ -6,9 +6,7 @@
 
         model : null,
         filters: null,
-        filterModel: null,
         format : null,
-        panelButtons : true,
 
         initialize : function(options) {
             if (options.format) {
@@ -23,15 +21,10 @@
             if (options.filters) {
                 this.filters = options.filters;
             }
-            if (options.filterModel) {
-                this.filterModel = options.filterModel;
-            }
-            if (! options.panelButtons) {
-                this.panelButtons = options.panelButtons;
-            }
 
             this.model.on("change:pageIndex", this.render, this);
             this.model.on("change:facet", this.render, this);
+            this.model.on("change:selection", this.render, this);
         },
 
         events: {
@@ -47,7 +40,8 @@
                 var id = $(item.currentTarget).attr("data-id");
 
                 // Get selected Filters
-                var facets = this.filters.get("selection").facets;
+                var selectionClone = $.extend(true, {}, this.model.get("selection"));
+                var facets = selectionClone.facets;
 
                 // Set up new object to update facet model
                 var selection = {facets: []};
@@ -93,11 +87,6 @@
                 // Set the updated filters model
                 selection.facets = facets;
                 this.filters.set("selection", selection);
-                this.filters.trigger("change");
-
-                if (! this.panelButtons) {
-                    this.filterModel.set("selection", selection);
-                }
             },
         },
 

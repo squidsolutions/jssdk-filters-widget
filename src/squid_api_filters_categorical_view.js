@@ -63,10 +63,10 @@
                 search : null
             }
             );
-            this.currentModel = new squid_api.model.FiltersJob();
             
-            this.model.on("change", function() {
-                this.filterStore.set({
+            this.model.on("change:domains", function() {
+                // reset
+                me.filterStore.set({
                     "searchPrevious" : null,
                     "search" : null,
                     "facet" : null,
@@ -75,12 +75,20 @@
                 }, {
                     "silent" : true
                 });
-                this.setCurrentModel();
-                
+                me.setCurrentModel();
+                me.render();
+                me.currentModel.on("change", me.renderFacet, this);
             }, this);
             
+            this.model.on("change:selection", function() {
+                if (me.currentModel !== me.model) {
+                    var selectionClone = $.extend(true, {}, me.model.get("selection"));
+                    me.currentModel.set("selection", selectionClone);
+                }
+            });
+            
             this.filterStore.on("change:selectedFilter", function() {
-                this.filterStore.set({
+                me.filterStore.set({
                     "searchPrevious" : null,
                     "search" : null,
                     "facet" : null,
@@ -90,26 +98,22 @@
                     "silent" : true
                 });
                 // reset the search box
-                $(this.filterPanel).find("#searchbox").val("");
+                $(me.filterPanel).find("#searchbox").val("");
                 // re-compute the filters
-                squid_api.controller.facetjob.compute(this.currentModel);
+                squid_api.controller.facetjob.compute(me.currentModel);
                 
             }, this);
+            
             this.filterStore.on("change:search", function() {
-                this.filterStore.set({"pageIndex": 0}, {"silent" : true});
-                this.filterStore.trigger("change:pageIndex", this.filterStore);
+                me.filterStore.set({"pageIndex": 0}, {"silent" : true});
+                me.filterStore.trigger("change:pageIndex", me.filterStore);
             }, this);
             
             this.filterStore.on("change:pageIndex", this.renderFacet, this);
-            
-            this.currentModel.on("change", this.renderFacet, this);
-
-            this.setCurrentModel();
 
             // listen for global status change
             squid_api.model.status.on('change:status', this.statusUpdate, this);
 
-            this.render();
         },
 
         statusUpdate : function() {
@@ -124,9 +128,14 @@
         },
         
         setCurrentModel : function() {
-            // duplicate the filters model
-            var attributesClone = $.extend(true, {}, this.model.attributes);
-            this.currentModel.set(attributesClone);
+            if (this.panelButtons) {
+                // duplicate the filters model
+                this.currentModel = new squid_api.model.FiltersJob();
+                var attributesClone = $.extend(true, {}, this.model.attributes);
+                this.currentModel.set(attributesClone);
+            } else {
+                this.currentModel = this.model;
+            }
         },
         
         search : function(event) {
@@ -148,17 +157,13 @@
             view = new squid_api.view.CategoricalSelectorView({
                 el: $(this.filterPanel).find("#filter-selection"),
                 model: this.currentModel,
-                filterModel: this.model,
-                panelButtons : this.panelButtons,
                 filterStore : this.filterStore
             });
-
+            
             view2 = new squid_api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
                 model: this.filterStore,
-                filterModel: this.model,
-                filters: this.currentModel,
-                panelButtons : this.panelButtons
+                filters: this.currentModel
             });
 
             view3 = new squid_api.view.CategoricalPagingView({
@@ -272,8 +277,8 @@
         },
         
         applySelection : function() {
-            var currentModelSelection = this.currentModel.get("selection");
-            this.model.set("selection", currentModelSelection);
+            var selectionClone = $.extend(true, {}, this.currentModel.get("selection"));
+            this.model.set("selection", selectionClone);
         },
 
         cancelSelection : function() {

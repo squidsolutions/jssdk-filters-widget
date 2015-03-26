@@ -494,9 +494,7 @@ function program4(depth0,data) {
 
         model : null,
         filters: null,
-        filterModel: null,
         format : null,
-        panelButtons : true,
 
         initialize : function(options) {
             if (options.format) {
@@ -511,15 +509,10 @@ function program4(depth0,data) {
             if (options.filters) {
                 this.filters = options.filters;
             }
-            if (options.filterModel) {
-                this.filterModel = options.filterModel;
-            }
-            if (! options.panelButtons) {
-                this.panelButtons = options.panelButtons;
-            }
 
             this.model.on("change:pageIndex", this.render, this);
             this.model.on("change:facet", this.render, this);
+            this.model.on("change:selection", this.render, this);
         },
 
         events: {
@@ -535,7 +528,8 @@ function program4(depth0,data) {
                 var id = $(item.currentTarget).attr("data-id");
 
                 // Get selected Filters
-                var facets = this.filters.get("selection").facets;
+                var selectionClone = $.extend(true, {}, this.model.get("selection"));
+                var facets = selectionClone.facets;
 
                 // Set up new object to update facet model
                 var selection = {facets: []};
@@ -581,11 +575,6 @@ function program4(depth0,data) {
                 // Set the updated filters model
                 selection.facets = facets;
                 this.filters.set("selection", selection);
-                this.filters.trigger("change");
-
-                if (! this.panelButtons) {
-                    this.filterModel.set("selection", selection);
-                }
             },
         },
 
@@ -813,21 +802,21 @@ function program4(depth0,data) {
                 var itemId = $(event.currentTarget).parent("li").attr("attr-id");
 
                 // Copy model selection object properties to remove object reference
-                var selection = $.extend(true, {}, this.model.get("selection"));
-
-                if (selection) {
-                    if (selection.facets) {
-                        var facets = selection.facets;
-                        var updatedFacets = {facets:[]};
+                var selectionClone = $.extend(true, {}, this.model.get("selection"));
+                if (selectionClone) {
+                    var facets = selectionClone.facets;
+                    if (facets) {
                         for (i=0; i<facets.length; i++) {
                             var facet = facets[i];
-                            var selectedItems = facet.selectedItems;
-                            if ((facetName === facet.id) && (selectedItems.length > 0)) {
+                            var selectedItems = facets[i].selectedItems;
+                            if ((facetName === facets[i].id) && (selectedItems.length > 0)) {
                                 var arr = [];
                                 for (ix=0; ix<selectedItems.length; ix++) {
                                     if (selectedItems[ix].id) {
                                         if (itemId !== selectedItems[ix].id) {
                                             arr.push(selectedItems[ix]);
+                                        } else {
+                                            // ignore this item
                                         }
                                     } else {
                                         // probably an interval
@@ -835,12 +824,9 @@ function program4(depth0,data) {
                                     }
                                 }
                                 facet.selectedItems = arr;
-                                updatedFacets.facets.push(facet);
-                            } else {
-                                updatedFacets.facets.push(facet);
                             }
                         }
-                        this.model.set("selection", updatedFacets);  
+                        this.model.set("selection", selectionClone);  
                     }
                 }
             }
@@ -908,9 +894,8 @@ function program4(depth0,data) {
                 }
             }
 
-            this.model.on("change", this.renderSelection, this);
+            this.model.on("change:selection", this.renderSelection, this);
             this.render();
-            this.renderSelection();
         },
         
         render : function() {
@@ -929,30 +914,28 @@ function program4(depth0,data) {
         renderSelection : function() {
             var me = this;
 
-            if (this.model.get("status") && this.model.get("status") !== "RUNNING") {
-                if (this.model.get("selection")) {
-                    var selectedFilter = me.filterStore.get("selectedFilter");
-                    var facets = this.model.get("selection").facets;
-                    var items = [];
-                    for (i=0; i<facets.length; i++) {
-                        var facet = facets[i];
-                        if ((facet.dimension.type == "CATEGORICAL") || (facet.dimension.type == "SEGMENTS")) {
-                            var selected = false;
-                            if (facet.id == selectedFilter) {
-                                selected = true;
-                            }
-                            items.push({
-                                label : facet.name,
-                                title : facet.name,
-                                value : facet.id,
-                                selected : selected
-                            });
+            if (this.model.get("selection")) {
+                var selectedFilter = me.filterStore.get("selectedFilter");
+                var facets = this.model.get("selection").facets;
+                var items = [];
+                for (i=0; i<facets.length; i++) {
+                    var facet = facets[i];
+                    if ((facet.dimension.type == "CATEGORICAL") || (facet.dimension.type == "SEGMENTS")) {
+                        var selected = false;
+                        if (facet.id == selectedFilter) {
+                            selected = true;
                         }
+                        items.push({
+                            label : facet.name,
+                            title : facet.name,
+                            value : facet.id,
+                            selected : selected
+                        });
                     }
-
-                    var select = this.$el.find(".btn-select-filter");
-                    select.multiselect('dataprovider', items);
                 }
+
+                var select = this.$el.find(".btn-select-filter");
+                select.multiselect('dataprovider', items);
             }
         }
     });
@@ -1025,10 +1008,10 @@ function program4(depth0,data) {
                 search : null
             }
             );
-            this.currentModel = new squid_api.model.FiltersJob();
             
-            this.model.on("change", function() {
-                this.filterStore.set({
+            this.model.on("change:domains", function() {
+                // reset
+                me.filterStore.set({
                     "searchPrevious" : null,
                     "search" : null,
                     "facet" : null,
@@ -1037,12 +1020,20 @@ function program4(depth0,data) {
                 }, {
                     "silent" : true
                 });
-                this.setCurrentModel();
-                
+                me.setCurrentModel();
+                me.render();
+                me.currentModel.on("change", me.renderFacet, this);
             }, this);
             
+            this.model.on("change:selection", function() {
+                if (me.currentModel !== me.model) {
+                    var selectionClone = $.extend(true, {}, me.model.get("selection"));
+                    me.currentModel.set("selection", selectionClone);
+                }
+            });
+            
             this.filterStore.on("change:selectedFilter", function() {
-                this.filterStore.set({
+                me.filterStore.set({
                     "searchPrevious" : null,
                     "search" : null,
                     "facet" : null,
@@ -1052,26 +1043,22 @@ function program4(depth0,data) {
                     "silent" : true
                 });
                 // reset the search box
-                $(this.filterPanel).find("#searchbox").val("");
+                $(me.filterPanel).find("#searchbox").val("");
                 // re-compute the filters
-                squid_api.controller.facetjob.compute(this.currentModel);
+                squid_api.controller.facetjob.compute(me.currentModel);
                 
             }, this);
+            
             this.filterStore.on("change:search", function() {
-                this.filterStore.set({"pageIndex": 0}, {"silent" : true});
-                this.filterStore.trigger("change:pageIndex", this.filterStore);
+                me.filterStore.set({"pageIndex": 0}, {"silent" : true});
+                me.filterStore.trigger("change:pageIndex", me.filterStore);
             }, this);
             
             this.filterStore.on("change:pageIndex", this.renderFacet, this);
-            
-            this.currentModel.on("change", this.renderFacet, this);
-
-            this.setCurrentModel();
 
             // listen for global status change
             squid_api.model.status.on('change:status', this.statusUpdate, this);
 
-            this.render();
         },
 
         statusUpdate : function() {
@@ -1086,9 +1073,14 @@ function program4(depth0,data) {
         },
         
         setCurrentModel : function() {
-            // duplicate the filters model
-            var attributesClone = $.extend(true, {}, this.model.attributes);
-            this.currentModel.set(attributesClone);
+            if (this.panelButtons) {
+                // duplicate the filters model
+                this.currentModel = new squid_api.model.FiltersJob();
+                var attributesClone = $.extend(true, {}, this.model.attributes);
+                this.currentModel.set(attributesClone);
+            } else {
+                this.currentModel = this.model;
+            }
         },
         
         search : function(event) {
@@ -1110,17 +1102,13 @@ function program4(depth0,data) {
             view = new squid_api.view.CategoricalSelectorView({
                 el: $(this.filterPanel).find("#filter-selection"),
                 model: this.currentModel,
-                filterModel: this.model,
-                panelButtons : this.panelButtons,
                 filterStore : this.filterStore
             });
-
+            
             view2 = new squid_api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
                 model: this.filterStore,
-                filterModel: this.model,
-                filters: this.currentModel,
-                panelButtons : this.panelButtons
+                filters: this.currentModel
             });
 
             view3 = new squid_api.view.CategoricalPagingView({
@@ -1234,8 +1222,8 @@ function program4(depth0,data) {
         },
         
         applySelection : function() {
-            var currentModelSelection = this.currentModel.get("selection");
-            this.model.set("selection", currentModelSelection);
+            var selectionClone = $.extend(true, {}, this.currentModel.get("selection"));
+            this.model.set("selection", selectionClone);
         },
 
         cancelSelection : function() {

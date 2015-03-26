@@ -162,7 +162,7 @@
                 }
                 
             } else {
-                message = "No Dimension Selected";
+                message = "No Filter Selected";
                 this.$el.removeClass("min-filter-height");
             }
 

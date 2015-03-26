@@ -211,22 +211,56 @@ function program4(depth0,data) {
 this["squid_api"]["template"]["squid_api_filters_categorical_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
+function program1(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
+  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n	</div>\n	";
+  return buffer;
+  }
 
-  buffer += "<div class=\"panel panel-default filter-panel squid_api_filters-categorical-panel-view\">\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
+function program3(depth0,data) {
+  
+  
+  return "\n			<div class=\"row\">\n		";
+  }
+
+function program5(depth0,data) {
+  
+  
+  return "\n			<div class=\"row no-padding\">\n		";
+  }
+
+function program7(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n		<div class=\"panel-footer\">\n			<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n				data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n		<h4 class=\"panel-title\" id=\"myModalLabel\">Filters</h4>\n	</div>\n	<div class=\"panel-body\">\n		<div class=\"row\">\n			<div class=\"col-md-3\">\n				<div id=\"filter-selection\">\n					<select class=\"btn btn-select-filter\" size=\"2\"></select>\n				</div>\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Filter\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n			<div class=\"col-md-3\">\n				\n			</div>\n			<div class=\"col-md-5\">\n				\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-6\">\n				<div id=\"filter-display-results\">\n				</div>\n			</div>\n			<div class=\"col-md-6\">\n				<div id=\"selected\">\n					\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div id=\"pagination-container\">\n					\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n	<div class=\"panel-footer\">\n		<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n			data-target=\"";
+    + "\" data-clavier=\"true\">Apply</button>\n			<button type=\"button\" class=\"btn btn-default cancel-selection\" data-toggle=\"collapse\"\n				data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\">Apply</button>\n		<button type=\"button\" class=\"btn btn-default cancel-selection\" data-toggle=\"collapse\"\n			data-target=\"";
-  if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\">Cancel</button>\n	</div>\n</div>";
+    + "\" data-clavier=\"true\">Cancel</button>\n		</div>\n	";
+  return buffer;
+  }
+
+  buffer += "<div class=\"panel panel-default filter-panel squid_api_filters-categorical-panel-view\">\n	";
+  stack1 = helpers.unless.call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n	<div class=\"panel-body\">\n		";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n			<div class=\"col-md-4\">\n				<div id=\"filter-selection\">\n					<select class=\"btn btn-select-filter\" size=\"2\"></select>\n				</div>\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Search for\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n			<div class=\"col-md-6\">\n				<div id=\"selected\">\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-6\">\n				<div id=\"filter-display-results\">\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div id=\"pagination-container\">\n					\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n\n	";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</div>";
   return buffer;
   });
 
@@ -460,7 +494,9 @@ function program4(depth0,data) {
 
         model : null,
         filters: null,
+        filterModel: null,
         format : null,
+        panelButtons : true,
 
         initialize : function(options) {
             if (options.format) {
@@ -474,6 +510,12 @@ function program4(depth0,data) {
             }
             if (options.filters) {
                 this.filters = options.filters;
+            }
+            if (options.filterModel) {
+                this.filterModel = options.filterModel;
+            }
+            if (! options.panelButtons) {
+                this.panelButtons = options.panelButtons;
             }
 
             this.model.on("change:pageIndex", this.render, this);
@@ -540,6 +582,10 @@ function program4(depth0,data) {
                 selection.facets = facets;
                 this.filters.set("selection", selection);
                 this.filters.trigger("change");
+
+                if (! this.panelButtons) {
+                    this.filterModel.set("selection", selection);
+                }
             },
         },
 
@@ -547,8 +593,10 @@ function program4(depth0,data) {
             var facet = this.model.get("facet");
             var message = null;
             var updatedItems = [];
-            
+
             if (facet) {
+                this.$el.addClass("min-filter-height");
+
                 var facetItems = facet.get("items");
                 var pageIndex = this.model.get("pageIndex");
                 var pageSize = this.model.get("pageSize");
@@ -588,25 +636,28 @@ function program4(depth0,data) {
                         }
                     }
                 }
-                
+
                 // set the message
                 if (facet.get("done") === true) {
                     if ((facet.get("hasMore") === true) && (updatedItems < pageSize)) {
                         message = "Partial results (computation pending)";
                     } else if (!facetItems || facetItems.length === 0) {
                         message = "No Items";
+                        this.$el.removeClass("min-filter-height");
                     }
                 } else {
                     message = "Computing in progress";
                 }
                 
             } else {
-                message = "No Dimension Selected";
+                message = "No Filter Selected";
+                this.$el.removeClass("min-filter-height");
             }
 
             var html = squid_api.template.squid_api_filters_categorical_facet_view({
                 "items" : updatedItems, "message" : message
             });
+
             this.$el.html(html);
         }
 
@@ -740,7 +791,6 @@ function program4(depth0,data) {
             if (options.noDataMessage) {
                 this.noDataMessage = options.noDataMessage;
             }
-
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
 
             if (options.format) {
@@ -847,7 +897,6 @@ function program4(depth0,data) {
             if (options.filterStore) {
                 this.filterStore = options.filterStore;
             }
-
             if (options.format) {
                 this.format = options.format;
             } else {
@@ -867,7 +916,7 @@ function program4(depth0,data) {
             var me = this;
 
             this.$el.find(".btn-select-filter").multiselect({
-                nonSelectedText: 'Select a Dimension',
+                nonSelectedText: 'Select Filter',
                 onChange: function(option) {
                     var filterValue = $(option).val();
                     me.filterStore.set("selectedFilter", filterValue);
@@ -920,11 +969,14 @@ function program4(depth0,data) {
         model : null,
         currentModel : null,
         format : null,
+        panelButtons : true,
         filterPanel : null,
         filterSelected : null,
         nbPages : 10,
 
         initialize : function(options) {
+            var me = this;
+
             if (!this.model) {
                 this.model = squid_api.model.filters;
             }
@@ -936,6 +988,9 @@ function program4(depth0,data) {
             }
             if (options.filterSelected) {
                 this.filterSelected = options.filterSelected;
+            }
+            if (! options.panelButtons) {
+                this.panelButtons = options.panelButtons;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -1036,7 +1091,7 @@ function program4(depth0,data) {
         },
         
         search : function(event) {
-                this.filterStore.set("search", event.target.value);
+            this.filterStore.set("search", event.target.value);
         },
 
         render : function() {
@@ -1046,22 +1101,25 @@ function program4(depth0,data) {
             .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + ">Filters<span class='caret'></span></button>");
 
             // Print Base Filter Panel Layout
-            $(this.filterPanel)
-            .addClass("squid_api_filters_categorical_filter_panel")
-            .html(this.filterPanelTemplate({
-                        "data-target" : this.filterPanel
-                    }));
+            $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel").html(this.filterPanelTemplate({
+                "data-target" : this.filterPanel,
+                "panel-buttons" : this.panelButtons
+            }));
 
             view = new squid_api.view.CategoricalSelectorView({
                 el: $(this.filterPanel).find("#filter-selection"),
                 model: this.currentModel,
+                filterModel: this.model,
+                panelButtons : this.panelButtons,
                 filterStore : this.filterStore
             });
 
             view2 = new squid_api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
                 model: this.filterStore,
+                filterModel: this.model,
                 filters: this.currentModel,
+                panelButtons : this.panelButtons
             });
 
             view3 = new squid_api.view.CategoricalPagingView({
@@ -1069,11 +1127,13 @@ function program4(depth0,data) {
                 model: this.filterStore
             });
 
-            view4 = new squid_api.view.CategoricalSelectedView({
-                el: $(this.filterPanel).find("#selected"),
-                model: this.currentModel,
-                noDataMessage: "No Filters Selected"
-            });
+            if (this.panelButtons) {
+                view4 = new squid_api.view.CategoricalSelectedView({
+                    el: $(this.filterPanel).find("#selected"),
+                    model: this.currentModel,
+                    noDataMessage: "No Filters Selected"
+                });
+            }
 
             view5 = new squid_api.view.CategoricalSelectedView({
                 el: this.filterSelected,
@@ -1082,12 +1142,14 @@ function program4(depth0,data) {
             });
 
             var me = this;
-            $(this.filterPanel).find(".apply-selection").click(function() {
-                me.applySelection();
-            });
-            $(this.filterPanel).find(".cancel-selection").click(function() {
-                me.cancelSelection();
-            });
+            if (this.panelButtons) {
+                $(this.filterPanel).find(".apply-selection").click(function() {
+                    me.applySelection();
+                });
+                $(this.filterPanel).find(".cancel-selection").click(function() {
+                    me.cancelSelection();
+                });
+            }
             
             $(this.filterPanel).find("#searchbox").keyup(_.bind(this.search, this));
         }, 
@@ -1176,7 +1238,7 @@ function program4(depth0,data) {
         },
 
         cancelSelection : function() {
-            console.log("Cancel");
+            
         },
         
         applyPaging : function(pageIndex) {

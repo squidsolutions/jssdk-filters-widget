@@ -18,7 +18,6 @@
             if (options.noDataMessage) {
                 this.noDataMessage = options.noDataMessage;
             }
-
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
 
             if (options.format) {

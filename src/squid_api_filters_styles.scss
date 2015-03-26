@@ -19,6 +19,7 @@
 
     .facet-name, .facet-value {
       text-align: left;
+      padding-right: 20px;
     }
     .facet-remove {
       position: absolute;
@@ -36,6 +37,9 @@
       float: left;
       margin-bottom: 10px;
     }
+  }
+  .panel-heading {
+    border: 0px;
   }
   .open > .dropdown-menu {
       display: block;
@@ -93,6 +97,9 @@
   .row {
     &:first-of-type {
       padding-top: 20px;
+    }
+    &.no-padding {
+      padding-top: 0px;
     }
     padding-left: 20px;
     padding-right: 20px;
@@ -248,9 +255,11 @@
     padding-top: 20px;
     overflow: hidden;
     width: 100%;
+    &.min-filter-height {
+      min-height: 230px;
+    }
     ul {
       padding-left: 0px;
-      min-height: 200px;
       list-style-type: none;
       display: inline-block;
       width: 100%;

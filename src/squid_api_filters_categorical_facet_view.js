@@ -6,7 +6,9 @@
 
         model : null,
         filters: null,
+        filterModel: null,
         format : null,
+        panelButtons : true,
 
         initialize : function(options) {
             if (options.format) {
@@ -20,6 +22,12 @@
             }
             if (options.filters) {
                 this.filters = options.filters;
+            }
+            if (options.filterModel) {
+                this.filterModel = options.filterModel;
+            }
+            if (! options.panelButtons) {
+                this.panelButtons = options.panelButtons;
             }
 
             this.model.on("change:pageIndex", this.render, this);
@@ -86,6 +94,10 @@
                 selection.facets = facets;
                 this.filters.set("selection", selection);
                 this.filters.trigger("change");
+
+                if (! this.panelButtons) {
+                    this.filterModel.set("selection", selection);
+                }
             },
         },
 
@@ -93,8 +105,10 @@
             var facet = this.model.get("facet");
             var message = null;
             var updatedItems = [];
-            
+
             if (facet) {
+                this.$el.addClass("min-filter-height");
+
                 var facetItems = facet.get("items");
                 var pageIndex = this.model.get("pageIndex");
                 var pageSize = this.model.get("pageSize");
@@ -134,25 +148,28 @@
                         }
                     }
                 }
-                
+
                 // set the message
                 if (facet.get("done") === true) {
                     if ((facet.get("hasMore") === true) && (updatedItems < pageSize)) {
                         message = "Partial results (computation pending)";
                     } else if (!facetItems || facetItems.length === 0) {
                         message = "No Items";
+                        this.$el.removeClass("min-filter-height");
                     }
                 } else {
                     message = "Computing in progress";
                 }
                 
             } else {
-                message = "No Dimension Selected";
+                message = "No Filter Selected";
+                this.$el.removeClass("min-filter-height");
             }
 
             var html = squid_api.template.squid_api_filters_categorical_facet_view({
                 "items" : updatedItems, "message" : message
             });
+
             this.$el.html(html);
         }
 

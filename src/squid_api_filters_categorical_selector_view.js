@@ -15,7 +15,6 @@
             if (options.filterStore) {
                 this.filterStore = options.filterStore;
             }
-
             if (options.format) {
                 this.format = options.format;
             } else {
@@ -35,7 +34,7 @@
             var me = this;
 
             this.$el.find(".btn-select-filter").multiselect({
-                nonSelectedText: 'Select a Dimension',
+                nonSelectedText: 'Select Filter',
                 onChange: function(option) {
                     var filterValue = $(option).val();
                     me.filterStore.set("selectedFilter", filterValue);

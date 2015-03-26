@@ -8,11 +8,14 @@
         model : null,
         currentModel : null,
         format : null,
+        panelButtons : true,
         filterPanel : null,
         filterSelected : null,
         nbPages : 10,
 
         initialize : function(options) {
+            var me = this;
+
             if (!this.model) {
                 this.model = squid_api.model.filters;
             }
@@ -24,6 +27,9 @@
             }
             if (options.filterSelected) {
                 this.filterSelected = options.filterSelected;
+            }
+            if (! options.panelButtons) {
+                this.panelButtons = options.panelButtons;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -124,7 +130,7 @@
         },
         
         search : function(event) {
-                this.filterStore.set("search", event.target.value);
+            this.filterStore.set("search", event.target.value);
         },
 
         render : function() {
@@ -134,22 +140,25 @@
             .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + ">Filters<span class='caret'></span></button>");
 
             // Print Base Filter Panel Layout
-            $(this.filterPanel)
-            .addClass("squid_api_filters_categorical_filter_panel")
-            .html(this.filterPanelTemplate({
-                        "data-target" : this.filterPanel
-                    }));
+            $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel").html(this.filterPanelTemplate({
+                "data-target" : this.filterPanel,
+                "panel-buttons" : this.panelButtons
+            }));
 
             view = new squid_api.view.CategoricalSelectorView({
                 el: $(this.filterPanel).find("#filter-selection"),
                 model: this.currentModel,
+                filterModel: this.model,
+                panelButtons : this.panelButtons,
                 filterStore : this.filterStore
             });
 
             view2 = new squid_api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
                 model: this.filterStore,
+                filterModel: this.model,
                 filters: this.currentModel,
+                panelButtons : this.panelButtons
             });
 
             view3 = new squid_api.view.CategoricalPagingView({
@@ -157,11 +166,13 @@
                 model: this.filterStore
             });
 
-            view4 = new squid_api.view.CategoricalSelectedView({
-                el: $(this.filterPanel).find("#selected"),
-                model: this.currentModel,
-                noDataMessage: "No Filters Selected"
-            });
+            if (this.panelButtons) {
+                view4 = new squid_api.view.CategoricalSelectedView({
+                    el: $(this.filterPanel).find("#selected"),
+                    model: this.currentModel,
+                    noDataMessage: "No Filters Selected"
+                });
+            }
 
             view5 = new squid_api.view.CategoricalSelectedView({
                 el: this.filterSelected,
@@ -170,12 +181,14 @@
             });
 
             var me = this;
-            $(this.filterPanel).find(".apply-selection").click(function() {
-                me.applySelection();
-            });
-            $(this.filterPanel).find(".cancel-selection").click(function() {
-                me.cancelSelection();
-            });
+            if (this.panelButtons) {
+                $(this.filterPanel).find(".apply-selection").click(function() {
+                    me.applySelection();
+                });
+                $(this.filterPanel).find(".cancel-selection").click(function() {
+                    me.cancelSelection();
+                });
+            }
             
             $(this.filterPanel).find("#searchbox").keyup(_.bind(this.search, this));
         }, 
@@ -264,7 +277,7 @@
         },
 
         cancelSelection : function() {
-            console.log("Cancel");
+            
         },
         
         applyPaging : function(pageIndex) {

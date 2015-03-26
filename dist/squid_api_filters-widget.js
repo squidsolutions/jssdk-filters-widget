@@ -803,7 +803,7 @@ function program4(depth0,data) {
                 }
             }
 
-            this.model.on("change:selection", this.render, this);
+            this.model.on("change", this.render, this);
         },
 
         events: {

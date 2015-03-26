@@ -37,7 +37,7 @@
             "click .facet-remove": function(event) {
                 // Obtain facet name / value
                 var facetName = $(event.currentTarget).parent("li").attr("attr-name");
-                var facetId = $(event.currentTarget).parent("li").attr("attr-id");
+                var itemId = $(event.currentTarget).parent("li").attr("attr-id");
 
                 // Copy model selection object properties to remove object reference
                 var selection = $.extend(true, {}, this.model.get("selection"));
@@ -47,12 +47,13 @@
                         var facets = selection.facets;
                         var updatedFacets = {facets:[]};
                         for (i=0; i<facets.length; i++) {
-                            var selectedItems = facets[i].selectedItems;
-                            if (selectedItems.length > 0) {
+                            var facet = facets[i];
+                            var selectedItems = facet.selectedItems;
+                            if ((facetName === facet.id) && (selectedItems.length > 0)) {
                                 var arr = [];
                                 for (ix=0; ix<selectedItems.length; ix++) {
                                     if (selectedItems[ix].id) {
-                                        if (facetId !== selectedItems[ix].id) {
+                                        if (itemId !== selectedItems[ix].id) {
                                             arr.push(selectedItems[ix]);
                                         }
                                     } else {
@@ -60,10 +61,10 @@
                                         arr.push(selectedItems[ix]);
                                     }
                                 }
-                                facets[i].selectedItems = arr;
-                                updatedFacets.facets.push(facets[i]);
+                                facet.selectedItems = arr;
+                                updatedFacets.facets.push(facet);
                             } else {
-                                updatedFacets.facets.push(facets[i]);
+                                updatedFacets.facets.push(facet);
                             }
                         }
                         this.model.set("selection", updatedFacets);  

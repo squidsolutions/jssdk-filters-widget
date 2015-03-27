@@ -508,11 +508,11 @@ function program4(depth0,data) {
             }
             if (options.filters) {
                 this.filters = options.filters;
+                this.filters.on("change:selection", this.render, this);
             }
 
             this.model.on("change:pageIndex", this.render, this);
             this.model.on("change:facet", this.render, this);
-            this.model.on("change:selection", this.render, this);
         },
 
         events: {
@@ -528,7 +528,7 @@ function program4(depth0,data) {
                 var id = $(item.currentTarget).attr("data-id");
 
                 // Get selected Filters
-                var selectionClone = $.extend(true, {}, this.model.get("selection"));
+                var selectionClone = $.extend(true, {}, this.filters.get("selection"));
                 var facets = selectionClone.facets;
 
                 // Set up new object to update facet model

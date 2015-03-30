@@ -76,11 +76,12 @@
                     "silent" : true
                 });
                 me.setCurrentModel();
-                me.render();
-                me.currentModel.on("change", me.renderFacet, this);
             }, this);
             
             this.model.on("change:selection", function() {
+                if (!me.currentModel) {
+                    me.setCurrentModel();
+                }
                 if (me.currentModel !== me.model) {
                     var selectionClone = $.extend(true, {}, me.model.get("selection"));
                     me.currentModel.set("selection", selectionClone);
@@ -136,6 +137,8 @@
             } else {
                 this.currentModel = this.model;
             }
+            this.render();
+            this.currentModel.on("change", this.renderFacet, this);
         },
         
         search : function(event) {

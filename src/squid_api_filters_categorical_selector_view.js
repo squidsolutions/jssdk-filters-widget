@@ -27,6 +27,7 @@
 
             this.model.on("change:selection", this.renderSelection, this);
             this.render();
+            this.renderSelection();
         },
         
         render : function() {

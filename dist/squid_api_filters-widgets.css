@@ -78,17 +78,19 @@
 .squid_api_filters_categorical_filter_panel h4 {
   text-align: center; }
 .squid_api_filters_categorical_filter_panel #filter-selection {
-  float: left; }
-  .squid_api_filters_categorical_filter_panel #filter-selection .btn-group button {
-    background: #3498db;
-    height: 40px;
-    font-size: 14px;
-    color: #fff;
-    min-width: 175px;
-    width: 50%; }
-    .squid_api_filters_categorical_filter_panel #filter-selection .btn-group button .caret {
-      right: 9px !important;
-      top: 19px !important; }
+  float: left;
+  width: 50%; }
+  .squid_api_filters_categorical_filter_panel #filter-selection .btn-group {
+    width: 100%; }
+    .squid_api_filters_categorical_filter_panel #filter-selection .btn-group button {
+      background: #3498db;
+      height: 40px;
+      font-size: 14px;
+      color: #fff;
+      width: 100%; }
+      .squid_api_filters_categorical_filter_panel #filter-selection .btn-group button .caret {
+        right: 9px !important;
+        top: 19px !important; }
 .squid_api_filters_categorical_filter_panel #selected {
   position: relative;
   top: -50px; }
@@ -184,6 +186,7 @@
     padding-left: 0px;
     list-style-type: none;
     display: inline-block;
+    padding-top: 10px;
     width: 100%;
     float: left;
     min-width: 15%;

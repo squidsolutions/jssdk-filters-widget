@@ -109,15 +109,15 @@
   }
   #filter-selection {
     float: left;
+    width: 50%;
     .btn-group {
-
+      width: 100%;
       button {
         background: #3498db;
         height: 40px;
         font-size: 14px;
         color: #fff;
-        min-width: 175px;
-        width: 50%;
+        width: 100%;
 
         .caret {
           right: 9px !important;
@@ -262,6 +262,7 @@
       padding-left: 0px;
       list-style-type: none;
       display: inline-block;
+      padding-top: 10px;
       width: 100%;
       float: left;
       min-width: 15%;

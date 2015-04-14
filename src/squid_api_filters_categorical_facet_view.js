@@ -7,6 +7,8 @@
         model : null,
         filters: null,
         format : null,
+        noFiltersMessage : null,
+        singleSelect : false,
 
         initialize : function(options) {
             if (options.format) {
@@ -21,6 +23,12 @@
             if (options.filters) {
                 this.filters = options.filters;
                 this.filters.on("change:selection", this.render, this);
+            }
+            if (options.noFiltersMessage) {
+                this.noFiltersMessage = options.noFiltersMessage;
+            }
+            if (options.singleSelect) {
+                this.singleSelect = options.singleSelect;
             }
 
             this.model.on("change:pageIndex", this.render, this);
@@ -79,7 +87,11 @@
                     // Push new filters to selectedItems array
                     for (i=0; i<facets.length; i++) {
                         if (facets[i].id === selectedFilter) {
-                            facets[i].selectedItems.push(selectObj);
+                            if (this.singleSelect) {
+                                facets[i].selectedItems = [selectObj];
+                            } else {
+                                facets[i].selectedItems.push(selectObj);
+                            }
                         }
                     }
                 }
@@ -151,7 +163,7 @@
                 }
                 
             } else {
-                message = "No Filter Selected";
+                message = this.noFiltersMessage;
                 this.$el.removeClass("min-filter-height");
             }
 

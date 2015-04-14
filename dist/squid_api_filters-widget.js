@@ -238,6 +238,12 @@ function program5(depth0,data) {
 
 function program7(depth0,data) {
   
+  
+  return "\n					<div id=\"filter-selection\">\n						<select class=\"btn btn-select-filter\" size=\"2\"></select>\n					</div>\n				";
+  }
+
+function program9(depth0,data) {
+  
   var buffer = "", stack1, helper;
   buffer += "\n		<div class=\"panel-footer\">\n			<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n				data-target=\"";
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
@@ -257,8 +263,11 @@ function program7(depth0,data) {
   buffer += "\n	<div class=\"panel-body\">\n		";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n			<div class=\"col-md-7\">\n				<div id=\"filter-selection\">\n					<select class=\"btn btn-select-filter\" size=\"2\"></select>\n				</div>\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Search for\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-7\">\n				<div id=\"filter-display-results\">\n				</div>\n			</div>\n			<div class=\"col-md-5\">\n				<div id=\"selected\">\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div id=\"pagination-container\">\n					\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n\n	";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
+  buffer += "\n			<div class=\"col-md-7\">\n				";
+  stack1 = helpers.unless.call(depth0, (depth0 && depth0['one-facet-type']), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Search for\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-7\">\n				<div id=\"filter-display-results\">\n				</div>\n			</div>\n			<div class=\"col-md-5\">\n				<div id=\"selected\">\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div id=\"pagination-container\">\n					\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n\n	";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n</div>";
   return buffer;
@@ -495,6 +504,8 @@ function program4(depth0,data) {
         model : null,
         filters: null,
         format : null,
+        noFiltersMessage : null,
+        singleSelect : false,
 
         initialize : function(options) {
             if (options.format) {
@@ -509,6 +520,12 @@ function program4(depth0,data) {
             if (options.filters) {
                 this.filters = options.filters;
                 this.filters.on("change:selection", this.render, this);
+            }
+            if (options.noFiltersMessage) {
+                this.noFiltersMessage = options.noFiltersMessage;
+            }
+            if (options.singleSelect) {
+                this.singleSelect = options.singleSelect;
             }
 
             this.model.on("change:pageIndex", this.render, this);
@@ -567,7 +584,11 @@ function program4(depth0,data) {
                     // Push new filters to selectedItems array
                     for (i=0; i<facets.length; i++) {
                         if (facets[i].id === selectedFilter) {
-                            facets[i].selectedItems.push(selectObj);
+                            if (this.singleSelect) {
+                                facets[i].selectedItems = [selectObj];
+                            } else {
+                                facets[i].selectedItems.push(selectObj);
+                            }
                         }
                     }
                 }
@@ -639,7 +660,7 @@ function program4(depth0,data) {
                 }
                 
             } else {
-                message = "No Filter Selected";
+                message = this.noFiltersMessage;
                 this.$el.removeClass("min-filter-height");
             }
 
@@ -769,6 +790,8 @@ function program4(depth0,data) {
         model : null,
         filterStore : null,
         format : null,
+        oneFacetType : null,
+        singleSelect : null,
 
         initialize : function(options) {
             if (!this.model) {
@@ -779,6 +802,12 @@ function program4(depth0,data) {
             }
             if (options.noDataMessage) {
                 this.noDataMessage = options.noDataMessage;
+            }
+            if (options.oneFacetType) {
+                this.oneFacetType = options.oneFacetType;
+            }
+            if (options.singleSelect) {
+                options.singleSelect = options.singleSelect;
             }
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
 
@@ -844,17 +873,19 @@ function program4(depth0,data) {
                         var selectedItems = facets[i].selectedItems;
                             if (facets[i].dimension.type !== "CONTINUOUS") {
                                 for (ix=0; ix<selectedItems.length; ix++) {
-                                    noData = false;
-                                    var obj = {};
-                                    obj.facetItem = selectedItems[ix].value;
-                                    obj.facetItemId = selectedItems[ix].id;
-                                    if (facets[i].name) {
-                                        obj.facetName = facets[i].name;
-                                    } else {
-                                        obj.facetName = facets[i].dimension.name;
+                                    if (this.oneFacetType == facets[i].id || !this.oneFacetType) {
+                                        noData = false;
+                                        var obj = {};
+                                        obj.facetItem = selectedItems[ix].value;
+                                        obj.facetItemId = selectedItems[ix].id;
+                                        if (facets[i].name) {
+                                            obj.facetName = facets[i].name;
+                                        } else {
+                                            obj.facetName = facets[i].dimension.name;
+                                        }
+                                        obj.facetNameId = facets[i].id;
+                                        selFacets.push(obj);
                                     }
-                                    obj.facetNameId = facets[i].id;
-                                    selFacets.push(obj);
                                 }
                             }
                         }
@@ -958,6 +989,10 @@ function program4(depth0,data) {
         filterPanel : null,
         filterSelected : null,
         nbPages : 10,
+        buttonLabel : "filters",
+        noFiltersMessage : "No Filter Selected",
+        oneFacetType : null,
+        singleSelect : null,
 
         initialize : function(options) {
             var me = this;
@@ -977,6 +1012,18 @@ function program4(depth0,data) {
             if (! options.panelButtons) {
                 this.panelButtons = options.panelButtons;
             }
+            if (options.buttonLabel) {
+                this.buttonLabel = options.buttonLabel;
+            }
+            if (options.noFiltersMessage) {
+                this.noFiltersMessage = options.noFiltersMessage;
+            }
+            if (options.oneFacetType) {
+                this.oneFacetType = options.oneFacetType;
+            }
+            if (options.singleSelect) {
+                this.singleSelect = options.singleSelect;
+            }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
 
@@ -992,7 +1039,7 @@ function program4(depth0,data) {
 
             this.filterStore = new Backbone.Model( { 
                 // selected dimension
-                selectedFilter : null,  
+                selectedFilter : me.oneFacetType,  
                 // current selected page
                 pageIndex : 0,          
                 // nb of items in a page
@@ -1095,12 +1142,13 @@ function program4(depth0,data) {
 
             // Button which opens filter Panel
             this.$el
-            .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + ">Filters<span class='caret'></span></button>");
+            .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + ">" + this.buttonLabel + "<span class='caret'></span></button>");
 
             // Print Base Filter Panel Layout
             $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel").html(this.filterPanelTemplate({
                 "data-target" : this.filterPanel,
-                "panel-buttons" : this.panelButtons
+                "panel-buttons" : this.panelButtons,
+                "one-facet-type" : this.oneFacetType
             }));
 
             view = new squid_api.view.CategoricalSelectorView({
@@ -1112,7 +1160,9 @@ function program4(depth0,data) {
             view2 = new squid_api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
                 model: this.filterStore,
-                filters: this.currentModel
+                filters: this.currentModel,
+                noFiltersMessage : this.noFiltersMessage,
+                singleSelect : this.singleSelect
             });
 
             view3 = new squid_api.view.CategoricalPagingView({
@@ -1124,14 +1174,16 @@ function program4(depth0,data) {
                 view4 = new squid_api.view.CategoricalSelectedView({
                     el: $(this.filterPanel).find("#selected"),
                     model: this.currentModel,
-                    noDataMessage: "No Filters Selected"
+                    noDataMessage: this.noFiltersMessage,
+                    oneFacetType : me.oneFacetType
                 });
             }
 
             view5 = new squid_api.view.CategoricalSelectedView({
                 el: this.filterSelected,
                 model: this.model,
-                noDataMessage: "No Filters Selected"
+                noDataMessage: this.noFiltersMessage,
+                oneFacetType : this.oneFacetType
             });
 
             var me = this;

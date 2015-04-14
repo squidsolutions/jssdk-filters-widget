@@ -12,6 +12,10 @@
         filterPanel : null,
         filterSelected : null,
         nbPages : 10,
+        buttonLabel : "filters",
+        noFiltersMessage : "No Filter Selected",
+        oneFacetType : null,
+        singleSelect : null,
 
         initialize : function(options) {
             var me = this;
@@ -31,6 +35,18 @@
             if (! options.panelButtons) {
                 this.panelButtons = options.panelButtons;
             }
+            if (options.buttonLabel) {
+                this.buttonLabel = options.buttonLabel;
+            }
+            if (options.noFiltersMessage) {
+                this.noFiltersMessage = options.noFiltersMessage;
+            }
+            if (options.oneFacetType) {
+                this.oneFacetType = options.oneFacetType;
+            }
+            if (options.singleSelect) {
+                this.singleSelect = options.singleSelect;
+            }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
 
@@ -46,7 +62,7 @@
 
             this.filterStore = new Backbone.Model( { 
                 // selected dimension
-                selectedFilter : null,  
+                selectedFilter : me.oneFacetType,  
                 // current selected page
                 pageIndex : 0,          
                 // nb of items in a page
@@ -149,12 +165,13 @@
 
             // Button which opens filter Panel
             this.$el
-            .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + ">Filters<span class='caret'></span></button>");
+            .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + ">" + this.buttonLabel + "<span class='caret'></span></button>");
 
             // Print Base Filter Panel Layout
             $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel").html(this.filterPanelTemplate({
                 "data-target" : this.filterPanel,
-                "panel-buttons" : this.panelButtons
+                "panel-buttons" : this.panelButtons,
+                "one-facet-type" : this.oneFacetType
             }));
 
             view = new squid_api.view.CategoricalSelectorView({
@@ -166,7 +183,9 @@
             view2 = new squid_api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
                 model: this.filterStore,
-                filters: this.currentModel
+                filters: this.currentModel,
+                noFiltersMessage : this.noFiltersMessage,
+                singleSelect : this.singleSelect
             });
 
             view3 = new squid_api.view.CategoricalPagingView({
@@ -178,14 +197,16 @@
                 view4 = new squid_api.view.CategoricalSelectedView({
                     el: $(this.filterPanel).find("#selected"),
                     model: this.currentModel,
-                    noDataMessage: "No Filters Selected"
+                    noDataMessage: this.noFiltersMessage,
+                    oneFacetType : me.oneFacetType
                 });
             }
 
             view5 = new squid_api.view.CategoricalSelectedView({
                 el: this.filterSelected,
                 model: this.model,
-                noDataMessage: "No Filters Selected"
+                noDataMessage: this.noFiltersMessage,
+                oneFacetType : this.oneFacetType
             });
 
             var me = this;

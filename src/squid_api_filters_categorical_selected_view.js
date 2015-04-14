@@ -7,6 +7,8 @@
         model : null,
         filterStore : null,
         format : null,
+        oneFacetType : null,
+        singleSelect : null,
 
         initialize : function(options) {
             if (!this.model) {
@@ -17,6 +19,12 @@
             }
             if (options.noDataMessage) {
                 this.noDataMessage = options.noDataMessage;
+            }
+            if (options.oneFacetType) {
+                this.oneFacetType = options.oneFacetType;
+            }
+            if (options.singleSelect) {
+                options.singleSelect = options.singleSelect;
             }
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
 
@@ -82,17 +90,19 @@
                         var selectedItems = facets[i].selectedItems;
                             if (facets[i].dimension.type !== "CONTINUOUS") {
                                 for (ix=0; ix<selectedItems.length; ix++) {
-                                    noData = false;
-                                    var obj = {};
-                                    obj.facetItem = selectedItems[ix].value;
-                                    obj.facetItemId = selectedItems[ix].id;
-                                    if (facets[i].name) {
-                                        obj.facetName = facets[i].name;
-                                    } else {
-                                        obj.facetName = facets[i].dimension.name;
+                                    if (this.oneFacetType == facets[i].id || !this.oneFacetType) {
+                                        noData = false;
+                                        var obj = {};
+                                        obj.facetItem = selectedItems[ix].value;
+                                        obj.facetItemId = selectedItems[ix].id;
+                                        if (facets[i].name) {
+                                            obj.facetName = facets[i].name;
+                                        } else {
+                                            obj.facetName = facets[i].dimension.name;
+                                        }
+                                        obj.facetNameId = facets[i].id;
+                                        selFacets.push(obj);
                                     }
-                                    obj.facetNameId = facets[i].id;
-                                    selFacets.push(obj);
                                 }
                             }
                         }

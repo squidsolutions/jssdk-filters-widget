@@ -1145,7 +1145,7 @@ function program4(depth0,data) {
             .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + ">" + this.buttonLabel + "<span class='caret'></span></button>");
 
             // Print Base Filter Panel Layout
-            $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel").html(this.filterPanelTemplate({
+            $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel collapse").html(this.filterPanelTemplate({
                 "data-target" : this.filterPanel,
                 "panel-buttons" : this.panelButtons,
                 "one-facet-type" : this.oneFacetType
@@ -1175,7 +1175,7 @@ function program4(depth0,data) {
                     el: $(this.filterPanel).find("#selected"),
                     model: this.currentModel,
                     noDataMessage: this.noFiltersMessage,
-                    oneFacetType : me.oneFacetType
+                    oneFacetType : this.oneFacetType
                 });
             }
 

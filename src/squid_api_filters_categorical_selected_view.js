@@ -7,7 +7,7 @@
         model : null,
         filterStore : null,
         format : null,
-        oneFacetType : null,
+        initialFacet : null,
         singleSelect : null,
 
         initialize : function(options) {
@@ -20,8 +20,8 @@
             if (options.noDataMessage) {
                 this.noDataMessage = options.noDataMessage;
             }
-            if (options.oneFacetType) {
-                this.oneFacetType = options.oneFacetType;
+            if (options.initialFacet) {
+                this.initialFacet = options.initialFacet;
             }
             if (options.singleSelect) {
                 options.singleSelect = options.singleSelect;
@@ -90,7 +90,7 @@
                         var selectedItems = facets[i].selectedItems;
                             if (facets[i].dimension.type !== "CONTINUOUS") {
                                 for (ix=0; ix<selectedItems.length; ix++) {
-                                    if (this.oneFacetType == facets[i].id || !this.oneFacetType) {
+                                    if (this.initialFacet == facets[i].id || !this.initialFacet) {
                                         noData = false;
                                         var obj = {};
                                         obj.facetItem = selectedItems[ix].value;

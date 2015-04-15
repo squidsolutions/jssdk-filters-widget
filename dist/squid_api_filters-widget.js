@@ -790,7 +790,7 @@ function program4(depth0,data) {
         model : null,
         filterStore : null,
         format : null,
-        oneFacetType : null,
+        initialFacet : null,
         singleSelect : null,
 
         initialize : function(options) {
@@ -803,8 +803,8 @@ function program4(depth0,data) {
             if (options.noDataMessage) {
                 this.noDataMessage = options.noDataMessage;
             }
-            if (options.oneFacetType) {
-                this.oneFacetType = options.oneFacetType;
+            if (options.initialFacet) {
+                this.initialFacet = options.initialFacet;
             }
             if (options.singleSelect) {
                 options.singleSelect = options.singleSelect;
@@ -873,7 +873,7 @@ function program4(depth0,data) {
                         var selectedItems = facets[i].selectedItems;
                             if (facets[i].dimension.type !== "CONTINUOUS") {
                                 for (ix=0; ix<selectedItems.length; ix++) {
-                                    if (this.oneFacetType == facets[i].id || !this.oneFacetType) {
+                                    if (this.initialFacet == facets[i].id || !this.initialFacet) {
                                         noData = false;
                                         var obj = {};
                                         obj.facetItem = selectedItems[ix].value;
@@ -991,7 +991,7 @@ function program4(depth0,data) {
         nbPages : 10,
         buttonLabel : "filters",
         noFiltersMessage : "No Filter Selected",
-        oneFacetType : null,
+        initialFacet : null,
         singleSelect : null,
 
         initialize : function(options) {
@@ -1018,8 +1018,8 @@ function program4(depth0,data) {
             if (options.noFiltersMessage) {
                 this.noFiltersMessage = options.noFiltersMessage;
             }
-            if (options.oneFacetType) {
-                this.oneFacetType = options.oneFacetType;
+            if (options.initialFacet) {
+                this.initialFacet = options.initialFacet;
             }
             if (options.singleSelect) {
                 this.singleSelect = options.singleSelect;
@@ -1039,7 +1039,7 @@ function program4(depth0,data) {
 
             this.filterStore = new Backbone.Model( { 
                 // selected dimension
-                selectedFilter : me.oneFacetType,  
+                selectedFilter : me.initialFacet,  
                 // current selected page
                 pageIndex : 0,          
                 // nb of items in a page
@@ -1072,6 +1072,20 @@ function program4(depth0,data) {
             }, this);
             
             this.model.on("change:selection", function() {
+                // Change Button text which opens filter panel
+                if (me.initialFacet) {
+                    var selection = me.model.get("selection").facets;
+                    var name;
+
+                    for (i=0; i<selection.length; i++) {
+                        if (selection[i].id === me.initialFacet) {
+                            name = selection[i].name;
+                        }
+                    }
+                    me.$el
+                    .find(".squid_api_filters_categorical_button").text(name);
+                }
+
                 if (!me.currentModel) {
                     me.setCurrentModel();
                 }
@@ -1148,7 +1162,7 @@ function program4(depth0,data) {
             $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel collapse").html(this.filterPanelTemplate({
                 "data-target" : this.filterPanel,
                 "panel-buttons" : this.panelButtons,
-                "one-facet-type" : this.oneFacetType
+                "one-facet-type" : this.initialFacet
             }));
 
             view = new squid_api.view.CategoricalSelectorView({
@@ -1175,7 +1189,7 @@ function program4(depth0,data) {
                     el: $(this.filterPanel).find("#selected"),
                     model: this.currentModel,
                     noDataMessage: this.noFiltersMessage,
-                    oneFacetType : this.oneFacetType
+                    initialFacet : this.initialFacet
                 });
             }
 
@@ -1183,7 +1197,7 @@ function program4(depth0,data) {
                 el: this.filterSelected,
                 model: this.model,
                 noDataMessage: this.noFiltersMessage,
-                oneFacetType : this.oneFacetType
+                initialFacet : this.initialFacet
             });
 
             var me = this;

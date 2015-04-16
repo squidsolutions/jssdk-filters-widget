@@ -903,7 +903,11 @@ function program4(depth0,data) {
                                 }
                             }
                         }
-                        selFacets = updatedFacets;
+                        if (updatedFacets.length === 0) {
+                            noData = true;
+                        } else {
+                            selFacets = updatedFacets;
+                        }
                     }
                 }
                 this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: this.noDataMessage}));

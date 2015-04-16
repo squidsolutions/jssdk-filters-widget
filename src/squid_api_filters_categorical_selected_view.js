@@ -9,6 +9,7 @@
         format : null,
         initialFacet : null,
         singleSelect : null,
+        facetList : null,
 
         initialize : function(options) {
             if (!this.model) {
@@ -25,6 +26,9 @@
             }
             if (options.singleSelect) {
                 options.singleSelect = options.singleSelect;
+            }
+            if (options.facetList) {
+                this.facetList = options.facetList;
             }
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
 
@@ -106,6 +110,17 @@
                                 }
                             }
                         }
+                    }
+                    if (this.facetList) {
+                        var updatedFacets = [];
+                        for (i=0; i<selFacets.length; i++) {
+                            for (ix=0; ix<this.facetList.length; ix++) {
+                                if (this.facetList[ix] === selFacets[i].facetNameId) {
+                                    updatedFacets.push(selFacets[i]);
+                                }
+                            }
+                        }
+                        selFacets = updatedFacets;
                     }
                 }
                 this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: this.noDataMessage}));

@@ -264,7 +264,7 @@ function program9(depth0,data) {
   stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n			<div class=\"col-md-7\">\n				";
-  stack1 = helpers.unless.call(depth0, (depth0 && depth0['one-facet-type']), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
+  stack1 = helpers.unless.call(depth0, (depth0 && depth0.initialFacet), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Search for\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-7\">\n				<div id=\"filter-display-results\">\n				</div>\n			</div>\n			<div class=\"col-md-5\">\n				<div id=\"selected\">\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div id=\"pagination-container\">\n					\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n\n	";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
@@ -792,6 +792,7 @@ function program4(depth0,data) {
         format : null,
         initialFacet : null,
         singleSelect : null,
+        facetList : null,
 
         initialize : function(options) {
             if (!this.model) {
@@ -808,6 +809,9 @@ function program4(depth0,data) {
             }
             if (options.singleSelect) {
                 options.singleSelect = options.singleSelect;
+            }
+            if (options.facetList) {
+                this.facetList = options.facetList;
             }
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
 
@@ -890,6 +894,17 @@ function program4(depth0,data) {
                             }
                         }
                     }
+                    if (this.facetList) {
+                        var updatedFacets = [];
+                        for (i=0; i<selFacets.length; i++) {
+                            for (ix=0; ix<this.facetList.length; ix++) {
+                                if (this.facetList[ix] === selFacets[i].facetNameId) {
+                                    updatedFacets.push(selFacets[i]);
+                                }
+                            }
+                        }
+                        selFacets = updatedFacets;
+                    }
                 }
                 this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: this.noDataMessage}));
             }
@@ -907,6 +922,7 @@ function program4(depth0,data) {
         model : null,
         filterStore : null,
         format : null,
+        facetList : null,
 
         initialize : function(options) {
             if (!this.model) {
@@ -923,6 +939,9 @@ function program4(depth0,data) {
                 } else {
                     this.format = function(val){return val;};
                 }
+            }
+            if (options.facetList) {
+                this.facetList = options.facetList;
             }
 
             this.model.on("change:selection", this.renderSelection, this);
@@ -957,12 +976,21 @@ function program4(depth0,data) {
                         if (facet.id == selectedFilter) {
                             selected = true;
                         }
-                        items.push({
+                        var json = {
                             label : facet.name,
                             title : facet.name,
                             value : facet.id,
                             selected : selected
-                        });
+                        };
+                        if (this.facetList) {
+                            for (ix=0; ix<this.facetList.length; ix++) {
+                                if (this.facetList[ix] === facet.id) {
+                                    items.push(json);
+                                }
+                            }
+                        } else {
+                            items.push(json);
+                        }
                     }
                 }
 
@@ -992,6 +1020,7 @@ function program4(depth0,data) {
         buttonLabel : "filters",
         noFiltersMessage : "No Filter Selected",
         initialFacet : null,
+        facetList : null,
         singleSelect : null,
 
         initialize : function(options) {
@@ -1023,6 +1052,9 @@ function program4(depth0,data) {
             }
             if (options.singleSelect) {
                 this.singleSelect = options.singleSelect;
+            }
+            if (options.facetList) {
+                this.facetList = options.facetList;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -1162,13 +1194,14 @@ function program4(depth0,data) {
             $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel collapse").html(this.filterPanelTemplate({
                 "data-target" : this.filterPanel,
                 "panel-buttons" : this.panelButtons,
-                "one-facet-type" : this.initialFacet
+                "initialFacet" : this.initialFacet
             }));
 
             view = new squid_api.view.CategoricalSelectorView({
                 el: $(this.filterPanel).find("#filter-selection"),
                 model: this.currentModel,
-                filterStore : this.filterStore
+                filterStore : this.filterStore,
+                facetList : this.facetList
             });
             
             view2 = new squid_api.view.CategoricalFacetView({
@@ -1189,7 +1222,8 @@ function program4(depth0,data) {
                     el: $(this.filterPanel).find("#selected"),
                     model: this.currentModel,
                     noDataMessage: this.noFiltersMessage,
-                    initialFacet : this.initialFacet
+                    initialFacet : this.initialFacet,
+                    facetList : this.facetList
                 });
             }
 
@@ -1197,7 +1231,8 @@ function program4(depth0,data) {
                 el: this.filterSelected,
                 model: this.model,
                 noDataMessage: this.noFiltersMessage,
-                initialFacet : this.initialFacet
+                initialFacet : this.initialFacet,
+                facetList : this.facetList
             });
 
             var me = this;

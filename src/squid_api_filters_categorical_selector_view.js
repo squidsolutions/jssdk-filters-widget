@@ -7,6 +7,7 @@
         model : null,
         filterStore : null,
         format : null,
+        facetList : null,
 
         initialize : function(options) {
             if (!this.model) {
@@ -23,6 +24,9 @@
                 } else {
                     this.format = function(val){return val;};
                 }
+            }
+            if (options.facetList) {
+                this.facetList = options.facetList;
             }
 
             this.model.on("change:selection", this.renderSelection, this);
@@ -57,12 +61,21 @@
                         if (facet.id == selectedFilter) {
                             selected = true;
                         }
-                        items.push({
+                        var json = {
                             label : facet.name,
                             title : facet.name,
                             value : facet.id,
                             selected : selected
-                        });
+                        };
+                        if (this.facetList) {
+                            for (ix=0; ix<this.facetList.length; ix++) {
+                                if (this.facetList[ix] === facet.id) {
+                                    items.push(json);
+                                }
+                            }
+                        } else {
+                            items.push(json);
+                        }
                     }
                 }
 

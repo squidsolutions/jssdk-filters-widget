@@ -15,6 +15,7 @@
         buttonLabel : "filters",
         noFiltersMessage : "No Filter Selected",
         initialFacet : null,
+        facetList : null,
         singleSelect : null,
 
         initialize : function(options) {
@@ -46,6 +47,9 @@
             }
             if (options.singleSelect) {
                 this.singleSelect = options.singleSelect;
+            }
+            if (options.facetList) {
+                this.facetList = options.facetList;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -185,13 +189,14 @@
             $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel collapse").html(this.filterPanelTemplate({
                 "data-target" : this.filterPanel,
                 "panel-buttons" : this.panelButtons,
-                "one-facet-type" : this.initialFacet
+                "initialFacet" : this.initialFacet
             }));
 
             view = new squid_api.view.CategoricalSelectorView({
                 el: $(this.filterPanel).find("#filter-selection"),
                 model: this.currentModel,
-                filterStore : this.filterStore
+                filterStore : this.filterStore,
+                facetList : this.facetList
             });
             
             view2 = new squid_api.view.CategoricalFacetView({
@@ -212,7 +217,8 @@
                     el: $(this.filterPanel).find("#selected"),
                     model: this.currentModel,
                     noDataMessage: this.noFiltersMessage,
-                    initialFacet : this.initialFacet
+                    initialFacet : this.initialFacet,
+                    facetList : this.facetList
                 });
             }
 
@@ -220,7 +226,8 @@
                 el: this.filterSelected,
                 model: this.model,
                 noDataMessage: this.noFiltersMessage,
-                initialFacet : this.initialFacet
+                initialFacet : this.initialFacet,
+                facetList : this.facetList
             });
 
             var me = this;

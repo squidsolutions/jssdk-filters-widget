@@ -17,7 +17,7 @@
         initialFacet : null,
         facetList : null,
         singleSelect : null,
-        dependency : null,
+        parentCheck : null,
 
         initialize : function(options) {
             var me = this;
@@ -52,8 +52,8 @@
             if (options.facetList) {
                 this.facetList = options.facetList;
             }
-            if (options.dependency) {
-                this.dependency = options.dependency;
+            if (options.parentCheck) {
+                this.parentCheck = options.parentCheck;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -157,24 +157,28 @@
 
         statusUpdate : function() {
             var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
-            var dependency = this.dependency;
             var disabled = null;
 
-            if (api.model.filters.get("selection") && dependency) {
-                facets = api.model.filters.get("selection").facets;
+            if (this.parentCheck && this.currentModel.get("selection")) {
+                var facetId = this.filterStore.get("selectedFilter");
+                var currentModel = this.currentModel.get("selection").facets;
+                var dimensionId;
 
-                for (i=0; i<facets.length; i++) {
-                    if (facets[i].id === dependency) {
-                        if (facets[i].selectedItems.length === 0) {
-                            disabled = true;
-                        } else {
-                            disabled = false;
-                        }
+                // Get Dimension ID of linked parent
+                for (i=0; i<currentModel.length; i++) {
+                    if ((currentModel[i].id === facetId) && (currentModel[i].dimension.parentId)) {
+                        dimensionId = currentModel[i].dimension.parentId.dimensionId;
+                    }
+                }
+                for (i=0; i<currentModel.length; i++) {
+                    if ((currentModel[i].dimension.id.dimensionId === dimensionId) && (currentModel[i].selectedItems.length === 0)) {
+                        disabled = true;
                     }
                 }
             }
+            
 
-            if (running || (dependency && disabled)) {
+            if ((running) || (disabled)) {
                 // computation is running : disable input
                 this.$el.find("button").attr("disabled","disabled");
             } else {

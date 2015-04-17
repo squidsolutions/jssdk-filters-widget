@@ -1157,7 +1157,9 @@ function program4(depth0,data) {
                 me.filterStore.trigger("change:pageIndex", me.filterStore);
             }, this);
             
-            this.filterStore.on("change:pageIndex", this.renderFacet, this);
+            this.filterStore.on("change:pageIndex", function() {
+                me.renderFacet(false);
+            }, this);
 
             // listen for global status change
             squid_api.model.status.on('change:status', this.statusUpdate, this);
@@ -1206,7 +1208,11 @@ function program4(depth0,data) {
                 this.currentModel = this.model;
             }
             this.render();
-            this.currentModel.on("change", this.renderFacet, this);
+            var me = this;
+            this.currentModel.on("change", function() {
+                    // force facet fetch (because the selection has changed)
+                    me.renderFacet(true);
+                }, this);
         },
         
         search : function(event) {
@@ -1277,7 +1283,12 @@ function program4(depth0,data) {
             $(this.filterPanel).find("#searchbox").keyup(_.bind(this.search, this));
         }, 
         
-        renderFacet : function() {
+        /**
+         * Render a facet.
+         * Facet fetch may be triggered if true is passed as the fetch arg or if the requested paging index
+         * requires more elements to be fetched.
+         */
+        renderFacet : function(fetch) {
             var me = this;
             
             if (this.currentModel.get("status") === "DONE") {
@@ -1293,7 +1304,6 @@ function program4(depth0,data) {
                     var endIndex = startIndex + pageSize;
                     
                     // check if we need to fetch more items
-                    var fetch = false;
                     var searchStale =  false;
                     var searchPrevious = this.filterStore.get("searchPrevious");
                     var search = this.filterStore.get("search");

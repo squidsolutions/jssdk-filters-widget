@@ -101,27 +101,26 @@
                         this.endDate = moment.utc(selItems[0].upperBound);
                     }
                 }
-                if (this.initialized) {
+                
+                // build the date pickers
+                var selHTML = "";
+                selHTML = this.template({
+                    dateAvailable: dateAvailable,
+                    facetId: facetId,
+                    name: name,
+                    startDateVal: this.startDate,
+                    endDateVal: this.endDate
+                });
 
-                } else {
-                    // build the date pickers
-                    var selHTML = "";
-                    selHTML = this.template({
-                        dateAvailable: dateAvailable,
-                        facetId: facetId,
-                        name: name,
-                        startDateVal: this.startDate,
-                        endDateVal: this.endDate
-                    });
+                // render HTML
+                this.$el.html(selHTML);
 
-                    // render HTML
-                    this.$el.html(selHTML);
-
+                if (dateAvailable) {
                     var me = this;
                     me.renderPicker(me);
-
                     this.initialized = true;
                 }
+
             }
 
             return this;

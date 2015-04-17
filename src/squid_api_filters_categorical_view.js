@@ -17,6 +17,7 @@
         initialFacet : null,
         facetList : null,
         singleSelect : null,
+        dependency : null,
 
         initialize : function(options) {
             var me = this;
@@ -50,6 +51,9 @@
             }
             if (options.facetList) {
                 this.facetList = options.facetList;
+            }
+            if (options.dependency) {
+                this.dependency = options.dependency;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -153,7 +157,24 @@
 
         statusUpdate : function() {
             var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
-            if (running) {
+            var dependency = this.dependency;
+            var disabled = null;
+
+            if (api.model.filters.get("selection") && dependency) {
+                facets = api.model.filters.get("selection").facets;
+
+                for (i=0; i<facets.length; i++) {
+                    if (facets[i].id === dependency) {
+                        if (facets[i].selectedItems.length === 0) {
+                            disabled = true;
+                        } else {
+                            disabled = false;
+                        }
+                    }
+                }
+            }
+
+            if (running || (dependency && disabled)) {
                 // computation is running : disable input
                 this.$el.find("button").attr("disabled","disabled");
             } else {

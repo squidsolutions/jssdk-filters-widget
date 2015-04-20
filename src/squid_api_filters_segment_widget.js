@@ -12,14 +12,25 @@
         model: null,
         segment : null,
         displayName : null,
+        onCheck : null,
         template : squid_api.template.squid_api_filters_segment_widget,
+        disabled : false,
 
         initialize : function(options) {
-            if (this.model) {
-                this.model.on('change', this.render, this);
-            }
             this.segment = options.segment;
             this.displayName = options.displayName;
+            if (options.onCheck) {
+                this.onCheck = options.onCheck;
+            } else {
+                this.onCheck = "set";
+            }
+            
+            if (this.model) {
+                this.listenTo(this.model, 'change', this.render);
+            }
+            
+            // listen for global status change
+            this.listenTo(squid_api.model.status, 'change:status', this.render);
         },
 
         setModel : function(model) {
@@ -35,22 +46,28 @@
 
         events: {
             "change": function(event) {
-                var segment = this.getSegment();
-                if (segment !== null) {
-                    var selectedItems = segment.selectedItems;
-                    var selectedItemsUpdated = [];
-                    var isChecked = event.target.checked;
-                    for (var sIdx = 0; sIdx < selectedItems.length; sIdx++) {
-                        var item = selectedItems[sIdx];
-                        if (isChecked || (item.id !== this.segment)) {
-                            selectedItemsUpdated.push(item);
+                if (this.disabled === false) {
+                    this.disabled = true;
+                    var segment = this.getSegment();
+                    if (segment !== null) {
+                        var selectedItems = segment.selectedItems;
+                        var selectedItemsUpdated = [];
+                        var isChecked = event.target.checked;
+                        if (this.onCheck == "unset") {
+                            isChecked = !isChecked;
                         }
+                        for (var sIdx = 0; sIdx < selectedItems.length; sIdx++) {
+                            var item = selectedItems[sIdx];
+                            if (isChecked || (item.id !== this.segment)) {
+                                selectedItemsUpdated.push(item);
+                            }
+                        }
+                        if (isChecked) {
+                            selectedItemsUpdated.push({"id" : this.segment, "type" : "v"});
+                        }
+                        segment.selectedItems = selectedItemsUpdated;
+                        this.model.trigger("change:selection", this.model);
                     }
-                    if (isChecked) {
-                        selectedItemsUpdated.push({"id" : this.segment, "type" : "v"});
-                    }
-                    segment.selectedItems = selectedItemsUpdated;
-                    this.model.trigger("change:selection", this.model);
                 }
             }
         },
@@ -90,6 +107,10 @@
                     }
                 }
                 
+                if (this.onCheck == "unset") {
+                    isSelected = !isSelected;
+                }
+                
                 // get HTML template and fill corresponding data
                 selHTML = this.template({
                     "isSelected" : isSelected,
@@ -101,6 +122,17 @@
                 this.$el.html(selHTML);
             } else {
                 this.$el.html("");
+            }
+            
+            // treat global status
+            var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
+            if (running === true) {
+                // computation is running : disable input
+                this.$el.find("input").attr("disabled","disabled");
+            } else {
+                // computation is done : enable input
+                this.disabled = false;
+                this.$el.find("input").removeAttr("disabled");
             }
 
             return this;

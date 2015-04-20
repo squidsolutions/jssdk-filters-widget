@@ -299,13 +299,17 @@
                     if ($(filterPanels[i]).hasClass('in') && ("#" + $(filterPanels[i]).attr('id')) !== dataTarget) {
                         var filterId = $(filterPanels[i]).attr('id');
 
-                        // Remove Opened Class on Buttons
-                        for (ix=0; ix<buttons.length; ix++) {
-                            $(buttons[ix]).removeClass(className);
-                        }
-
-                        // Close
+                        // Close Panel
                         $(filterPanels[i]).removeClass('in');
+
+                        // Remove Opened Class on Buttons
+                        var target = $(filterPanels[i]).attr('id');
+                        
+                        for (ix=0; ix<buttons.length; ix++) {
+                            if ($(buttons[ix]).attr('data-target') === '#' + target) {
+                                $(buttons[ix]).removeClass(className);
+                            }
+                        }
                     }
                 }
             }

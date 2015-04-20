@@ -272,7 +272,25 @@
             }
             
             $(this.filterPanel).find("#searchbox").keyup(_.bind(this.search, this));
-        }, 
+        },
+
+        events: {
+            "click .squid_api_filters_categorical_button": function(item) {
+                /**
+                    With each categorical view being independent, obtain all
+                    filter panels which don't matched the one being clicked 
+                    & is currently open. Once identified, close it.
+                **/
+                var dataTarget = $(item.currentTarget).attr('data-target');
+                var filterPanels = $('.squid_api_filters_categorical_filter_panel');
+
+                for (i=0; i<filterPanels.length; i++) {
+                    if ($(filterPanels[i]).hasClass('in') && ("#" + $(filterPanels[i]).attr('id')) !== dataTarget) {
+                        $(filterPanels[i]).removeClass('in');
+                    }
+                }
+            }
+        },
         
         /**
          * Render a facet.

@@ -1303,7 +1303,20 @@ function program4(depth0,data) {
             }
             
             $(this.filterPanel).find("#searchbox").keyup(_.bind(this.search, this));
-        }, 
+        },
+
+        events: {
+            "click .squid_api_filters_categorical_button": function(item) {
+                var dataTarget = $(item.currentTarget).attr('data-target');
+                var filterPanels = $('.squid_api_filters_categorical_filter_panel');
+
+                for (i=0; i<filterPanels.length; i++) {
+                    if ($(filterPanels[i]).hasClass('in') && ("#" + $(filterPanels[i]).attr('id')) !== dataTarget) {
+                        $(filterPanels[i]).removeClass('in');
+                    }
+                }
+            }
+        },
         
         /**
          * Render a facet.

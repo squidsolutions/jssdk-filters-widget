@@ -220,7 +220,7 @@ function program1(depth0,data) {
   if (helper = helpers['data-target']) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0['data-target']); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n			<i class=\"glyphicon glyphicon-chevron-up\"></i>\n		</button>\n	</div>\n	";
+    + "\" data-clavier=\"true\" aria-hidden=\"true\">\n		</button>\n	</div>\n	";
   return buffer;
   }
 
@@ -1145,7 +1145,7 @@ function program4(depth0,data) {
                         }
                     }
                     me.$el
-                    .find(".squid_api_filters_categorical_button").text(name);
+                    .find(".squid_api_filters_categorical_button .name").text(name);
                 }
 
                 if (!me.currentModel) {
@@ -1245,7 +1245,7 @@ function program4(depth0,data) {
 
             // Button which opens filter Panel
             this.$el
-            .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + ">" + this.buttonLabel + "<span class='caret'></span></button>");
+            .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + "><span class='name'>" + this.buttonLabel + "</span><span class='caret'></span></button>");
 
             // Print Base Filter Panel Layout
             $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel collapse").html(this.filterPanelTemplate({
@@ -1307,11 +1307,35 @@ function program4(depth0,data) {
 
         events: {
             "click .squid_api_filters_categorical_button": function(item) {
+                var className = 'opened';
+
+                // Rotate Caret Position
+                if ($(item.currentTarget).hasClass(className)) {
+                    $(item.currentTarget).removeClass(className);
+                } else {
+                    $(item.currentTarget).addClass(className);
+                }
+
+                /**
+                    With each categorical view being independent, obtain all
+                    filter panels which don't matched the one being clicked 
+                    & is currently open. Once identified, close it.
+                **/
+
                 var dataTarget = $(item.currentTarget).attr('data-target');
                 var filterPanels = $('.squid_api_filters_categorical_filter_panel');
+                var buttons = $('.squid_api_filters_categorical_button');
 
                 for (i=0; i<filterPanels.length; i++) {
                     if ($(filterPanels[i]).hasClass('in') && ("#" + $(filterPanels[i]).attr('id')) !== dataTarget) {
+                        var filterId = $(filterPanels[i]).attr('id');
+
+                        // Remove Opened Class on Buttons
+                        for (ix=0; ix<buttons.length; ix++) {
+                            $(buttons[ix]).removeClass(className);
+                        }
+
+                        // Close
                         $(filterPanels[i]).removeClass('in');
                     }
                 }

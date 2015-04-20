@@ -1,5 +1,7 @@
 .squid_api_filters_categorical_button {
   margin-bottom: 10px; }
+  .squid_api_filters_categorical_button.opened .caret {
+    transform: rotate(180deg); }
 
 #squid_api_filters_categorical_selected_view, #squid_api_filters-categorical-panel-view {
   list-style-type: none;

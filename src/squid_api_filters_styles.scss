@@ -1,6 +1,11 @@
 // Button to open filter panel
 .squid_api_filters_categorical_button {
   margin-bottom: 10px;
+  &.opened {
+    .caret {
+      transform: rotate(180deg);
+    }
+  }
 }
 
 // Shared internal / external selectioned view styles

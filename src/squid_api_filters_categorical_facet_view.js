@@ -9,6 +9,7 @@
         format : null,
         noFiltersMessage : null,
         singleSelect : false,
+        disabled : false,
 
         initialize : function(options) {
             if (options.format) {
@@ -38,67 +39,70 @@
         events: {
             // Dimension Sorting
             "click li": function(item) {
-                // Get selected Filter & Item
-                var selectedFilter = this.model.get("selectedFilter");
-                var selectedItem = $(item.currentTarget).attr("data-attr");
-
-                // Get clicked filter value & create object
-                var value = $(item.currentTarget).attr("data-value");
-                var type = $(item.currentTarget).attr("data-type");
-                var id = $(item.currentTarget).attr("data-id");
-
-                // Get selected Filters
-                var selectionClone = $.extend(true, {}, this.filters.get("selection"));
-                var facets = selectionClone.facets;
-
-                // Set up new object to update facet model
-                var selection = {facets: []};
-
-                if ($(item.currentTarget).attr("selected")) {
-                    // Style manipulation
-                    $(item.currentTarget).removeClass("active");
-                    $(item.currentTarget).removeAttr("selected");
-
-                    // Remove selected item from facet 
-                    for (i=0; i<facets.length; i++) {
-                        if (facets[i].id === selectedFilter) {
-                            var selectedItems = facets[i].selectedItems;
-                            var updatedSelectedItems = [];
-                            for (ix=0; ix<selectedItems.length; ix++) {
-                                if (id !== selectedItems[ix].id) {
-                                    var obj = {};
-                                    obj.id = selectedItems[ix].id;
-                                    obj.type = selectedItems[ix].type;
-                                    obj.value = selectedItems[ix].value;
-                                    updatedSelectedItems.push(obj);
+                if (this.disabled === false) {
+                    this.disabled = true;
+                    // Get selected Filter & Item
+                    var selectedFilter = this.model.get("selectedFilter");
+                    var selectedItem = $(item.currentTarget).attr("data-attr");
+    
+                    // Get clicked filter value & create object
+                    var value = $(item.currentTarget).attr("data-value");
+                    var type = $(item.currentTarget).attr("data-type");
+                    var id = $(item.currentTarget).attr("data-id");
+    
+                    // Get selected Filters
+                    var selectionClone = $.extend(true, {}, this.filters.get("selection"));
+                    var facets = selectionClone.facets;
+    
+                    // Set up new object to update facet model
+                    var selection = {facets: []};
+    
+                    if ($(item.currentTarget).attr("selected")) {
+                        // Style manipulation
+                        $(item.currentTarget).removeClass("active");
+                        $(item.currentTarget).removeAttr("selected");
+    
+                        // Remove selected item from facet 
+                        for (i=0; i<facets.length; i++) {
+                            if (facets[i].id === selectedFilter) {
+                                var selectedItems = facets[i].selectedItems;
+                                var updatedSelectedItems = [];
+                                for (ix=0; ix<selectedItems.length; ix++) {
+                                    if (id !== selectedItems[ix].id) {
+                                        var obj = {};
+                                        obj.id = selectedItems[ix].id;
+                                        obj.type = selectedItems[ix].type;
+                                        obj.value = selectedItems[ix].value;
+                                        updatedSelectedItems.push(obj);
+                                    }
+                                }
+                                facets[i].selectedItems = updatedSelectedItems;
+                            }
+                        }
+                    } else {
+                        // style manipulation
+                        $(item.currentTarget).addClass("active");
+                        $(item.currentTarget).attr("selected", true);
+                        
+                        // set up object to add a new selected item
+                        var selectObj = {id : id, type : type, value : value};
+    
+                        // Push new filters to selectedItems array
+                        for (i=0; i<facets.length; i++) {
+                            if (facets[i].id === selectedFilter) {
+                                if (this.singleSelect) {
+                                    facets[i].selectedItems = [selectObj];
+                                } else {
+                                    facets[i].selectedItems.push(selectObj);
                                 }
                             }
-                            facets[i].selectedItems = updatedSelectedItems;
                         }
                     }
-                } else {
-                    // style manipulation
-                    $(item.currentTarget).addClass("active");
-                    $(item.currentTarget).attr("selected", true);
-                    
-                    // set up object to add a new selected item
-                    var selectObj = {id : id, type : type, value : value};
-
-                    // Push new filters to selectedItems array
-                    for (i=0; i<facets.length; i++) {
-                        if (facets[i].id === selectedFilter) {
-                            if (this.singleSelect) {
-                                facets[i].selectedItems = [selectObj];
-                            } else {
-                                facets[i].selectedItems.push(selectObj);
-                            }
-                        }
-                    }
+    
+                    // Set the updated filters model
+                    selection.facets = facets;
+                    this.filters.set("selection", selection);
                 }
-
-                // Set the updated filters model
-                selection.facets = facets;
-                this.filters.set("selection", selection);
             },
         },
 
@@ -172,6 +176,15 @@
             });
 
             this.$el.html(html);
+            
+            // treat global status
+            var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
+            if (running === true) {
+                // computation is running
+            } else {
+                // computation is done : enable input
+                this.disabled = false;
+            }
         }
 
     });

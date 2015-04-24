@@ -56,26 +56,8 @@
                 if (selectionClone) {
                     var facets = selectionClone.facets;
                     if (facets) {
-                        for (i=0; i<facets.length; i++) {
-                            var facet = facets[i];
-                            var selectedItems = facets[i].selectedItems;
-                            if ((facetName === facets[i].id) && (selectedItems.length > 0)) {
-                                var arr = [];
-                                for (ix=0; ix<selectedItems.length; ix++) {
-                                    if (selectedItems[ix].id) {
-                                        if (itemId !== selectedItems[ix].id) {
-                                            arr.push(selectedItems[ix]);
-                                        } else {
-                                            // ignore this item
-                                        }
-                                    } else {
-                                        // probably an interval
-                                        arr.push(selectedItems[ix]);
-                                    }
-                                }
-                                facet.selectedItems = arr;
-                            }
-                        }
+                        // Remove selected item from facet
+                        squid_api.controller.facetjob.unSelect(facets, facetName, itemId);
                         this.model.set("selection", selectionClone);  
                     }
                 }

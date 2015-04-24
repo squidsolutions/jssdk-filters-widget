@@ -562,65 +562,54 @@ function program4(depth0,data) {
                     this.disabled = true;
                     // Get selected Filter & Item
                     var selectedFilter = this.model.get("selectedFilter");
-                    var selectedItem = $(item.currentTarget).attr("data-attr");
+                    var target = $(item.currentTarget);
+                    var selectedItem = target.attr("data-attr");
     
                     // Get clicked filter value & create object
-                    var value = $(item.currentTarget).attr("data-value");
-                    var type = $(item.currentTarget).attr("data-type");
-                    var id = $(item.currentTarget).attr("data-id");
+                    var value = target.attr("data-value");
+                    var type = target.attr("data-type");
+                    var id = target.attr("data-id");
     
                     // Get selected Filters
                     var selectionClone = $.extend(true, {}, this.filters.get("selection"));
                     var facets = selectionClone.facets;
     
-                    // Set up new object to update facet model
-                    var selection = {facets: []};
-    
-                    if ($(item.currentTarget).attr("selected")) {
+                    if (target.attr("selected")) {
                         // Style manipulation
-                        $(item.currentTarget).removeClass("active");
-                        $(item.currentTarget).removeAttr("selected");
+                        target.removeClass("active");
+                        target.removeAttr("selected");
     
-                        // Remove selected item from facet 
-                        for (i=0; i<facets.length; i++) {
-                            if (facets[i].id === selectedFilter) {
-                                var selectedItems = facets[i].selectedItems;
-                                var updatedSelectedItems = [];
-                                for (ix=0; ix<selectedItems.length; ix++) {
-                                    if (id !== selectedItems[ix].id) {
-                                        var obj = {};
-                                        obj.id = selectedItems[ix].id;
-                                        obj.type = selectedItems[ix].type;
-                                        obj.value = selectedItems[ix].value;
-                                        updatedSelectedItems.push(obj);
-                                    }
-                                }
-                                facets[i].selectedItems = updatedSelectedItems;
-                            }
-                        }
+                        // Remove selected item from facet
+                        squid_api.controller.facetjob.unSelect(facets, selectedFilter, id);
+                        
                     } else {
                         // style manipulation
-                        $(item.currentTarget).addClass("active");
-                        $(item.currentTarget).attr("selected", true);
+                        target.addClass("active");
+                        target.attr("selected", true);
                         
                         // set up object to add a new selected item
                         var selectObj = {id : id, type : type, value : value};
     
                         // Push new filters to selectedItems array
+                       
+                        var selectedFacet;
                         for (i=0; i<facets.length; i++) {
-                            if (facets[i].id === selectedFilter) {
+                            var facet = facets[i];
+                            if (facet.id === selectedFilter) {
+                                selectedFacet = facet;
                                 if (this.singleSelect) {
-                                    facets[i].selectedItems = [selectObj];
+                                    facet.selectedItems = [selectObj];
                                 } else {
-                                    facets[i].selectedItems.push(selectObj);
+                                    facet.selectedItems.push(selectObj);
                                 }
                             }
                         }
+                        // Remove selected items from children
+                        squid_api.controller.facetjob.unSelectChildren(facets, selectedFacet, false);
                     }
     
                     // Set the updated filters model
-                    selection.facets = facets;
-                    this.filters.set("selection", selection);
+                    this.filters.set("selection", selectionClone);
                 }
             },
         },
@@ -874,26 +863,8 @@ function program4(depth0,data) {
                 if (selectionClone) {
                     var facets = selectionClone.facets;
                     if (facets) {
-                        for (i=0; i<facets.length; i++) {
-                            var facet = facets[i];
-                            var selectedItems = facets[i].selectedItems;
-                            if ((facetName === facets[i].id) && (selectedItems.length > 0)) {
-                                var arr = [];
-                                for (ix=0; ix<selectedItems.length; ix++) {
-                                    if (selectedItems[ix].id) {
-                                        if (itemId !== selectedItems[ix].id) {
-                                            arr.push(selectedItems[ix]);
-                                        } else {
-                                            // ignore this item
-                                        }
-                                    } else {
-                                        // probably an interval
-                                        arr.push(selectedItems[ix]);
-                                    }
-                                }
-                                facet.selectedItems = arr;
-                            }
-                        }
+                        // Remove selected item from facet
+                        squid_api.controller.facetjob.unSelect(facets, facetName, itemId);
                         this.model.set("selection", selectionClone);  
                     }
                 }

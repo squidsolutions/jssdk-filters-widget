@@ -12,7 +12,7 @@
         filterPanel : null,
         filterSelected : null,
         nbPages : 10,
-        buttonLabel : "filters",
+        buttonLabel : "Filters",
         noFiltersMessage : "No Filter Selected",
         initialFacet : null,
         facetList : null,

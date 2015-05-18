@@ -817,6 +817,7 @@ function program4(depth0,data) {
         initialFacet : null,
         singleSelect : null,
         facetList : null,
+        avoidFacets : null,
 
         initialize : function(options) {
             if (!this.model) {
@@ -836,6 +837,9 @@ function program4(depth0,data) {
             }
             if (options.facetList) {
                 this.facetList = options.facetList;
+            }
+            if (options.avoidFacets) {
+                this.avoidFacets = options.avoidFacets;
             }
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
 
@@ -915,6 +919,15 @@ function program4(depth0,data) {
                             selFacets = updatedFacets;
                         }
                     }
+                    if (this.avoidFacets) {
+                        for (i=0; i<this.avoidFacets.length; i++) {
+                            for (ix=0; ix<selFacets.length; ix++) {
+                                if (this.avoidFacets[i] === selFacets[ix].facetNameId) {
+                                    selFacets.splice(ix, 1);
+                                }
+                            }
+                        }
+                    }
                 }
                 this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: this.noDataMessage}));
             }
@@ -933,6 +946,7 @@ function program4(depth0,data) {
         filterStore : null,
         format : null,
         facetList : null,
+        avoidFacets : null,
 
         initialize : function(options) {
             if (!this.model) {
@@ -952,6 +966,9 @@ function program4(depth0,data) {
             }
             if (options.facetList) {
                 this.facetList = options.facetList;
+            }
+            if (options.avoidFacets) {
+                this.avoidFacets = options.avoidFacets;
             }
 
             this.model.on("change:selection", this.renderSelection, this);
@@ -998,8 +1015,18 @@ function program4(depth0,data) {
                                     items.push(json);
                                 }
                             }
-                        } else {
+                        }
+                        else {
                             items.push(json);
+                        }
+                    }
+                }
+                if (this.avoidFacets) {
+                    for (i=0; i<this.avoidFacets.length; i++) {
+                        for (ix=0; ix<items.length; ix++) {
+                            if (this.avoidFacets[i] === items[ix].value) {
+                                items.splice(ix, 1);
+                            }
                         }
                     }
                 }
@@ -1067,6 +1094,9 @@ function program4(depth0,data) {
             if (options.facetList) {
                 this.facetList = options.facetList;
             }
+            if (options.avoidFacets) {
+                this.avoidFacets = options.avoidFacets;
+            }
             if (options.parentCheck) {
                 this.parentCheck = options.parentCheck;
             }
@@ -1131,7 +1161,6 @@ function program4(depth0,data) {
                     me.$el
                     .find(".squid_api_filters_categorical_button .name").text(name);
                 }
-
                 if (!me.currentModel) {
                     me.setCurrentModel();
                 }
@@ -1242,7 +1271,8 @@ function program4(depth0,data) {
                 el: $(this.filterPanel).find("#filter-selection"),
                 model: this.currentModel,
                 filterStore : this.filterStore,
-                facetList : this.facetList
+                facetList : this.facetList,
+                avoidFacets : this.avoidFacets
             });
             
             view2 = new squid_api.view.CategoricalFacetView({
@@ -1264,7 +1294,8 @@ function program4(depth0,data) {
                     model: this.currentModel,
                     noDataMessage: this.noFiltersMessage,
                     initialFacet : this.initialFacet,
-                    facetList : this.facetList
+                    facetList : this.facetList,
+                    avoidFacets : this.avoidFacets
                 });
             }
 
@@ -1273,7 +1304,8 @@ function program4(depth0,data) {
                 model: this.model,
                 noDataMessage: this.noFiltersMessage,
                 initialFacet : this.initialFacet,
-                facetList : this.facetList
+                facetList : this.facetList,
+                avoidFacets : this.avoidFacets
             });
 
             var me = this;

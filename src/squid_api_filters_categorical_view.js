@@ -52,6 +52,9 @@
             if (options.facetList) {
                 this.facetList = options.facetList;
             }
+            if (options.avoidFacets) {
+                this.avoidFacets = options.avoidFacets;
+            }
             if (options.parentCheck) {
                 this.parentCheck = options.parentCheck;
             }
@@ -116,7 +119,6 @@
                     me.$el
                     .find(".squid_api_filters_categorical_button .name").text(name);
                 }
-
                 if (!me.currentModel) {
                     me.setCurrentModel();
                 }
@@ -227,7 +229,8 @@
                 el: $(this.filterPanel).find("#filter-selection"),
                 model: this.currentModel,
                 filterStore : this.filterStore,
-                facetList : this.facetList
+                facetList : this.facetList,
+                avoidFacets : this.avoidFacets
             });
             
             view2 = new squid_api.view.CategoricalFacetView({
@@ -249,7 +252,8 @@
                     model: this.currentModel,
                     noDataMessage: this.noFiltersMessage,
                     initialFacet : this.initialFacet,
-                    facetList : this.facetList
+                    facetList : this.facetList,
+                    avoidFacets : this.avoidFacets
                 });
             }
 
@@ -258,7 +262,8 @@
                 model: this.model,
                 noDataMessage: this.noFiltersMessage,
                 initialFacet : this.initialFacet,
-                facetList : this.facetList
+                facetList : this.facetList,
+                avoidFacets : this.avoidFacets
             });
 
             var me = this;

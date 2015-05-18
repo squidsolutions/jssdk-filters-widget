@@ -8,6 +8,7 @@
         filterStore : null,
         format : null,
         facetList : null,
+        avoidFacets : null,
 
         initialize : function(options) {
             if (!this.model) {
@@ -27,6 +28,9 @@
             }
             if (options.facetList) {
                 this.facetList = options.facetList;
+            }
+            if (options.avoidFacets) {
+                this.avoidFacets = options.avoidFacets;
             }
 
             this.model.on("change:selection", this.renderSelection, this);
@@ -73,8 +77,18 @@
                                     items.push(json);
                                 }
                             }
-                        } else {
+                        }
+                        else {
                             items.push(json);
+                        }
+                    }
+                }
+                if (this.avoidFacets) {
+                    for (i=0; i<this.avoidFacets.length; i++) {
+                        for (ix=0; ix<items.length; ix++) {
+                            if (this.avoidFacets[i] === items[ix].value) {
+                                items.splice(ix, 1);
+                            }
                         }
                     }
                 }

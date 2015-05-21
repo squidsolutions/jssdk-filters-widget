@@ -52,6 +52,10 @@
 .squid-api-filters-categorical-selected-view {
     .warning {
         color: #e74c3c;
+
+        &:before {
+            padding-right: 7px;
+        }
     }
 }
 

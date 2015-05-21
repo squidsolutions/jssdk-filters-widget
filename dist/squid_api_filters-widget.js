@@ -179,7 +179,7 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   
-  return "warning";
+  return "warning fa fa-exclamation-circle";
   }
 
 function program4(depth0,data) {

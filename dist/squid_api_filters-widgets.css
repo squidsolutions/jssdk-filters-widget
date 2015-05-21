@@ -34,6 +34,8 @@
 
 .squid-api-filters-categorical-selected-view .warning {
   color: #e74c3c; }
+  .squid-api-filters-categorical-selected-view .warning:before {
+    padding-right: 7px; }
 
 .squid_api_filters_categorical_filter_panel #squid_api_filters_categorical_selected_view li {
   float: left;

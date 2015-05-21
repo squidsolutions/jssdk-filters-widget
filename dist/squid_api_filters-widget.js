@@ -466,7 +466,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"col-sm-3 col-xs-3 col-md-2\">\n<div id=\"date-picker\"></div>\n</div>\n<div class=\"col-md-6\">\n<span class=\"date-wrap\"><span id=\"sq-startDate\"></span> - <span id=\"sq-endDate\"></span></div>\n</div>\n";
+  return "<div class=\"squid-api-period-selection-widget\">\n	<div id=\"date-picker\"></div>\n	<span class=\"date-wrap\"><span id=\"sq-startDate\"></span> - <span id=\"sq-endDate\"></span></label>\n</div>\n";
   });
 
 this["squid_api"]["template"]["squid_api_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {

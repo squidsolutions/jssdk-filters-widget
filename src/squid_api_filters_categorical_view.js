@@ -166,6 +166,18 @@
         
         setInitialFacet : function(initialFacet) {
             this.initialFacet = initialFacet;
+            this.filterStore.set({
+                "selectedFilter": initialFacet,
+                "searchPrevious" : null,
+                "search" : null,
+                "facet" : null,
+                "pageIndex" : 0,
+                "itemIndex" : 0
+            }, {
+                "silent" : true
+            });
+            // reset the search box
+            $(this.filterPanel).find("#searchbox").val("");
             this.render();
         },
         

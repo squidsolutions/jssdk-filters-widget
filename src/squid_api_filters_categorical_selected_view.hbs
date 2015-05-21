@@ -1,5 +1,6 @@
+<div class="squid-api-filters-categorical-selected-view">
 {{#if noData}}
-    <div class="noData">{{noDataMessage}}</div>
+    <label class="noData {{#if mandatory}}warning fa fa-exclamation-circle{{/if}}">{{noDataMessage}}</label>
 {{else}}
     <ul class="facets" id="squid_api_filters_categorical_selected_view">
         {{#each facets}}
@@ -17,4 +18,5 @@
         {{/each}}
     </ul>
 {{/if}}
+</div>
 

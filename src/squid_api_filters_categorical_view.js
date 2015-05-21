@@ -19,6 +19,7 @@
         singleSelect : null,
         parentCheck : null,
         ignoredFacets : null,
+        mandatory : null,
 
         initialize : function(options) {
             var me = this;
@@ -58,6 +59,9 @@
             }
             if (options.parentCheck) {
                 this.parentCheck = options.parentCheck;
+            }
+            if (options.mandatory) {
+                this.mandatory = options.mandatory;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -264,7 +268,8 @@
                     noDataMessage: this.noFiltersMessage,
                     initialFacet : this.initialFacet,
                     facetList : this.facetList,
-                    avoidFacets : this.ignoredFacets
+                    avoidFacets : this.ignoredFacets,
+                    mandatory : this.mandatory
                 });
             }
 
@@ -274,7 +279,8 @@
                 noDataMessage: this.noFiltersMessage,
                 initialFacet : this.initialFacet,
                 facetList : this.facetList,
-                avoidFacets : this.ignoredFacets
+                avoidFacets : this.ignoredFacets,
+                mandatory : this.mandatory
             });
 
             var me = this;

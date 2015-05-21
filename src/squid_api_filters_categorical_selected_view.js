@@ -11,6 +11,7 @@
         singleSelect : null,
         facetList : null,
         avoidFacets : null,
+        mandatory : null,
 
         initialize : function(options) {
             if (!this.model) {
@@ -34,6 +35,10 @@
             if (options.avoidFacets) {
                 this.avoidFacets = options.avoidFacets;
             }
+            if (options.mandatory) {
+                this.mandatory = options.mandatory;
+            }
+
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
 
             if (options.format) {
@@ -122,7 +127,7 @@
                         }
                     }
                 }
-                this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: this.noDataMessage}));
+                this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: this.noDataMessage, mandatory: this.mandatory}));
             }
         });
 

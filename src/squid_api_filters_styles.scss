@@ -23,8 +23,8 @@
     padding: 5px !important;
 
     .facet-name, .facet-value {
-      text-align: left;
-      padding-right: 20px;
+        text-align: left;
+        padding-right: 15px;
     }
     .facet-remove {
       position: absolute;
@@ -33,6 +33,30 @@
       cursor: pointer;
     }
   }
+}
+
+.squid-api-period-selection-widget {
+    #date-picker {
+        float: left;
+
+        .sq-content {
+            margin-bottom: auto;
+        }
+    }
+    .date-wrap {
+        margin-top: 9px;
+        display: inline-block;
+    }
+}
+
+.squid-api-filters-categorical-selected-view {
+    .warning {
+        color: #e74c3c;
+
+        &:before {
+            padding-right: 7px;
+        }
+    }
 }
 
 // Within filter panel
@@ -130,14 +154,6 @@
         }
       }
     }
-  }
-  #selected {
-        position: relative;
-        top: -50px;
-      .noData {
-          position: relative;
-          text-align: center;
-      }
   }
   #pagination-container {
     float: left;

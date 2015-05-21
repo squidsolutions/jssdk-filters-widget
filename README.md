@@ -14,4 +14,4 @@ A collection of widgets to manage data filtering (aka facets).
   * noFiltersMessage : text displayed when no facets are selected
   * initialFacet : if an id is set, this filter will automatically be selected upon instantiation
   * facetList : an array of permitted filter ID's
-  * avoidFacets : an array of filter ID's to not be displayed
+  * ignoredFacets : an array of filter ID's to not be displayed

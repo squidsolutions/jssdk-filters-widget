@@ -18,6 +18,7 @@
         facetList : null,
         singleSelect : null,
         parentCheck : null,
+        ignoredFacets : null,
 
         initialize : function(options) {
             var me = this;
@@ -52,8 +53,8 @@
             if (options.facetList) {
                 this.facetList = options.facetList;
             }
-            if (options.avoidFacets) {
-                this.avoidFacets = options.avoidFacets;
+            if (options.ignoredFacets) {
+                this.ignoredFacets = options.ignoredFacets;
             }
             if (options.parentCheck) {
                 this.parentCheck = options.parentCheck;
@@ -158,6 +159,16 @@
             squid_api.model.status.on('change:status', this.statusUpdate, this);
 
         },
+        
+        setInitialFacet : function(initialFacet) {
+            this.initialFacet = initialFacet;
+            this.render();
+        },
+        
+        setIgnoredFacets : function(ignoredFacets) {
+            this.ignoredFacets = ignoredFacets;
+            this.render();
+        },
 
         statusUpdate : function() {
             var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
@@ -230,7 +241,7 @@
                 model: this.currentModel,
                 filterStore : this.filterStore,
                 facetList : this.facetList,
-                avoidFacets : this.avoidFacets
+                avoidFacets : this.ignoredFacets
             });
             
             view2 = new squid_api.view.CategoricalFacetView({
@@ -253,7 +264,7 @@
                     noDataMessage: this.noFiltersMessage,
                     initialFacet : this.initialFacet,
                     facetList : this.facetList,
-                    avoidFacets : this.avoidFacets
+                    avoidFacets : this.ignoredFacets
                 });
             }
 
@@ -263,7 +274,7 @@
                 noDataMessage: this.noFiltersMessage,
                 initialFacet : this.initialFacet,
                 facetList : this.facetList,
-                avoidFacets : this.avoidFacets
+                avoidFacets : this.ignoredFacets
             });
 
             var me = this;

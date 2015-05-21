@@ -161,29 +161,37 @@ function program6(depth0,data) {
 this["squid_api"]["template"]["squid_api_filters_categorical_selected_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, self=this, functionType="function", escapeExpression=this.escapeExpression;
 
 function program1(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n    <div class=\"noData\">";
+  buffer += "\n    <label class=\"noData ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.mandatory), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\">";
   if (helper = helpers.noDataMessage) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.noDataMessage); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</div>\n";
+    + "</label>\n";
   return buffer;
   }
+function program2(depth0,data) {
+  
+  
+  return "warning";
+  }
 
-function program3(depth0,data) {
+function program4(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\n    <ul class=\"facets\" id=\"squid_api_filters_categorical_selected_view\">\n        ";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.facets), {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.facets), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n    </ul>\n";
   return buffer;
   }
-function program4(depth0,data) {
+function program5(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += "\n            <li attr-id=\"";
@@ -202,9 +210,10 @@ function program4(depth0,data) {
   return buffer;
   }
 
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.noData), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  buffer += "<div class=\"squid-api-filters-categorical-selected-view\">\n";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.noData), {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n\n";
+  buffer += "\n</div>\n\n";
   return buffer;
   });
 
@@ -818,6 +827,7 @@ function program4(depth0,data) {
         singleSelect : null,
         facetList : null,
         avoidFacets : null,
+        mandatory : null,
 
         initialize : function(options) {
             if (!this.model) {
@@ -841,6 +851,10 @@ function program4(depth0,data) {
             if (options.avoidFacets) {
                 this.avoidFacets = options.avoidFacets;
             }
+            if (options.mandatory) {
+                this.mandatory = options.mandatory;
+            }
+
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_selected_view;
 
             if (options.format) {
@@ -929,7 +943,7 @@ function program4(depth0,data) {
                         }
                     }
                 }
-                this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: this.noDataMessage}));
+                this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: this.noDataMessage, mandatory: this.mandatory}));
             }
         });
 
@@ -1060,6 +1074,7 @@ function program4(depth0,data) {
         facetList : null,
         singleSelect : null,
         parentCheck : null,
+        mandatory : null,
 
         initialize : function(options) {
             var me = this;
@@ -1099,6 +1114,9 @@ function program4(depth0,data) {
             }
             if (options.parentCheck) {
                 this.parentCheck = options.parentCheck;
+            }
+            if (options.mandatory) {
+                this.mandatory = options.mandatory;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -1295,7 +1313,8 @@ function program4(depth0,data) {
                     noDataMessage: this.noFiltersMessage,
                     initialFacet : this.initialFacet,
                     facetList : this.facetList,
-                    avoidFacets : this.avoidFacets
+                    avoidFacets : this.avoidFacets,
+                    mandatory : this.mandatory
                 });
             }
 
@@ -1305,7 +1324,8 @@ function program4(depth0,data) {
                 noDataMessage: this.noFiltersMessage,
                 initialFacet : this.initialFacet,
                 facetList : this.facetList,
-                avoidFacets : this.avoidFacets
+                avoidFacets : this.avoidFacets,
+                mandatory : this.mandatory
             });
 
             var me = this;

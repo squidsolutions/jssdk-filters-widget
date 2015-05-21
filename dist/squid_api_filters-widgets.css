@@ -32,6 +32,9 @@
   margin-top: 9px;
   display: inline-block; }
 
+.squid-api-filters-categorical-selected-view .warning {
+  color: #e74c3c; }
+
 .squid_api_filters_categorical_filter_panel #squid_api_filters_categorical_selected_view li {
   float: left;
   margin-bottom: 10px; }
@@ -101,12 +104,6 @@
       .squid_api_filters_categorical_filter_panel #filter-selection .btn-group button .caret {
         right: 9px !important;
         top: 19px !important; }
-.squid_api_filters_categorical_filter_panel #selected {
-  position: relative;
-  top: -50px; }
-  .squid_api_filters_categorical_filter_panel #selected .noData {
-    position: relative;
-    text-align: center; }
 .squid_api_filters_categorical_filter_panel #pagination-container {
   float: left; }
   .squid_api_filters_categorical_filter_panel #pagination-container .pagination {

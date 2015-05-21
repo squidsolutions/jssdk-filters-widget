@@ -49,6 +49,12 @@
     }
 }
 
+.squid-api-filters-categorical-selected-view {
+    .warning {
+        color: #e74c3c;
+    }
+}
+
 // Within filter panel
 .squid_api_filters_categorical_filter_panel {
   #squid_api_filters_categorical_selected_view {
@@ -144,14 +150,6 @@
         }
       }
     }
-  }
-  #selected {
-        position: relative;
-        top: -50px;
-      .noData {
-          position: relative;
-          text-align: center;
-      }
   }
   #pagination-container {
     float: left;

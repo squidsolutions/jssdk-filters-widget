@@ -12,7 +12,7 @@
         filterPanel : null,
         filterSelected : null,
         nbPages : 10,
-        buttonLabel : "Filters",
+        buttonLabel : null,
         noFiltersMessage : "No Filter Selected",
         initialFacet : null,
         facetList : null,
@@ -111,18 +111,13 @@
             }, this);
             
             this.model.on("change:selection", function() {
-                // Change Button text which opens filter panel
+                // Display label of Button which opens filter panel
                 if (me.initialFacet) {
-                    var selection = me.model.get("selection").facets;
-                    var name;
-
-                    for (i=0; i<selection.length; i++) {
-                        if (selection[i].id === me.initialFacet) {
-                            name = selection[i].name;
-                        }
-                    }
+                   var name = me.getButtonLabel();
+                   if (name) {
                     me.$el
                     .find(".squid_api_filters_categorical_button .name").text(name);
+                   }
                 }
                 if (!me.currentModel) {
                     me.setCurrentModel();
@@ -239,12 +234,33 @@
             this.filterStore.set("search", event.target.value);
         },
 
+        getButtonLabel : function() {
+            // Button which opens filter Panel
+            var buttonLabel = this.buttonLabel;
+            if (!buttonLabel) {
+                var selection = this.model.get("selection");
+                if (this.initialFacet && selection) {        
+                    var facets = selection.facets;
+                    for (i=0; i<facets.length; i++) {
+                        if (facets[i].id === this.initialFacet) {
+                            buttonLabel = facets[i].name;
+                        }
+                    }
+                } else {
+                    buttonLabel = "Filters";
+                }
+            }
+            return buttonLabel;
+        },
+        
         render : function() {
 
             // Button which opens filter Panel
-            this.$el
-            .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + "><span class='name'>" + this.buttonLabel + "</span><span class='caret'></span></button>");
-
+            var buttonLabel = this.getButtonLabel();
+            if (buttonLabel) {
+                this.$el
+                .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + "><span class='name'>" + buttonLabel + "</span><span class='caret'></span></button>");
+            }
             // Print Base Filter Panel Layout
             $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel collapse").html(this.filterPanelTemplate({
                 "data-target" : this.filterPanel,

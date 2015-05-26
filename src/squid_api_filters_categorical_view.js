@@ -214,20 +214,26 @@
         },
         
         setCurrentModel : function() {
+            var me = this;
             if (this.panelButtons) {
                 // duplicate the filters model
                 this.currentModel = new squid_api.model.FiltersJob();
                 var attributesClone = $.extend(true, {}, this.model.attributes);
                 this.currentModel.set(attributesClone);
-            } else {
-                this.currentModel = this.model;
-            }
-            this.render();
-            var me = this;
-            this.currentModel.on("change", function() {
+                this.listenTo(this.currentModel, 'change', function() {
                     // force facet fetch (because the selection has changed)
                     me.renderFacet(true);
-                }, this);
+                });
+            } else {
+                if (this.currentModel !== this.model) {
+                    this.currentModel = this.model;
+                    this.listenTo(this.currentModel, 'change', function() {
+                        // force facet fetch (because the selection has changed)
+                        me.renderFacet(true);
+                    });
+                }
+            }
+            this.render();
         },
         
         search : function(event) {

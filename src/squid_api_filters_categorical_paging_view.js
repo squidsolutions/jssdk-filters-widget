@@ -22,8 +22,8 @@
                 }
             }
 
-            this.model.on("change:pageIndex", this.render, this);
-            this.model.on("change:facet", this.render, this);
+            this.listenTo(this.model, "change:pageIndex", this.render);
+            this.listenTo(this.model, "change:facet", this.render);
             this.render();
         },
         

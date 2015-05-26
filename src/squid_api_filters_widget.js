@@ -90,16 +90,16 @@
             this.initCurrentModel(this.model);
 
             // listen for some model events
-            this.model.on('change:domains', function(model) {
+            this.listenTo(this.model, "change:domains", function(model) {
                 me.initCurrentModel(model);
-            }, this);
-            this.model.on('change:selection', function(model) {
+            });
+            this.listenTo(this.model, 'change:selection', function(model) {
                 // update the current model
                 var attributesClone = $.extend(true, {}, model.attributes);
                 me.currentModel.set("selection", attributesClone.selection);
                 me.render();
-            }, this);
-            this.model.on('change:enabled', this.setEnable, this);
+            });
+            this.listenTo(this.model, 'change:enabled', this.setEnable);
 
         },
 

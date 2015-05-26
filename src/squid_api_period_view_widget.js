@@ -12,7 +12,8 @@
             if (!this.model) {
                 this.model = squid_api.model.filters;
             }
-            this.model.on('change', this.render, this);
+            this.listenTo(this.model, 'change', this.render);
+
             if (options.format) {
                 this.format = options.format;
             } else {

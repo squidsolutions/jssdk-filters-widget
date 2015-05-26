@@ -33,7 +33,7 @@
                 this.avoidFacets = options.avoidFacets;
             }
 
-            this.model.on("change:selection", this.renderSelection, this);
+            this.listenTo(this.model, "change:selection", this.renderSelection);
             this.render();
             this.renderSelection();
         },

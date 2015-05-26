@@ -23,7 +23,7 @@
             }
             if (options.filters) {
                 this.filters = options.filters;
-                this.filters.on("change:selection", this.render, this);
+                this.listenTo(this.filters, "change:selection", this.render);
             }
             if (options.noFiltersMessage) {
                 this.noFiltersMessage = options.noFiltersMessage;
@@ -32,8 +32,8 @@
                 this.singleSelect = options.singleSelect;
             }
 
-            this.model.on("change:pageIndex", this.render, this);
-            this.model.on("change:facet", this.render, this);
+            this.listenTo(this.model, "change:pageIndex", this.render);
+            this.listenTo(this.model, "change:facet", this.render);
         },
 
         events: {

@@ -551,7 +551,7 @@ function program4(depth0,data) {
             }
             if (options.filters) {
                 this.filters = options.filters;
-                this.filters.on("change:selection", this.render, this);
+                this.listenTo(this.filters, "change:selection", this.render);
             }
             if (options.noFiltersMessage) {
                 this.noFiltersMessage = options.noFiltersMessage;
@@ -560,8 +560,8 @@ function program4(depth0,data) {
                 this.singleSelect = options.singleSelect;
             }
 
-            this.model.on("change:pageIndex", this.render, this);
-            this.model.on("change:facet", this.render, this);
+            this.listenTo(this.model, "change:pageIndex", this.render);
+            this.listenTo(this.model, "change:facet", this.render);
         },
 
         events: {
@@ -733,8 +733,8 @@ function program4(depth0,data) {
                 }
             }
 
-            this.model.on("change:pageIndex", this.render, this);
-            this.model.on("change:facet", this.render, this);
+            this.listenTo(this.model, "change:pageIndex", this.render);
+            this.listenTo(this.model, "change:facet", this.render);
             this.render();
         },
         
@@ -867,7 +867,7 @@ function program4(depth0,data) {
                 }
             }
 
-            this.model.on("change", this.render, this);
+            this.listenTo(this.model, "change", this.render);
         },
 
         events: {
@@ -985,7 +985,7 @@ function program4(depth0,data) {
                 this.avoidFacets = options.avoidFacets;
             }
 
-            this.model.on("change:selection", this.renderSelection, this);
+            this.listenTo(this.model, "change:selection", this.renderSelection);
             this.render();
             this.renderSelection();
         },
@@ -1270,20 +1270,26 @@ function program4(depth0,data) {
         },
         
         setCurrentModel : function() {
+            var me = this;
             if (this.panelButtons) {
                 // duplicate the filters model
                 this.currentModel = new squid_api.model.FiltersJob();
                 var attributesClone = $.extend(true, {}, this.model.attributes);
                 this.currentModel.set(attributesClone);
-            } else {
-                this.currentModel = this.model;
-            }
-            this.render();
-            var me = this;
-            this.currentModel.on("change", function() {
+                this.listenTo(this.currentModel, 'change', function() {
                     // force facet fetch (because the selection has changed)
                     me.renderFacet(true);
-                }, this);
+                });
+            } else {
+                if (this.currentModel !== this.model) {
+                    this.currentModel = this.model;
+                    this.listenTo(this.currentModel, 'change', function() {
+                        // force facet fetch (because the selection has changed)
+                        me.renderFacet(true);
+                    });
+                }
+            }
+            this.render();
         },
         
         search : function(event) {
@@ -2187,16 +2193,16 @@ function program4(depth0,data) {
             this.initCurrentModel(this.model);
 
             // listen for some model events
-            this.model.on('change:domains', function(model) {
+            this.listenTo(this.model, "change:domains", function(model) {
                 me.initCurrentModel(model);
-            }, this);
-            this.model.on('change:selection', function(model) {
+            });
+            this.listenTo(this.model, 'change:selection', function(model) {
                 // update the current model
                 var attributesClone = $.extend(true, {}, model.attributes);
                 me.currentModel.set("selection", attributesClone.selection);
                 me.render();
-            }, this);
-            this.model.on('change:enabled', this.setEnable, this);
+            });
+            this.listenTo(this.model, 'change:enabled', this.setEnable);
 
         },
 
@@ -2637,7 +2643,8 @@ function program4(depth0,data) {
             if (!this.model) {
                 this.model = squid_api.model.filters;
             }
-            this.model.on('change', this.render, this);
+            this.listenTo(this.model, 'change', this.render);
+
             if (options.format) {
                 this.format = options.format;
             } else {

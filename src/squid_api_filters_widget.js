@@ -99,6 +99,9 @@
                 me.currentModel.set("selection", attributesClone.selection);
                 me.render();
             });
+            this.listenTo(this.model, 'change:status', function(model) {
+                me.currentModel.set("status", this.model.get("status"));
+            });
             this.listenTo(this.model, 'change:enabled', this.setEnable);
 
         },
@@ -240,16 +243,14 @@
                 console.error(errorData.message);
                 this.$el.find(".sq-error").show();
                 this.$el.find(".sq-content").hide();
-                this.$el.find(".sq-wait").hide();
             } else {
                 this.$el.find(".sq-error").hide();
                 var enabled = this.model.get("enabled");
                 var sel = this.currentModel.get("selection");
                 if ((!sel) || (this.currentModel.get("status") == "RUNNING")) {
-                    this.$el.find(".sq-wait").show();
+                    // computing
                 } else {
                     var facets = sel.facets;
-                    this.$el.find(".sq-wait").hide();
 
                     // sort & filter the facets
                     var sortedFacets = [];

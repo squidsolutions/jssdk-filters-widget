@@ -444,7 +444,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"sq-filters\">\n    <div class='sq-wait'>Computing in progress...</div>\n    <div class='sq-error'>An error has occurred</div>\n    <dl class='sq-content dl-horizontal'></dl>\n</div>";
+  return "<div class=\"sq-filters\">\n    <div class='sq-error'>An error has occurred</div>\n    <dl class='sq-content dl-horizontal'></dl>\n</div>";
   });
 
 this["squid_api"]["template"]["squid_api_period_selection_panel"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -2202,6 +2202,9 @@ function program4(depth0,data) {
                 me.currentModel.set("selection", attributesClone.selection);
                 me.render();
             });
+            this.listenTo(this.model, 'change:status', function(model) {
+                me.currentModel.set("status", this.model.get("status"));
+            });
             this.listenTo(this.model, 'change:enabled', this.setEnable);
 
         },
@@ -2343,16 +2346,14 @@ function program4(depth0,data) {
                 console.error(errorData.message);
                 this.$el.find(".sq-error").show();
                 this.$el.find(".sq-content").hide();
-                this.$el.find(".sq-wait").hide();
             } else {
                 this.$el.find(".sq-error").hide();
                 var enabled = this.model.get("enabled");
                 var sel = this.currentModel.get("selection");
                 if ((!sel) || (this.currentModel.get("status") == "RUNNING")) {
-                    this.$el.find(".sq-wait").show();
+                    // computing
                 } else {
                     var facets = sel.facets;
-                    this.$el.find(".sq-wait").hide();
 
                     // sort & filter the facets
                     var sortedFacets = [];

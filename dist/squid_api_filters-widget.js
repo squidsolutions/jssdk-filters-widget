@@ -1471,10 +1471,12 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 var className = 'opened';
 
                 // Rotate Caret Position
-                if ($(item.currentTarget).hasClass(className)) {
-                    $(item.currentTarget).removeClass(className);
-                } else {
-                    $(item.currentTarget).addClass(className);
+                if (! this.popup) {
+                    if ($(item.currentTarget).hasClass(className)) {
+                        $(item.currentTarget).removeClass(className);
+                    } else {
+                        $(item.currentTarget).addClass(className);
+                    }
                 }
 
                 /**

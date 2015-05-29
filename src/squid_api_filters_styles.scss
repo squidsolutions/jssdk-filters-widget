@@ -406,6 +406,13 @@
             li {
                 padding-right: 20px;
                 width: auto;
+                i {
+                    width: 0px;
+                }
+                span {
+                    position: relative;
+                    left: 25px;
+                }
                 &:hover {
                     background: #eaebec;
                 }

@@ -291,6 +291,11 @@
     .squid-api-filters-widget-popup #filter-display-results ul li {
       padding-right: 20px;
       width: auto; }
+      .squid-api-filters-widget-popup #filter-display-results ul li i {
+        width: 0px; }
+      .squid-api-filters-widget-popup #filter-display-results ul li span {
+        position: relative;
+        left: 25px; }
       .squid-api-filters-widget-popup #filter-display-results ul li:hover {
         background: #eaebec; }
   .squid-api-filters-widget-popup #pagination-container {

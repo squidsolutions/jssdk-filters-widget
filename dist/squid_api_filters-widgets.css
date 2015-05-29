@@ -230,3 +230,71 @@
         display: inline-block; }
         .squid_api_filters_categorical_filter_panel #filter-display-results ul li.active i:before {
           content: "\f046"; }
+.squid_api_filters_categorical_filter_panel .popup {
+  background-color: #fff;
+  border-radius: 8px;
+  margin-top: 24px;
+  border: 1px solid #d1d1d1;
+  box-shadow: 5px 4px 15px -8px;
+  z-index: 1;
+  padding: 15px 15px;
+  position: relative; }
+  .squid_api_filters_categorical_filter_panel .popup #search {
+    display: inline-block;
+    min-width: inherit;
+    width: 130px;
+    position: relative; }
+    .squid_api_filters_categorical_filter_panel .popup #search .input-group {
+      width: 160px; }
+  .squid_api_filters_categorical_filter_panel .popup .open > .dropdown-menu {
+    left: 120px;
+    top: 5px; }
+    .squid_api_filters_categorical_filter_panel .popup .open > .dropdown-menu li a {
+      min-height: 31px; }
+  .squid_api_filters_categorical_filter_panel .popup #filter-display-results.min-filter-height {
+    min-height: inherit;
+    padding-top: 0px; }
+  .squid_api_filters_categorical_filter_panel .popup #filter-selection .btn-group button {
+    width: 110px; }
+
+.squid-api-filters-widget-popup {
+  outline: 0; }
+  .squid-api-filters-widget-popup .ui-dialog-titlebar {
+    display: none; }
+  .squid-api-filters-widget-popup:before {
+    position: absolute;
+    top: -6px;
+    left: 9px;
+    z-index: 2;
+    display: inline-block;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid #ccc;
+    border-left: 7px solid transparent;
+    border-bottom-color: #fff;
+    content: ''; }
+  .squid-api-filters-widget-popup .ui-dialog-titlebar-close {
+    position: absolute;
+    right: 10px;
+    top: 30px;
+    background: none;
+    border: 0px;
+    font-size: 15px; }
+  .squid-api-filters-widget-popup #filter-selection {
+    width: auto; }
+  .squid-api-filters-widget-popup #filter-display-results {
+    padding-top: 20px;
+    overflow: hidden;
+    width: 100%; }
+    .squid-api-filters-widget-popup #filter-display-results.min-filter-height {
+      min-height: 230px;
+      display: inline-block; }
+    .squid-api-filters-widget-popup #filter-display-results ul li {
+      padding-right: 20px;
+      width: auto; }
+      .squid-api-filters-widget-popup #filter-display-results ul li:hover {
+        background: #eaebec; }
+  .squid-api-filters-widget-popup #pagination-container {
+    float: none;
+    height: 40px; }
+    .squid-api-filters-widget-popup #pagination-container .pagination {
+      margin: 0px; }

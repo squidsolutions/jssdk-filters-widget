@@ -9,7 +9,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n	<ul>\n		";
+  buffer += "\n	<ul class=\"squid-api-action\">\n		";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.items), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n	</ul>\n";
@@ -145,7 +145,7 @@ function program6(depth0,data) {
   return "\n		<li class=\"next\"  data-id=\"next\"><a  href=\"#\"><i class=\"fa fa-arrow-right\"></i></a></li>\n		";
   }
 
-  buffer += "<div class=\"pagination\">\n	<ul>\n		";
+  buffer += "<div class=\"pagination squid-api-action\">\n	<ul>\n		";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.prev), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n		";
@@ -220,9 +220,42 @@ function program5(depth0,data) {
 this["squid_api"]["template"]["squid_api_filters_categorical_view"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var stack1, self=this, functionType="function", escapeExpression=this.escapeExpression;
 
 function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n<div class=\"squid_api_filters-categorical-panel-view popup\">\n	";
+  stack1 = helpers.unless.call(depth0, (depth0 && depth0.initialFacet), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n	<div id=\"search\">\n		<div class=\"input-group\">\n			<input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Search for\">\n				<span class=\"input-group-addon\">\n					<i class=\"fa fa-search\"></i>\n				</span>\n		</div>\n	</div>\n	<div id=\"filter-display-results\">\n	</div>\n	<div id=\"selected\">\n	</div>\n	<div id=\"pagination-container\">\n</div>\n";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  
+  return "\n		<div id=\"filter-selection\">\n			<select class=\"btn btn-select-filter\" size=\"2\"></select>\n		</div>\n	";
+  }
+
+function program4(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n<div class=\"panel panel-default filter-panel squid_api_filters-categorical-panel-view\">\n	";
+  stack1 = helpers.unless.call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n	<div class=\"panel-body\">\n		";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n			<div class=\"col-md-7\">\n				";
+  stack1 = helpers.unless.call(depth0, (depth0 && depth0.initialFacet), {hash:{},inverse:self.noop,fn:self.program(11, program11, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Search for\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-7\">\n				<div id=\"filter-display-results\">\n				</div>\n			</div>\n			<div class=\"col-md-5\">\n				<div id=\"selected\">\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div id=\"pagination-container\">\n					\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n\n	";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.noop,fn:self.program(13, program13, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</div>\n";
+  return buffer;
+  }
+function program5(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += "\n	<div class=\"panel-heading\">\n		<button type=\"button\" class=\"close\" data-toggle=\"collapse\"\n			data-target=\"";
@@ -233,25 +266,25 @@ function program1(depth0,data) {
   return buffer;
   }
 
-function program3(depth0,data) {
+function program7(depth0,data) {
   
   
   return "\n			<div class=\"row\">\n		";
   }
 
-function program5(depth0,data) {
+function program9(depth0,data) {
   
   
   return "\n			<div class=\"row no-padding\">\n		";
   }
 
-function program7(depth0,data) {
+function program11(depth0,data) {
   
   
   return "\n					<div id=\"filter-selection\">\n						<select class=\"btn btn-select-filter\" size=\"2\"></select>\n					</div>\n				";
   }
 
-function program9(depth0,data) {
+function program13(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += "\n		<div class=\"panel-footer\">\n			<button type=\"button\" class=\"btn btn-primary apply-selection\" data-toggle=\"collapse\"\n				data-target=\"";
@@ -266,20 +299,9 @@ function program9(depth0,data) {
   return buffer;
   }
 
-  buffer += "<div class=\"panel panel-default filter-panel squid_api_filters-categorical-panel-view\">\n	";
-  stack1 = helpers.unless.call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n	<div class=\"panel-body\">\n		";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n			<div class=\"col-md-7\">\n				";
-  stack1 = helpers.unless.call(depth0, (depth0 && depth0.initialFacet), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n				<div id=\"search\">\n                  <div class=\"input-group\">\n                    <input class=\"form-control\" id=\"searchbox\" type=\"search\" placeholder=\"Search for\">\n                    <span class=\"input-group-addon\">\n                      <i class=\"fa fa-search\"></i>\n                    </span>\n                  </div>\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div class=\"col-md-7\">\n				<div id=\"filter-display-results\">\n				</div>\n			</div>\n			<div class=\"col-md-5\">\n				<div id=\"selected\">\n				</div>\n			</div>\n		</div>\n		<div class=\"row\">\n			<div id=\"pagination-container\">\n					\n			</div>\n		</div>\n		<div class=\"row\">\n		<div class=\"col-md-4\">\n		</div>\n		<div class=\"col-md-8\">\n				\n			</div>\n	</div>\n\n	";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0['panel-buttons']), {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n</div>";
-  return buffer;
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.popup), {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { return stack1; }
+  else { return ''; }
   });
 
 this["squid_api"]["template"]["squid_api_filters_categorical_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -526,6 +548,41 @@ function program4(depth0,data) {
   buffer += "\n</div>";
   return buffer;
   });
+$.widget( "ui.dialog", $.ui.dialog, {
+  options: {
+    clickOutside: false, // Determine if clicking outside the dialog shall close it
+    clickOutsideTrigger: "", // Element (id or class) that triggers the dialog opening
+    facetResultsWrapper: ".squid-api-categorical-facet-view" // Set facet view wrapper to prevent close from internal facet view
+  },
+
+  open: function() {
+    var clickOutsideTriggerEl = $( this.options.clickOutsideTrigger );
+    var that = this;
+    var facetResultsWrapper = $( this.options.facetResultsWrapper );
+    
+    if (this.options.clickOutside){
+      // Add document wide click handler for the current dialog namespace
+      $(document).on( "click.ui.dialogClickOutside" + that.eventNamespace, function(event){
+        // Provide an exception rule with .squid-api-action to not 
+        if ( $(event.target).closest($(clickOutsideTriggerEl)).length === 0 && $(event.target).closest($(that.uiDialog)).length === 0 && $(event.target).parents(".squid-api-action").length === 0){
+          that.close();
+        }
+      });
+    }
+    
+    this._super(); // Invoke parent open method
+  },
+  
+  close: function() {
+    var that = this;
+    
+    // Remove global click handler for current dialog
+    $(document).off( "click.ui.dialogClickOutside" + that.eventNamespace );
+    
+    this._super(); // Invoke parent's close method
+  },  
+
+});
 (function (root, factory) {
     root.squid_api.view.CategoricalFacetView = factory(root.Backbone, root.squid_api);
 }(this, function (Backbone, squid_api) {
@@ -1076,6 +1133,7 @@ function program4(depth0,data) {
         parentCheck : null,
         ignoredFacets : null,
         mandatory : null,
+        popup : null,
 
         initialize : function(options) {
             var me = this;
@@ -1118,6 +1176,9 @@ function program4(depth0,data) {
             }
             if (options.mandatory) {
                 this.mandatory = options.mandatory;
+            }
+            if (options.popup) {
+                this.popup = options.popup;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -1319,16 +1380,39 @@ function program4(depth0,data) {
 
             // Button which opens filter Panel
             var buttonLabel = this.getButtonLabel();
-            if (buttonLabel) {
-                this.$el
-                .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + "><span class='name'>" + buttonLabel + "</span><span class='caret'></span></button>");
-            }
+
             // Print Base Filter Panel Layout
-            $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel collapse").html(this.filterPanelTemplate({
+            $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel").html(this.filterPanelTemplate({
+                "popup" : this.popup,
                 "data-target" : this.filterPanel,
                 "panel-buttons" : this.panelButtons,
                 "initialFacet" : this.initialFacet
             }));
+
+            if (this.popup) {
+                if (buttonLabel) {
+                    this.$el
+                    .html("<button type='button' class='btn squid_api_filters_categorical_button'><span class='name'>" + buttonLabel + "</span><span class='caret'></span></button>");
+                }
+                $(this.filterPanel).dialog({
+                    dialogClass: "squid-api-filters-widget-popup",
+                    autoOpen: false,
+                    position: { 
+                        my: "left top", at: "left bottom", of: this.$el.find("button")
+                    },
+                    clickOutside: true, // clicking outside the dialog will close it
+                    clickOutsideTrigger: this.$el.find("button") // Element (id or class) that triggers the dialog opening
+                });
+                this.$el.find("button").click(function() {
+                    $(me.filterPanel).dialog( "open" );
+                });
+            } else {
+                if (buttonLabel) {
+                    this.$el
+                    .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + "><span class='name'>" + buttonLabel + "</span><span class='caret'></span></button>");
+                }
+                $(this.filterPanel).addClass("collapse");
+            }
 
             view = new squid_api.view.CategoricalSelectorView({
                 el: $(this.filterPanel).find("#filter-selection"),

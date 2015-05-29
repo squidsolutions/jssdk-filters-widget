@@ -20,6 +20,7 @@
         parentCheck : null,
         ignoredFacets : null,
         mandatory : null,
+        popup : null,
 
         initialize : function(options) {
             var me = this;
@@ -62,6 +63,9 @@
             }
             if (options.mandatory) {
                 this.mandatory = options.mandatory;
+            }
+            if (options.popup) {
+                this.popup = options.popup;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -263,16 +267,39 @@
 
             // Button which opens filter Panel
             var buttonLabel = this.getButtonLabel();
-            if (buttonLabel) {
-                this.$el
-                .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + "><span class='name'>" + buttonLabel + "</span><span class='caret'></span></button>");
-            }
+
             // Print Base Filter Panel Layout
-            $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel collapse").html(this.filterPanelTemplate({
+            $(this.filterPanel).addClass("squid_api_filters_categorical_filter_panel").html(this.filterPanelTemplate({
+                "popup" : this.popup,
                 "data-target" : this.filterPanel,
                 "panel-buttons" : this.panelButtons,
                 "initialFacet" : this.initialFacet
             }));
+
+            if (this.popup) {
+                if (buttonLabel) {
+                    this.$el
+                    .html("<button type='button' class='btn squid_api_filters_categorical_button'><span class='name'>" + buttonLabel + "</span><span class='caret'></span></button>");
+                }
+                $(this.filterPanel).dialog({
+                    dialogClass: "squid-api-filters-widget-popup",
+                    autoOpen: false,
+                    position: { 
+                        my: "left top", at: "left bottom", of: this.$el.find("button")
+                    },
+                    clickOutside: true, // clicking outside the dialog will close it
+                    clickOutsideTrigger: this.$el.find("button") // Element (id or class) that triggers the dialog opening
+                });
+                this.$el.find("button").click(function() {
+                    $(me.filterPanel).dialog( "open" );
+                });
+            } else {
+                if (buttonLabel) {
+                    this.$el
+                    .html("<button type='button' class='btn squid_api_filters_categorical_button' data-toggle='collapse' data-target="+ this.filterPanel + "><span class='name'>" + buttonLabel + "</span><span class='caret'></span></button>");
+                }
+                $(this.filterPanel).addClass("collapse");
+            }
 
             view = new squid_api.view.CategoricalSelectorView({
                 el: $(this.filterPanel).find("#filter-selection"),

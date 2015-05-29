@@ -1,3 +1,25 @@
+{{#if popup}}
+<div class="squid_api_filters-categorical-panel-view popup">
+	{{#unless initialFacet}}
+		<div id="filter-selection">
+			<select class="btn btn-select-filter" size="2"></select>
+		</div>
+	{{/unless}}
+	<div id="search">
+		<div class="input-group">
+			<input class="form-control" id="searchbox" type="search" placeholder="Search for">
+				<span class="input-group-addon">
+					<i class="fa fa-search"></i>
+				</span>
+		</div>
+	</div>
+	<div id="filter-display-results">
+	</div>
+	<div id="selected">
+	</div>
+	<div id="pagination-container">
+</div>
+{{else}}
 <div class="panel panel-default filter-panel squid_api_filters-categorical-panel-view">
 	{{#unless panel-buttons}}
 	<div class="panel-heading">
@@ -60,3 +82,4 @@
 		</div>
 	{{/if}}
 </div>
+{{/if}}

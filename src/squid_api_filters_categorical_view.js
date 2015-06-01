@@ -285,8 +285,7 @@
                 model: this.currentModel,
                 filterStore : this.filterStore,
                 facetList : this.facetList,
-                avoidFacets : this.ignoredFacets,
-                autoShow : this.autoShow
+                avoidFacets : this.ignoredFacets
             });
             
             view2 = new squid_api.view.CategoricalFacetView({

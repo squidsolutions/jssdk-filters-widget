@@ -69,14 +69,11 @@
     .panel-heading {
         border: 0px;
     }
-    .open > .dropdown-menu {
+    .largeList > .dropdown-menu {
         display: block;
         left: 173px;
         top: 0px;
         min-width: 600px;
-            input[type="radio"], input[type="checkbox"] {
-            display: none;
-        }
         li {
             min-width: 50%;
             display: inline-block;
@@ -86,6 +83,9 @@
             text-overflow: ellipsis;
             overflow: hidden;
         }
+    }
+    input[type="radio"], input[type="checkbox"] {
+        display: none;
     }
     .no-items {
         display: inline-block;

@@ -1100,6 +1100,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
                 var select = this.$el.find(".btn-select-filter");
                 select.multiselect('dataprovider', items);
+                
+                // Detect List Length for display purposes
+                if (items.length >= 10) {
+                    select.siblings(".btn-group").addClass("largeList");
+                }
             }
         }
     });

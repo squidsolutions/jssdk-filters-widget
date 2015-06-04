@@ -71,7 +71,7 @@
                 
                 var pages = [];
                 var pageCount = facetItems.length / pageSize;
-                if (pageCount>1) {
+                if (pageCount>1 || pageIndex>0) {
                     if (pageCount>nbPages) {
                         pageCount = nbPages;
                     }

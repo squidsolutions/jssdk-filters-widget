@@ -21,7 +21,6 @@
         ignoredFacets : null,
         mandatory : null,
         popup : null,
-        autoShow : null,
 
         initialize : function(options) {
             var me = this;
@@ -67,9 +66,6 @@
             }
             if (options.popup) {
                 this.popup = options.popup;
-            }
-            if (options.autoShow) {
-                this.autoShow = options.autoShow;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -360,11 +356,6 @@
             this.$el.find("button").off("click").on("click", function() {
                 if (me.popup) {
                     $(me.filterPanel).dialog( "open" );
-                }
-                if (me.autoShow) {
-                    setTimeout(function() {
-                        $(me.filterPanel).find("button.multiselect").trigger("click");
-                    }, 300);
                 }
             });
         },

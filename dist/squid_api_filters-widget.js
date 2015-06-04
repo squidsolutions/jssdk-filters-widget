@@ -835,7 +835,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 
                 var pages = [];
                 var pageCount = facetItems.length / pageSize;
-                if (pageCount>1) {
+                if (pageCount>1 || pageIndex>0) {
                     if (pageCount>nbPages) {
                         pageCount = nbPages;
                     }
@@ -1135,7 +1135,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
         ignoredFacets : null,
         mandatory : null,
         popup : null,
-        autoShow : null,
 
         initialize : function(options) {
             var me = this;
@@ -1181,9 +1180,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
             }
             if (options.popup) {
                 this.popup = options.popup;
-            }
-            if (options.autoShow) {
-                this.autoShow = options.autoShow;
             }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
@@ -1474,11 +1470,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
             this.$el.find("button").off("click").on("click", function() {
                 if (me.popup) {
                     $(me.filterPanel).dialog( "open" );
-                }
-                if (me.autoShow) {
-                    setTimeout(function() {
-                        $(me.filterPanel).find("button.multiselect").trigger("click");
-                    }, 300);
                 }
             });
         },

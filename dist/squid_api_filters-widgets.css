@@ -42,18 +42,6 @@
   margin-bottom: 10px; }
 .squid_api_filters_categorical_filter_panel .panel-heading {
   border: 0px; }
-.squid_api_filters_categorical_filter_panel .largeList > .dropdown-menu {
-  display: block;
-  left: 173px;
-  top: 0px;
-  min-width: 600px; }
-  .squid_api_filters_categorical_filter_panel .largeList > .dropdown-menu li {
-    min-width: 50%;
-    display: inline-block; }
-  .squid_api_filters_categorical_filter_panel .largeList > .dropdown-menu label {
-    max-width: 230px;
-    text-overflow: ellipsis;
-    overflow: hidden; }
 .squid_api_filters_categorical_filter_panel input[type="radio"], .squid_api_filters_categorical_filter_panel input[type="checkbox"] {
   display: none; }
 .squid_api_filters_categorical_filter_panel .no-items {
@@ -247,8 +235,12 @@
     .squid_api_filters_categorical_filter_panel .popup #search .input-group {
       width: 160px; }
   .squid_api_filters_categorical_filter_panel .popup .open > .dropdown-menu {
-    left: 120px;
-    top: 5px; }
+    left: -5px;
+    top: -5px;
+    border-radius: 15px;
+    box-shadow: none;
+    min-height: 179px;
+    min-width: 280px; }
     .squid_api_filters_categorical_filter_panel .popup .open > .dropdown-menu li a {
       min-height: 31px; }
   .squid_api_filters_categorical_filter_panel .popup #filter-display-results.min-filter-height {

@@ -228,11 +228,12 @@
   padding: 15px 15px;
   position: relative; }
   .squid_api_filters_categorical_filter_panel .popup .open > .dropdown-menu {
-    border-radius: 7px;
-    width: 380px;
+    left: -16px;
+    top: -16px;
+    border-radius: 10px;
     box-shadow: none;
-    top: -17px;
-    left: -15px; }
+    min-height: 153px;
+    min-width: 382px; }
     .squid_api_filters_categorical_filter_panel .popup .open > .dropdown-menu li a {
       min-height: 31px; }
   .squid_api_filters_categorical_filter_panel .popup #filter-display-results.min-filter-height {

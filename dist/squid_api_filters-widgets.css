@@ -220,34 +220,24 @@
           content: "\f046"; }
 .squid_api_filters_categorical_filter_panel .popup {
   background-color: #fff;
+  display: inline-block;
   border-radius: 8px;
-  margin-top: 24px;
   border: 1px solid #d1d1d1;
   box-shadow: 5px 4px 15px -8px;
   z-index: 1;
   padding: 15px 15px;
   position: relative; }
-  .squid_api_filters_categorical_filter_panel .popup #search {
-    display: inline-block;
-    min-width: inherit;
-    width: 130px;
-    position: relative; }
-    .squid_api_filters_categorical_filter_panel .popup #search .input-group {
-      width: 160px; }
   .squid_api_filters_categorical_filter_panel .popup .open > .dropdown-menu {
-    left: -5px;
-    top: -5px;
-    border-radius: 15px;
+    border-radius: 7px;
+    width: 380px;
     box-shadow: none;
-    min-height: 179px;
-    min-width: 280px; }
+    top: -17px;
+    left: -15px; }
     .squid_api_filters_categorical_filter_panel .popup .open > .dropdown-menu li a {
       min-height: 31px; }
   .squid_api_filters_categorical_filter_panel .popup #filter-display-results.min-filter-height {
     min-height: inherit;
     padding-top: 0px; }
-  .squid_api_filters_categorical_filter_panel .popup #filter-selection .btn-group button {
-    width: 110px; }
 
 .squid-api-filters-widget-popup {
   outline: 0; }
@@ -291,7 +281,10 @@
       .squid-api-filters-widget-popup #filter-display-results ul li:hover {
         background: #eaebec; }
   .squid-api-filters-widget-popup #pagination-container {
-    float: none;
-    height: 40px; }
+    display: flex; }
     .squid-api-filters-widget-popup #pagination-container .pagination {
       margin: 0px; }
+      .squid-api-filters-widget-popup #pagination-container .pagination ul {
+        display: flex; }
+        .squid-api-filters-widget-popup #pagination-container .pagination ul li {
+          margin-right: -2px; }

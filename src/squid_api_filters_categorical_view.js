@@ -120,7 +120,7 @@
                    var name = me.getButtonLabel();
                    if (name) {
                     me.$el
-                    .find(".squid_api_filters_categorical_button").text(name);
+                    .find(".squid_api_filters_categorical_button").html(name + "<span class='caret'></span>");
                    }
                 }
                 if (!me.currentModel) {

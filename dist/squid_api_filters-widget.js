@@ -561,19 +561,20 @@ $.widget( "ui.dialog", $.ui.dialog, {
         if (this.options.clickOutside) {
             // Add document wide click handler for the current dialog namespace
             $(document).off( "click.ui.dialogClickOutside" + me.eventNamespace).on( "click.ui.dialogClickOutside" + me.eventNamespace, function(event) {
-                if (me.opener.hasClass("open-dialog")) {
+                var openClass = "open-dialog";
+                if (me.opener.hasClass(openClass)) {
                     var item1 = $(event.target).closest($(clickOutsideTriggerEl));
                     var item2 = $(event.target).closest($(me.uiDialog));
                     var item3 = $(event.target).parents(parentContains);
                     if ((item1.length === 0 && item2.length === 0 && item3.length === 0)) {
                         me.close();
-                        me.opener.removeClass("open-dialog");
-                    } else if ($(event.target).hasClass("open-dialog")) {
+                        me.opener.removeClass(openClass);
+                    } else if ($(event.target).hasClass(openClass)) {
                         me.close();
-                        $(event.target).removeClass("open-dialog");
+                        $(event.target).removeClass(openClass);
                     }
                 } else {
-                    $(event.target).addClass("open-dialog");
+                    $(event.target).addClass(openClass);
                 }
             });
         }
@@ -1242,7 +1243,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                    var name = me.getButtonLabel();
                    if (name) {
                     me.$el
-                    .find(".squid_api_filters_categorical_button").text(name);
+                    .find(".squid_api_filters_categorical_button").html(name + "<span class='caret'></span>");
                    }
                 }
                 if (!me.currentModel) {

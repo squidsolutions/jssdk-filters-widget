@@ -120,7 +120,7 @@
                    var name = me.getButtonLabel();
                    if (name) {
                     me.$el
-                    .find(".squid_api_filters_categorical_button .name").text(name);
+                    .find(".squid_api_filters_categorical_button").text(name);
                    }
                 }
                 if (!me.currentModel) {
@@ -334,7 +334,7 @@
             if (this.popup) {
                 if (buttonLabel) {
                     this.$el
-                    .html("<button type='button' class='btn squid_api_filters_categorical_button'><span class='name'>" + buttonLabel + "</span><span class='caret'></span></button>");
+                    .html("<button type='button' class='btn squid_api_filters_categorical_button'>" + buttonLabel + "<span class='caret'></span></button>");
                 }
                 $(this.filterPanel).dialog({
                     dialogClass: "squid-api-filters-widget-popup",

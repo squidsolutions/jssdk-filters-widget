@@ -560,12 +560,20 @@ $.widget( "ui.dialog", $.ui.dialog, {
         var me = this;
         if (this.options.clickOutside) {
             // Add document wide click handler for the current dialog namespace
-            $(document).on( "click.ui.dialogClickOutside" + me.eventNamespace, function(event) {
-                var item1 = $(event.target).closest($(clickOutsideTriggerEl));
-                var item2 = $(event.target).closest($(me.uiDialog));
-                var item3 = $(event.target).parents(parentContains);
-                if ((item1.length === 0 && item2.length === 0 && item3.length === 0)) {
-                    me.close();
+            $(document).off( "click.ui.dialogClickOutside" + me.eventNamespace).on( "click.ui.dialogClickOutside" + me.eventNamespace, function(event) {
+                if (me.opener.hasClass("open-dialog")) {
+                    var item1 = $(event.target).closest($(clickOutsideTriggerEl));
+                    var item2 = $(event.target).closest($(me.uiDialog));
+                    var item3 = $(event.target).parents(parentContains);
+                    if ((item1.length === 0 && item2.length === 0 && item3.length === 0)) {
+                        me.close();
+                        me.opener.removeClass("open-dialog");
+                    } else if ($(event.target).hasClass("open-dialog")) {
+                        me.close();
+                        $(event.target).removeClass("open-dialog");
+                    }
+                } else {
+                    $(event.target).addClass("open-dialog");
                 }
             });
         }
@@ -1234,7 +1242,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                    var name = me.getButtonLabel();
                    if (name) {
                     me.$el
-                    .find(".squid_api_filters_categorical_button .name").text(name);
+                    .find(".squid_api_filters_categorical_button").text(name);
                    }
                 }
                 if (!me.currentModel) {
@@ -1448,7 +1456,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
             if (this.popup) {
                 if (buttonLabel) {
                     this.$el
-                    .html("<button type='button' class='btn squid_api_filters_categorical_button'><span class='name'>" + buttonLabel + "</span><span class='caret'></span></button>");
+                    .html("<button type='button' class='btn squid_api_filters_categorical_button'>" + buttonLabel + "<span class='caret'></span></button>");
                 }
                 $(this.filterPanel).dialog({
                     dialogClass: "squid-api-filters-widget-popup",

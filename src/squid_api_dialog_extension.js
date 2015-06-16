@@ -10,12 +10,21 @@ $.widget( "ui.dialog", $.ui.dialog, {
         var me = this;
         if (this.options.clickOutside) {
             // Add document wide click handler for the current dialog namespace
-            $(document).on( "click.ui.dialogClickOutside" + me.eventNamespace, function(event) {
-                var item1 = $(event.target).closest($(clickOutsideTriggerEl));
-                var item2 = $(event.target).closest($(me.uiDialog));
-                var item3 = $(event.target).parents(parentContains);
-                if ((item1.length === 0 && item2.length === 0 && item3.length === 0)) {
-                    me.close();
+            $(document).off( "click.ui.dialogClickOutside" + me.eventNamespace).on( "click.ui.dialogClickOutside" + me.eventNamespace, function(event) {
+                var openClass = "open-dialog";
+                if (me.opener.hasClass(openClass)) {
+                    var item1 = $(event.target).closest($(clickOutsideTriggerEl));
+                    var item2 = $(event.target).closest($(me.uiDialog));
+                    var item3 = $(event.target).parents(parentContains);
+                    if ((item1.length === 0 && item2.length === 0 && item3.length === 0)) {
+                        me.close();
+                        me.opener.removeClass(openClass);
+                    } else if ($(event.target).hasClass(openClass)) {
+                        me.close();
+                        $(event.target).removeClass(openClass);
+                    }
+                } else {
+                    $(event.target).addClass(openClass);
                 }
             });
         }

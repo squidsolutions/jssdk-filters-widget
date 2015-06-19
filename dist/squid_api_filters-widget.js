@@ -680,7 +680,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     }
     
                     // Set the updated filters model
-                    this.filters.set("selection", selectionClone);
+                    this.filters.set("userSelection", selectionClone);
                 }
             },
         },
@@ -1138,6 +1138,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
         buttonLabel : null,
         noFiltersMessage : "No Filter Selected",
         initialFacet : null,
+        initialDimension : null,
         facetList : null,
         singleSelect : null,
         parentCheck : null,
@@ -1171,6 +1172,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
             }
             if (options.initialFacet) {
                 this.initialFacet = options.initialFacet;
+            }
+            if (options.initialDimension) {
+                this.initialDimension = options.initialDimension;
             }
             if (options.singleSelect) {
                 this.singleSelect = options.singleSelect;
@@ -1237,20 +1241,34 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 me.setCurrentModel();
             }, this);
             
-            this.model.on("change:selection", function() {
+            this.model.on("change:selection", function(filters) {
                 // Display label of Button which opens filter panel
                 if (me.initialFacet) {
                    var name = me.getButtonLabel();
                    if (name) {
-                    me.$el
-                    .find(".squid_api_filters_categorical_button").html(name + "<span class='caret'></span>");
+                       me.$el.find(".squid_api_filters_categorical_button").html(name + "<span class='caret'></span>");
                    }
+                } else {
+                    // search Facet By DimensionId = function(selection, dimensionId) {
+                    var dimensionId = me.initialDimension;
+                    if (dimensionId) {
+                        var facetId;
+                        var facets = filters.get("selection").facets;
+                        for (var i=0; i<facets.length; i++) {
+                            var facet = facets[i];
+                            if (facet.id.lastIndexOf(dimensionId) === (facet.id.length - dimensionId.length - 1)) {
+                                facetId = facet.id;
+                                break;
+                            }
+                        }
+                        me.setInitialFacet(facetId);
+                    }
                 }
                 if (!me.currentModel) {
                     me.setCurrentModel();
                 }
                 if (me.currentModel !== me.model) {
-                    var selectionClone = $.extend(true, {}, me.model.get("selection"));
+                    var selectionClone = $.extend(true, {}, filters.get("selection"));
                     me.currentModel.set("selection", selectionClone);
                 }
             });
@@ -1568,7 +1586,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                         fetch = true;
                     }
                     
-                    if ((fetch === true) && (selectedFacetId)) {
+                    if ((fetch === true) && (selectedFacetId) && (this.currentModel.get("id").facetJobId)) {
                         // pre-fetch some pages of facet members
                         var facetJob = new squid_api.model.ProjectFacetJobFacet();
                         facetJob.set("id",this.currentModel.get("id"));

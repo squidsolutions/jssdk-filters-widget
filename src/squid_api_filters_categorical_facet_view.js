@@ -90,7 +90,7 @@
                     }
     
                     // Set the updated filters model
-                    this.filters.set("selection", selectionClone);
+                    this.filters.set("userSelection", selectionClone);
                 }
             },
         },

@@ -33,7 +33,7 @@
         }
     }
 }
- 
+
 .squid-api-period-selection-widget {
     #date-picker {
         float: left;
@@ -91,7 +91,7 @@
             }
             span.input-group-addon {
                 left: -2px;
-                position: relative; 
+                position: relative;
                 background: #ecf0f1;
                 color: #777;
             }
@@ -385,9 +385,11 @@
                 span {
                     position: relative;
                     left: 25px;
-                }
-                &:hover {
-                    background: #eaebec;
+                    padding: 3px;
+                    border-radius: 8px;
+                    &:hover {
+                        background: #eaebec;
+                    }
                 }
             }
         }

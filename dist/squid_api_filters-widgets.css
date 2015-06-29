@@ -278,9 +278,11 @@
         width: 0px; }
       .squid-api-filters-widget-popup #filter-display-results ul li span {
         position: relative;
-        left: 25px; }
-      .squid-api-filters-widget-popup #filter-display-results ul li:hover {
-        background: #eaebec; }
+        left: 25px;
+        padding: 3px;
+        border-radius: 8px; }
+        .squid-api-filters-widget-popup #filter-display-results ul li span:hover {
+          background: #eaebec; }
   .squid-api-filters-widget-popup #pagination-container {
     display: flex; }
     .squid-api-filters-widget-popup #pagination-container .pagination {

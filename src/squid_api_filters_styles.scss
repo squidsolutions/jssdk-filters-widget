@@ -315,11 +315,11 @@
         background-color: #fff;
         display: inline-block;
         border-radius: 8px;
+        position: absolute;
         border: 1px solid #d1d1d1;
         box-shadow: 5px 4px 15px -8px;
         z-index: 1;
         padding: 15px 15px;
-        position: relative;
         .open > .dropdown-menu {
             left: -16px;
             top: -16px;
@@ -340,6 +340,7 @@
     }
 }
 .squid-api-filters-widget-popup {
+    position: absolute;
     outline: 0;
     .ui-dialog-titlebar {
         display: none;

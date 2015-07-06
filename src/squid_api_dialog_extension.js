@@ -32,9 +32,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
     },
     close: function() {
         var me = this;
-
         // Remove global click handler for current dialog
         $(document).off( "click.ui.dialogClickOutside" + me.eventNamespace );
         this._super(); // Invoke parent's close method
-    },
+    }
 });

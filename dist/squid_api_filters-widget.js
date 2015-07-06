@@ -582,12 +582,12 @@ $.widget( "ui.dialog", $.ui.dialog, {
     },
     close: function() {
         var me = this;
-
         // Remove global click handler for current dialog
         $(document).off( "click.ui.dialogClickOutside" + me.eventNamespace );
         this._super(); // Invoke parent's close method
-    },
+    }
 });
+
 (function (root, factory) {
     root.squid_api.view.CategoricalFacetView = factory(root.Backbone, root.squid_api);
 }(this, function (Backbone, squid_api) {
@@ -1477,6 +1477,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     this.$el
                     .html("<button type='button' class='btn squid_api_filters_categorical_button'>" + buttonLabel + "<span class='caret'></span></button>");
                 }
+                // this.$el.find("button")
                 $(this.filterPanel).dialog({
                     dialogClass: "squid-api-filters-widget-popup",
                     autoOpen: false,

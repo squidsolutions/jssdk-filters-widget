@@ -24,13 +24,16 @@
             } else {
                 this.onCheck = "set";
             }
-            
+
             if (this.model) {
                 this.listenTo(this.model, 'change', this.render);
             }
-            
+
             // listen for global status change
             this.listenTo(squid_api.model.status, 'change:status', this.render);
+
+            // listen for report change
+            this.listenTo(squid_api.model.config, 'change:report', this.resetSegment);
         },
 
         setModel : function(model) {
@@ -71,7 +74,23 @@
                 }
             }
         },
-        
+
+        resetSegment : function() {
+            var segment = this.getSegment();
+            if (segment !== null) {
+                var selectedItems = segment.selectedItems;
+                var selectedItemsUpdated = [];
+                for (var sIdx = 0; sIdx < selectedItems.length; sIdx++) {
+                    var item = selectedItems[sIdx];
+                    if (item.id !== this.segment) {
+                        selectedItemsUpdated.push(item);
+                    }
+                }
+                segment.selectedItems = selectedItemsUpdated;
+                this.model.trigger("change:selection", this.model);
+            }
+        },
+
         getSegment : function() {
             var segment = null;
             var selection = this.model.get('selection');
@@ -106,11 +125,11 @@
                         }
                     }
                 }
-                
+
                 if (this.onCheck == "unset") {
                     isSelected = !isSelected;
                 }
-                
+
                 // get HTML template and fill corresponding data
                 selHTML = this.template({
                     "isSelected" : isSelected,
@@ -123,7 +142,7 @@
             } else {
                 this.$el.html("");
             }
-            
+
             // treat global status
             var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
             if (running === true) {

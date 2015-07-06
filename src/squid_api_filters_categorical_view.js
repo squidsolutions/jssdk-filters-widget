@@ -31,7 +31,7 @@
             }
             // force using the non-blocking engine
             this.model.set("engineVersion", "2");
-            
+
             if (options.filterPanel) {
                 this.filterPanel = options.filterPanel;
             }
@@ -84,17 +84,17 @@
                 }
             }
 
-            this.filterStore = new Backbone.Model( { 
+            this.filterStore = new Backbone.Model( {
                 // selected dimension
-                selectedFilter : me.initialFacet,  
+                selectedFilter : me.initialFacet,
                 // current selected page
-                pageIndex : 0,          
+                pageIndex : 0,
                 // nb of items in a page
-                pageSize : 10,          
+                pageSize : 10,
                 // nb of pages to display
                 nbPages : 10,
                 // current facet retrieved from API
-                facet : null,           
+                facet : null,
                 // index id of the first item of facet
                 itemIndex : 0,
                 // previous search query
@@ -103,7 +103,7 @@
                 search : null
             }
             );
-            
+
             this.model.on("change:domains", function() {
                 // reset
                 me.filterStore.set({
@@ -117,7 +117,7 @@
                 });
                 me.setCurrentModel();
             }, this);
-            
+
             this.model.on("change:selection", function(filters) {
                 // Display label of Button which opens filter panel
                 if (me.initialFacet) {
@@ -149,7 +149,7 @@
                     me.currentModel.set("selection", selectionClone);
                 }
             });
-            
+
             this.filterStore.on("change:selectedFilter", function() {
                 me.filterStore.set({
                     "searchPrevious" : null,
@@ -164,14 +164,14 @@
                 $(me.filterPanel).find("#searchbox").val("");
                 // re-compute the filters
                 squid_api.controller.facetjob.compute(me.currentModel);
-                
+
             }, this);
-            
+
             this.filterStore.on("change:search", function() {
                 me.filterStore.set({"pageIndex": 0}, {"silent" : true});
                 me.filterStore.trigger("change:pageIndex", me.filterStore);
             }, this);
-            
+
             this.filterStore.on("change:pageIndex", function() {
                 me.renderFacet(false);
             }, this);
@@ -180,7 +180,7 @@
             squid_api.model.status.on('change:status', this.statusUpdate, this);
 
         },
-        
+
         setInitialFacet : function(initialFacet) {
             this.initialFacet = initialFacet;
             this.filterStore.set({
@@ -197,7 +197,7 @@
             $(this.filterPanel).find("#searchbox").val("");
             this.render();
         },
-        
+
         setIgnoredFacets : function(ignoredFacets) {
             this.ignoredFacets = ignoredFacets;
             this.render();
@@ -224,7 +224,7 @@
                     }
                 }
             }
-            
+
 
             if ((running) || (disabled)) {
                 // computation is running : disable input
@@ -234,7 +234,7 @@
                 this.$el.find("button").removeAttr("disabled");
             }
         },
-        
+
         setCurrentModel : function() {
             var me = this;
             if (this.panelButtons) {
@@ -257,7 +257,7 @@
             }
             this.render();
         },
-        
+
         search : function(event) {
             this.filterStore.set("search", event.target.value);
         },
@@ -267,7 +267,7 @@
             var buttonLabel = this.buttonLabel;
             if (!buttonLabel) {
                 var selection = this.model.get("selection");
-                if (this.initialFacet && selection) {        
+                if (this.initialFacet && selection) {
                     var facets = selection.facets;
                     for (i=0; i<facets.length; i++) {
                         if (facets[i].id === this.initialFacet) {
@@ -280,7 +280,7 @@
             }
             return buttonLabel;
         },
-        
+
         render : function() {
 
             // Button which opens filter Panel
@@ -301,7 +301,7 @@
                 facetList : this.facetList,
                 avoidFacets : this.ignoredFacets
             });
-            
+
             view2 = new squid_api.view.CategoricalFacetView({
                 el: $(this.filterPanel).find("#filter-display-results"),
                 model: this.filterStore,
@@ -346,7 +346,7 @@
                     me.cancelSelection();
                 });
             }
-            
+
             $(this.filterPanel).find("#searchbox").keyup(_.bind(this.search, this));
 
             if (this.popup) {
@@ -357,7 +357,7 @@
                 $(this.filterPanel).dialog({
                     dialogClass: "squid-api-filters-widget-popup",
                     autoOpen: false,
-                    position: { 
+                    position: {
                         my: "left top", at: "left bottom", of: this.$el.find("button")
                     },
                     clickOutside: true, // clicking outside the dialog will close it
@@ -393,7 +393,7 @@
 
                 /**
                     With each categorical view being independent, obtain all
-                    filter panels which don't matched the one being clicked 
+                    filter panels which don't matched the one being clicked
                     & is currently open. Once identified, close it.
                 **/
 
@@ -410,7 +410,7 @@
 
                         // Remove Opened Class on Buttons
                         var target = $(filterPanels[i]).attr('id');
-                        
+
                         for (ix=0; ix<buttons.length; ix++) {
                             if ($(buttons[ix]).attr('data-target') === '#' + target) {
                                 $(buttons[ix]).removeClass(className);
@@ -420,7 +420,7 @@
                 }
             }
         },
-        
+
         /**
          * Render a facet.
          * Facet fetch may be triggered if true is passed as the fetch arg or if the requested paging index
@@ -428,7 +428,7 @@
          */
         renderFacet : function(fetch) {
             var me = this;
-            
+
             if (this.currentModel.get("status") === "DONE") {
                 if (this.currentModel.get("selection")) {
                     var selectedFacetId = this.filterStore.get("selectedFilter");
@@ -436,11 +436,11 @@
                     var pageSize = this.filterStore.get("pageSize");
                     var facet = this.filterStore.get("facet");
                     var nbPages = this.filterStore.get("nbPages");
-                    
+
                     // compute required index range
                     var startIndex = pageIndex * pageSize;
                     var endIndex = startIndex + pageSize;
-                    
+
                     // check if we need to fetch more items
                     var searchStale =  false;
                     var searchPrevious = this.filterStore.get("searchPrevious");
@@ -452,7 +452,7 @@
                         var itemIndex = this.filterStore.get("itemIndex");
 
                         // compute what's the max index
-                        var maxItem = itemIndex + facet.get("items").length;     
+                        var maxItem = itemIndex + facet.get("items").length;
                         if (startIndex < itemIndex) {
                             fetch = true;
                         }
@@ -462,7 +462,7 @@
                     } else {
                         fetch = true;
                     }
-                    
+
                     if ((fetch === true) && (selectedFacetId) && (this.currentModel.get("id").facetJobId)) {
                         // pre-fetch some pages of facet members
                         var facetJob = new squid_api.model.ProjectFacetJobFacet();
@@ -502,20 +502,20 @@
                 }
             }
         },
-        
+
         applySelection : function() {
             var selectionClone = $.extend(true, {}, this.currentModel.get("selection"));
             this.model.set("selection", selectionClone);
         },
 
         cancelSelection : function() {
-            
+
         },
-        
+
         applyPaging : function(pageIndex) {
             filterStore.set("pageIndex", pageIndex);
         }
-        
+
     });
 
     return View;

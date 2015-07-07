@@ -76,18 +76,28 @@
         },
 
         resetSegment : function() {
-            var segment = this.getSegment();
-            if (segment !== null) {
-                var selectedItems = segment.selectedItems;
-                var selectedItemsUpdated = [];
-                for (var sIdx = 0; sIdx < selectedItems.length; sIdx++) {
-                    var item = selectedItems[sIdx];
-                    if (item.id !== this.segment) {
-                        selectedItemsUpdated.push(item);
+            if (this.disabled === false) {
+                this.disabled = true;
+                var segment = this.getSegment();
+                if (segment !== null) {
+                    var selectedItems = segment.selectedItems;
+                    var selectedItemsUpdated = [];
+                    var isChecked = false;
+                    if (this.onCheck == "unset") {
+                        isChecked = !isChecked;
                     }
+                    for (var sIdx = 0; sIdx < selectedItems.length; sIdx++) {
+                        var item = selectedItems[sIdx];
+                        if (isChecked || (item.id !== this.segment)) {
+                            selectedItemsUpdated.push(item);
+                        }
+                    }
+                    if (isChecked) {
+                        selectedItemsUpdated.push({"id" : this.segment, "type" : "v"});
+                    }
+                    segment.selectedItems = selectedItemsUpdated;
+                    this.model.trigger("change:selection", this.model);
                 }
-                segment.selectedItems = selectedItemsUpdated;
-                this.model.trigger("change:selection", this.model);
             }
         },
 

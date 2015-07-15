@@ -361,7 +361,15 @@
                         my: "left top", at: "left bottom", of: this.$el.find("button")
                     },
                     clickOutside: true, // clicking outside the dialog will close it
-                    clickOutsideTrigger: this.$el.find("button") // Element (id or class) that triggers the dialog opening
+                    clickOutsideTrigger: this.$el.find("button"), // Element (id or class) that triggers the dialog opening
+                });
+                // Click Event for filter panel button
+                this.$el.find("button").off("click").on("click", function() {
+                    if ($(me.filterPanel).dialog("isOpen")) {
+                        $(me.filterPanel).dialog( "close" );
+                    } else {
+                        $(me.filterPanel).dialog( "open" );
+                    }
                 });
             } else {
                 if (buttonLabel) {
@@ -370,12 +378,6 @@
                 }
                 $(this.filterPanel).addClass("collapse");
             }
-            // Click Event for filter panel button
-            this.$el.find("button").off("click").on("click", function() {
-                if (me.popup) {
-                    $(me.filterPanel).dialog( "open" );
-                }
-            });
         },
 
         events: {

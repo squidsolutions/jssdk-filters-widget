@@ -26,10 +26,11 @@
             this.listenTo(this.model, "change:facet", this.render);
             this.render();
         },
-        
-        events : { 
+
+        events : {
             "click li" : function(event) {
                 event.preventDefault();
+                event.stopPropagation();
                 var pageId = $(event.currentTarget).data("id");
                 var pageIndex = this.model.get("pageIndex");
                 var nbPages = this.model.get("nbPages");
@@ -66,9 +67,9 @@
                 var pageSize = this.model.get("pageSize");
                 var nbPages = this.model.get("nbPages");
                 var itemIndex = this.model.get("itemIndex");
-                
+
                 var firstPageIndex = Math.round(itemIndex / pageSize);
-                
+
                 var pages = [];
                 var pageCount = facetItems.length / pageSize;
                 if (pageCount>1 || pageIndex>0) {
@@ -87,7 +88,7 @@
                     if (facet.get("hasMore")) {
                         next = true;
                     }
-                    
+
                     this.$el.html(squid_api.template.squid_api_filters_categorical_paging_view({
                         "prev" : prev,
                         "pages" : pages,

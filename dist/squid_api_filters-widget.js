@@ -627,34 +627,34 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     var selectedFilter = this.model.get("selectedFilter");
                     var target = $(item.currentTarget);
                     var selectedItem = target.attr("data-attr");
-    
+
                     // Get clicked filter value & create object
                     var value = target.attr("data-value");
                     var type = target.attr("data-type");
                     var id = target.attr("data-id");
-    
+
                     // Get selected Filters
                     var selectionClone = $.extend(true, {}, this.filters.get("selection"));
                     var facets = selectionClone.facets;
-    
+
                     if (target.attr("selected")) {
                         // Style manipulation
                         target.removeClass("active");
                         target.removeAttr("selected");
-    
+
                         // Remove selected item from facet
                         squid_api.controller.facetjob.unSelect(facets, selectedFilter, id);
-                        
+
                     } else {
                         // style manipulation
                         target.addClass("active");
                         target.attr("selected", true);
-                        
+
                         // set up object to add a new selected item
                         var selectObj = {id : id, type : type, value : value};
-    
+
                         // Push new filters to selectedItems array
-                       
+
                         var selectedFacet;
                         for (i=0; i<facets.length; i++) {
                             var facet = facets[i];
@@ -670,7 +670,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                         // Remove selected items from children
                         squid_api.controller.facetjob.unSelectChildren(facets, selectedFacet, false);
                     }
-    
+
                     // Set the updated filters model
                     this.filters.set("userSelection", selectionClone);
                 }
@@ -699,13 +699,13 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 if (endIndex > facetItems.length) {
                     endIndex = facetItems.length;
                 }
-                
+
                 if (startIndex >= 0) {
                     var items = [];
                     for (ix=startIndex; ix<endIndex; ix++) {
                         items.push(facetItems[ix]);
                     }
-                    
+
                     // Manipulate items to add a selected or not attribute
                     for (ix=0; ix<facets.length; ix++) {
                         if (selectedFilter === facets[ix].id) {
@@ -736,7 +736,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 } else {
                     message = "Computing in progress";
                 }
-                
+
             } else {
                 message = this.noFiltersMessage;
                 this.$el.removeClass("min-filter-height");
@@ -747,7 +747,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
             });
 
             this.$el.html(html);
-            
+
             // treat global status
             var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
             if (running === true) {
@@ -791,10 +791,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
             this.listenTo(this.model, "change:facet", this.render);
             this.render();
         },
-        
-        events : { 
+
+        events : {
             "click li" : function(event) {
                 event.preventDefault();
+                event.stopPropagation();
                 var pageId = $(event.currentTarget).data("id");
                 var pageIndex = this.model.get("pageIndex");
                 var nbPages = this.model.get("nbPages");
@@ -831,9 +832,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 var pageSize = this.model.get("pageSize");
                 var nbPages = this.model.get("nbPages");
                 var itemIndex = this.model.get("itemIndex");
-                
+
                 var firstPageIndex = Math.round(itemIndex / pageSize);
-                
+
                 var pages = [];
                 var pageCount = facetItems.length / pageSize;
                 if (pageCount>1 || pageIndex>0) {
@@ -852,7 +853,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     if (facet.get("hasMore")) {
                         next = true;
                     }
-                    
+
                     this.$el.html(squid_api.template.squid_api_filters_categorical_paging_view({
                         "prev" : prev,
                         "pages" : pages,

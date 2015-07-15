@@ -281,6 +281,7 @@
         position: relative;
         left: 25px;
         padding: 3px;
+        white-space: nowrap;
         border-radius: 8px; }
         .squid-api-filters-widget-popup #filter-display-results ul li span:hover {
           background: #eaebec; }

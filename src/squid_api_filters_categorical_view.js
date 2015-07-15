@@ -495,6 +495,13 @@
                                     me.filterStore.set("itemIndex", startIndex);
                                     me.filterStore.set("facet", model);
                                 }
+                                // set error message if exists
+                                var errorMessage = model.get("errorMessage");
+                                if (model.get("error")) {
+                                    if (errorMessage) {
+                                        squid_api.model.status.set("message", errorMessage);
+                                    }
+                                }
                             }
                         });
                     } else {

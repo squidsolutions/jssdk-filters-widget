@@ -2001,9 +2001,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
             // listen for global status change
             this.listenTo(squid_api.model.status, 'change:status', this.render);
-
-            // listen for report change
-            this.listenTo(squid_api.model.config, 'change:report', this.resetSegment);
         },
 
         setModel : function(model) {
@@ -2041,32 +2038,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
                         segment.selectedItems = selectedItemsUpdated;
                         this.model.trigger("change:selection", this.model);
                     }
-                }
-            }
-        },
-
-        resetSegment : function() {
-            if (this.disabled === false) {
-                this.disabled = true;
-                var segment = this.getSegment();
-                if (segment !== null) {
-                    var selectedItems = segment.selectedItems;
-                    var selectedItemsUpdated = [];
-                    var isChecked = false;
-                    if (this.onCheck == "unset") {
-                        isChecked = !isChecked;
-                    }
-                    for (var sIdx = 0; sIdx < selectedItems.length; sIdx++) {
-                        var item = selectedItems[sIdx];
-                        if (isChecked || (item.id !== this.segment)) {
-                            selectedItemsUpdated.push(item);
-                        }
-                    }
-                    if (isChecked) {
-                        selectedItemsUpdated.push({"id" : this.segment, "type" : "v"});
-                    }
-                    segment.selectedItems = selectedItemsUpdated;
-                    this.model.trigger("change:selection", this.model);
                 }
             }
         },
@@ -2692,7 +2663,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
         datePickerPosition : "left",
 
         refreshOnChange: false,
-        
+
         ranges: null,
 
         initialize : function(options) {

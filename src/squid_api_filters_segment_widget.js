@@ -24,6 +24,10 @@
             } else {
                 this.onCheck = "set";
             }
+            // in order to replace segment when checkbox is on / off
+            if (options.replaceWith) {
+                this.replaceWith = options.replaceWith;
+            }
 
             if (this.model) {
                 this.listenTo(this.model, 'change', this.render);
@@ -60,6 +64,11 @@
                             var item = selectedItems[sIdx];
                             if (isChecked || (item.id !== this.segment)) {
                                 selectedItemsUpdated.push(item);
+                            }
+                        }
+                        if (this.replaceWith) {
+                            if (! isChecked) {
+                                selectedItemsUpdated.push({"id" : this.replaceWith, "type" : "v"});
                             }
                         }
                         if (isChecked) {

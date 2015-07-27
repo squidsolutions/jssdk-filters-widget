@@ -22,7 +22,7 @@
         datePickerPosition : "left",
 
         refreshOnChange: false,
-        
+
         ranges: null,
 
         initialize : function(options) {

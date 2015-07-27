@@ -63,7 +63,9 @@
                         for (var sIdx = 0; sIdx < selectedItems.length; sIdx++) {
                             var item = selectedItems[sIdx];
                             if (isChecked || (item.id !== this.segment)) {
-                                selectedItemsUpdated.push(item);
+                                if (item.id !== this.replaceWith) {
+                                    selectedItemsUpdated.push(item);
+                                }
                             }
                         }
                         if (this.replaceWith) {

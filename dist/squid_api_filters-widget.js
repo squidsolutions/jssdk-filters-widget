@@ -1221,6 +1221,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
             );
 
             this.model.on("change:domains", function() {
+                me.initialFacet = null;
                 // reset
                 me.filterStore.set({
                     "searchPrevious" : null,

@@ -106,6 +106,7 @@
 
             this.model.on("change:domains", function() {
                 // reset
+                me.initialFacet = null;
                 me.filterStore.set({
                     "searchPrevious" : null,
                     "search" : null,

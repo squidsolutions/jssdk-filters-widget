@@ -897,6 +897,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
             if (options.initialFacet) {
                 this.initialFacet = options.initialFacet;
             }
+            if (options.initialDimension) {
+                this.initialDimension = options.initialDimension;
+            }
             if (options.singleSelect) {
                 options.singleSelect = options.singleSelect;
             }
@@ -938,7 +941,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     if (facets) {
                         // Remove selected item from facet
                         squid_api.controller.facetjob.unSelect(facets, facetName, itemId);
-                        this.model.set("selection", selectionClone);  
+                        this.model.set("selection", selectionClone);
                     }
                 }
             }
@@ -956,7 +959,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                         var selectedItems = facets[i].selectedItems;
                             if (facets[i].dimension.type !== "CONTINUOUS") {
                                 for (ix=0; ix<selectedItems.length; ix++) {
-                                    if (this.initialFacet == facets[i].id || !this.initialFacet) {
+                                    if (this.initialFacet == facets[i].id || (!this.initialFacet && !this.initialDimension)) {
                                         noData = false;
                                         var obj = {};
                                         obj.facetItem = selectedItems[ix].value;
@@ -1221,8 +1224,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
             );
 
             this.model.on("change:domains", function() {
-                me.initialFacet = null;
                 // reset
+                me.initialFacet = null;
                 me.filterStore.set({
                     "searchPrevious" : null,
                     "search" : null,
@@ -1438,6 +1441,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     model: this.currentModel,
                     noDataMessage: this.noFiltersMessage,
                     initialFacet : this.initialFacet,
+                    initialDimension : this.initialDimension,
                     facetList : this.facetList,
                     avoidFacets : this.ignoredFacets,
                     mandatory : this.mandatory
@@ -1449,6 +1453,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 model: this.model,
                 noDataMessage: this.noFiltersMessage,
                 initialFacet : this.initialFacet,
+                initialDimension : this.initialDimension,
                 facetList : this.facetList,
                 avoidFacets : this.ignoredFacets,
                 mandatory : this.mandatory

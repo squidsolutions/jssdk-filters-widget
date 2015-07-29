@@ -26,6 +26,9 @@
             if (options.initialFacet) {
                 this.initialFacet = options.initialFacet;
             }
+            if (options.initialDimension) {
+                this.initialDimension = options.initialDimension;
+            }
             if (options.singleSelect) {
                 options.singleSelect = options.singleSelect;
             }
@@ -67,7 +70,7 @@
                     if (facets) {
                         // Remove selected item from facet
                         squid_api.controller.facetjob.unSelect(facets, facetName, itemId);
-                        this.model.set("selection", selectionClone);  
+                        this.model.set("selection", selectionClone);
                     }
                 }
             }
@@ -85,7 +88,7 @@
                         var selectedItems = facets[i].selectedItems;
                             if (facets[i].dimension.type !== "CONTINUOUS") {
                                 for (ix=0; ix<selectedItems.length; ix++) {
-                                    if (this.initialFacet == facets[i].id || !this.initialFacet) {
+                                    if (this.initialFacet == facets[i].id || (!this.initialFacet && !this.initialDimension)) {
                                         noData = false;
                                         var obj = {};
                                         obj.facetItem = selectedItems[ix].value;

@@ -322,6 +322,7 @@
                     model: this.currentModel,
                     noDataMessage: this.noFiltersMessage,
                     initialFacet : this.initialFacet,
+                    initialDimension : this.initialDimension,
                     facetList : this.facetList,
                     avoidFacets : this.ignoredFacets,
                     mandatory : this.mandatory
@@ -333,6 +334,7 @@
                 model: this.model,
                 noDataMessage: this.noFiltersMessage,
                 initialFacet : this.initialFacet,
+                initialDimension : this.initialDimension,
                 facetList : this.facetList,
                 avoidFacets : this.ignoredFacets,
                 mandatory : this.mandatory

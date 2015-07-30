@@ -98,6 +98,7 @@
         render : function() {
             var facet = this.model.get("facet");
             var message = null;
+            var computingInProgress = false;
             var updatedItems = [];
 
             if (facet) {
@@ -151,8 +152,10 @@
                         message = "No Items";
                         this.$el.removeClass("min-filter-height");
                     }
+                    computingInProgress = false;
                 } else {
                     message = "Computing in progress";
+                    computingInProgress = true;
                 }
 
             } else {
@@ -161,7 +164,7 @@
             }
 
             var html = squid_api.template.squid_api_filters_categorical_facet_view({
-                "items" : updatedItems, "message" : message
+                "items" : updatedItems, "message" : message, "computingInProgress" : computingInProgress
             });
 
             this.$el.html(html);

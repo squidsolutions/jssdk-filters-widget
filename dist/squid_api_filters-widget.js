@@ -88,12 +88,20 @@ function program8(depth0,data) {
 function program10(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n	<span class='no-items'>";
+  buffer += "\n	<span class='no-items'>\n		";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.computingInProgress), {hash:{},inverse:self.noop,fn:self.program(11, program11, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n		";
   if (helper = helpers.message) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.message); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span>\n";
+    + "\n	</span>\n";
   return buffer;
+  }
+function program11(depth0,data) {
+  
+  
+  return "\n			<span class=\"glyphicon glyphicon-refresh\"></span>\n		";
   }
 
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.items), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
@@ -680,6 +688,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
         render : function() {
             var facet = this.model.get("facet");
             var message = null;
+            var computingInProgress = false;
             var updatedItems = [];
 
             if (facet) {
@@ -733,8 +742,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
                         message = "No Items";
                         this.$el.removeClass("min-filter-height");
                     }
+                    computingInProgress = false;
                 } else {
                     message = "Computing in progress";
+                    computingInProgress = true;
                 }
 
             } else {
@@ -743,7 +754,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
             }
 
             var html = squid_api.template.squid_api_filters_categorical_facet_view({
-                "items" : updatedItems, "message" : message
+                "items" : updatedItems, "message" : message, "computingInProgress" : computingInProgress
             });
 
             this.$el.html(html);

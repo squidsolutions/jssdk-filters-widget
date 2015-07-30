@@ -177,6 +177,13 @@
   padding-top: 20px;
   overflow: hidden;
   width: 100%; }
+  .squid_api_filters_categorical_filter_panel #filter-display-results .glyphicon-refresh {
+    margin-right: 10px;
+    -moz-animation: spin .7s infinite;
+    -webkit-animation: spin .7s infinite;
+    font-size: 18px;
+    position: relative;
+    top: 2px; }
   .squid_api_filters_categorical_filter_panel #filter-display-results.min-filter-height {
     min-height: 230px; }
   .squid_api_filters_categorical_filter_panel #filter-display-results ul {
@@ -293,3 +300,14 @@
         display: flex; }
         .squid-api-filters-widget-popup #pagination-container .pagination ul li {
           margin-right: -2px; }
+
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg); }
+  100% {
+    -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(360deg); } }

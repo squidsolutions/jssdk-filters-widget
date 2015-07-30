@@ -18,5 +18,10 @@
 	</ul>
 {{/if}}
 {{#if message}}
-	<span class='no-items'>{{message}}</span>
+	<span class='no-items'>
+		{{#if computingInProgress}}
+			<span class="glyphicon glyphicon-refresh"></span>
+		{{/if}}
+		{{message}}
+	</span>
 {{/if}}

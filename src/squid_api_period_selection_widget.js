@@ -15,6 +15,12 @@
 
         format : null,
 
+        periodSelector : null,
+
+        selectedPeriod: null,
+
+        nbPeriod: null,
+
         periodView : null,
 
         datePickerEl : null,
@@ -56,13 +62,14 @@
             if (options.ranges) {
                 this.ranges = options.ranges;
             }
+
             this.render();
 
             // listen for global status change
             squid_api.model.status.on('change:status', this.enable, this);
         },
 
-        enable: function() {
+        enable: function () {
             var select = this.$el.find("button");
             if (select) {
                 var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
@@ -71,6 +78,23 @@
                     this.$el.find(select).attr("disabled", true);
                 } else {
                     // computation is done : enable input
+
+                    // Compute period numbers
+                    var sel = squid_api.model.filters.get("selection");
+                    if (sel && sel.facets) {
+                        var nb = 0;
+                        var facets = sel.facets;
+                        for (var i = 0; i < facets.length; i++) {
+                            var facet = facets[i];
+                            if (facet.dimension.type == "CONTINUOUS") {
+                                nb = nb + 1;
+                            }
+                        }
+                        this.nbPeriod = nb;
+                        //refreshing
+                        this.render();
+                    }
+
                     this.$el.find(select).attr("disabled", false);
                 }
             }
@@ -87,21 +111,61 @@
                 // first call, setup the child views
                 this.$el.html(this.template());
 
-                this.periodView = new squid_api.view.PeriodView({
-                    el : this.el,
-                    model : this.model,
-                    format : this.format
-                });
+                // Compute period numbers
+                var sel = squid_api.model.filters.get("selection");
+                if (sel && sel.facets) {
+                    var nb = 0;
+                    var facets = sel.facets;
+                    for (var i = 0; i < facets.length; i++) {
+                        var facet = facets[i];
+                        if (facet.dimension.type == "CONTINUOUS") {
+                            nb = nb + 1;
+                        }
+                    }
+                    this.nbPeriod = nb;
+                }
 
-                this.datePickerView = new squid_api.view.FiltersView({
-                    model : this.model,
-                    el : this.$el.find("#date-picker"),
-                    pickerVisible : true,
-                    datePickerPosition: this.datePickerPosition,
-                    refreshOnChange : this.refreshOnChange,
-                    displayCategorical : false,
-                    ranges : this.ranges
-                });
+                if(this.selectedPeriod === null && this.nbPeriod > 1){
+                    if(this.datePickerView){
+                      this.datePickerView.remove();
+                    }
+                    if(this.periodView){
+                        this.periodView.remove();
+                    }
+
+                    console.log("several continuous dimension detected; activating period selector");
+                    this.periodSelector = new squid_api.view.ContinuousFilterSelectorView({
+                        el : this.$el.find("#date-picker"),
+                        model : this.model,
+                        format : this.format
+                    });
+
+
+                } else if (this.selectedPeriod !== null || this.nbPeriod === 1){
+
+                  if(this.periodSelector){
+                      this.periodSelector.remove();
+                  }
+
+                    this.periodView = new squid_api.view.PeriodView({
+                        el : this.el,
+                        model : this.model,
+                        format : this.format
+                    });
+
+                    this.datePickerView = new squid_api.view.FiltersView({
+                        model : this.model,
+                        el : this.$el.find("#date-picker"),
+                        pickerVisible : true,
+                        datePickerPosition: this.datePickerPosition,
+                        refreshOnChange : this.refreshOnChange,
+                        displayCategorical : false,
+                        ranges : this.ranges
+                    });
+                }
+
+
+
             }
         }
     });

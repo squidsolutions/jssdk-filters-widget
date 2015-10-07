@@ -382,6 +382,87 @@ function program5(depth0,data) {
   return buffer;
   });
 
+this["squid_api"]["template"]["squid_api_filters_continuous_selector_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n    <select class=\"sq-select form-control squid-api-filters-widgets-period-selector\" ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.multiple), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += ">\r\n        ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.empty), {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n        ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.options), {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n    </select>\r\n";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  
+  return "multiple";
+  }
+
+function program4(depth0,data) {
+  
+  
+  return "\r\n            <option>No period available</option>\r\n        ";
+  }
+
+function program6(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\r\n            <option value=\"";
+  if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += " ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.error), {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += ">\r\n                ";
+  if (helper = helpers.label) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.label); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\r\n            </option>\r\n        ";
+  return buffer;
+  }
+function program7(depth0,data) {
+  
+  
+  return "selected";
+  }
+
+function program9(depth0,data) {
+  
+  
+  return " disabled ";
+  }
+
+function program11(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\r\n    <!-- just display filter name -->\r\n    <label class=\"squid-api-period-selection-widget\">";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</label>\r\n    <span>-</span>\r\n";
+  return buffer;
+  }
+
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selAvailable), {hash:{},inverse:self.program(11, program11, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n";
+  return buffer;
+  });
+
 this["squid_api"]["template"]["squid_api_filters_continuous_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -1786,6 +1867,268 @@ $.widget( "ui.dialog", $.ui.dialog, {
     return View;
 }));
 (function (root, factory) {
+    root.squid_api.view.ContinuousFilterSelectorView = factory(root.Backbone, root.squid_api, squid_api.template.squid_api_filters_continuous_selector_widget);
+
+}(this, function (Backbone, squid_api, template) {
+
+    var View = Backbone.View.extend({
+        template : null,
+        periodIdList : null,
+        periodIndex: null,
+        filters: null,
+
+        remove: function() {
+                   this.undelegateEvents();
+                   this.$el.empty();
+                   this.stopListening();
+                   return this;
+        },
+
+        initialize: function(options) {
+            var me = this;
+
+            // setup options
+            if (options.template) {
+                this.template = options.template;
+            } else {
+                this.template = template;
+            }
+
+            if (options.filters) {
+                this.filters = options.filters;
+            } else {
+                this.filters = squid_api.model.filters;
+            }
+
+            if (options.dimensionIdList) {
+                this.periodIdList = options.dimensionIdList;
+            }
+            if (options.dimensionIndex !== null) {
+                this.periodIndex = options.dimensionIndex;
+            }
+
+            // listen for selection change as we use it to get dimensions
+            this.filters.on("change:selection", function() {
+                me.render();
+            });
+
+            if (!this.model) {
+                this.model = squid_api.model.config;
+            }
+
+            // listen for global status change
+            squid_api.model.status.on('change:status', this.enable, this);
+            me.render();
+
+        },
+
+        enable: function() {
+            var select = this.$el.find("select");
+            var multiSelectDropdown = this.$el.find(".multiselect-container");
+            if (select) {
+                var isMultiple = true;
+                if (this.periodIndex !== null) {
+                    isMultiple = false;
+                }
+                var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
+                if (running) {
+                    // computation is running : disable input
+                    select.attr("disabled","disabled");
+                    if (isMultiple) {
+                        select.multiselect('disable');
+                        multiSelectDropdown.append("<div class='dropdownDisabled'></div>");
+                    }
+                } else {
+                    // computation is done : enable input
+                    select.removeAttr("disabled");
+                    if (isMultiple) {
+                        select.multiselect('enable');
+                        multiSelectDropdown.find(".dropdownDisabled").remove();
+                    }
+                }
+            }
+        },
+
+        render: function() {
+            var me = this;
+            squid_api.utils.fetchModel("project").then(function(project) {
+                squid_api.utils.fetchModel("domain").then(function(domain) {
+                    var isMultiple = true;
+
+                    if (me.periodIndex !== null) {
+                        isMultiple = false;
+                    }
+
+                    var jsonData = {"selAvailable" : true, "options" : [], "multiple" : isMultiple};
+
+                    // iterate through all filter facets
+                    var selection = me.filters.get("selection");
+                    if (selection) {
+                        var facets = selection.facets;
+                        if (facets) {
+                            me.dimensions = [];
+                            var dims = facets;
+                            for (var i=0; i<facets.length; i++){
+                                var facet = facets[i];
+                                if (facet.dimension.type === "CONTINUOUS" || (project.get("_role") == "WRITE" && (facet.dimension.valueType === "DATE" || facet.dimension.valueType === "TIME"))){
+                                    // do not display boolean dimensions
+                                        if (me.periodIdList) {
+                                            // insert and sort
+                                            var idx = me.periodIdList.indexOf(facet.dimension.oid);
+                                            if (idx >= 0) {
+                                                me.dimensions[idx] = facet;
+                                            }
+                                        } else {
+                                            // default unordered behavior
+                                            me.dimensions.push(facet);
+                                        }
+
+                                    // avoid holes
+                                    if (!me.dimensions[i]) {
+                                        me.dimensions[i] = null;
+                                    }
+                                }
+                            }
+                            var noneSelected = true;
+                            for (var dimIdx=0; dimIdx<me.dimensions.length; dimIdx++) {
+                                var facet1 = me.dimensions[dimIdx];
+                                if (facet1) {
+                                    // check if selected
+                                    var selected = me.isChosen(facet1);
+                                    if (selected === true) {
+                                        noneSelected = false;
+                                    }
+                                    // add to the list
+                                    var name;
+                                    if (facet1.name) {
+                                        name = facet1.name;
+                                    } else {
+                                        name = facet1.dimension.name;
+                                    }
+                                    var option = {"label" : name, "value" : facet1.id, "selected" : selected, "error" : me.dimensions[dimIdx].error};
+                                    jsonData.options.push(option);
+                                }
+                            }
+                            /*if (noneSelected === true) {
+                                me.model.set("chosenDimensions", []);
+                            }*/
+                        }
+                    }
+
+                    // Alphabetical Sorting
+                    jsonData.options.sort(function(a, b) {
+                        var labelA=a.label.toLowerCase(), labelB=b.label.toLowerCase();
+                        if (labelA < labelB)
+                            return -1;
+                        if (labelA > labelB)
+                            return 1;
+                        return 0; // no sorting
+                    });
+
+                    // check if empty
+                    if (jsonData.options.length === 0) {
+                        jsonData.empty = true;
+                    }
+
+                    var html = me.template(jsonData);
+                    me.$el.html(html);
+                    me.$el.show();
+
+                    // Initialize plugin
+                    var selector = me.$el.find("select");
+                    if (isMultiple) {
+                        selector.multiselect({
+                            buttonContainer: '<div class="squid-api-filters-widgets-period-selector-open" />',
+                            buttonText: function(options, select) {
+                                return 'Period';
+                            },
+                            onChange: function(option, selected, index) {
+                                /*var chosenModel = _.clone(me.model.get("chosenDimensions"));
+                                if (!chosenModel) {
+                                    chosenModel = [];
+                                }
+                                var currentItem = option.attr("value");
+
+                                if (selected) {
+                                    chosenModel.push(option.attr("value"));
+                                } else {
+                                    // If deselected remove item from array
+                                    for (var i = chosenModel.length; i--;) {
+                                        if (chosenModel[i] === currentItem) {
+                                            chosenModel.splice(i, 1);
+                                        }
+                                    }
+                                }*/
+                                //me.model.set("chosenDimensions", chosenModel);
+                            },
+                            onDropdownShown: function() {
+                                if (project.get("_role") == "WRITE" || project.get("_role") == "OWNER") {
+                                    me.$el.find("li.configure").remove();
+                                    me.$el.find("li").first().before("<li class='configure'> configure</option>");
+                                    me.$el.find("li").first().off().on("click", function() {
+                                        var dimensionSelect = new squid_api.view.ColumnsManagementWidget({
+                                            buttonLabel : "<i class='fa fa-arrows-h'></i>",
+                                            type : "Dimension",
+                                            collection :new squid_api.model.DimensionCollection(),
+                                            model : new squid_api.model.DimensionModel(),
+                                            autoOpen : true,
+                                            successHandler : function() {
+                                                var message = me.type + " with name " + this.get("name") + " has been successfully modified";
+                                                squid_api.model.status.set({'message' : message});
+                                            }
+                                        });
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        /*var selectedDimension = me.model.get("selectedDimension");
+
+                        me.$el.find("select").on("change", function() {
+                            var dimension = $(me).val();
+                            me.model.set("chosenDimensions", [dimension]);
+                        });
+
+                        if (selectedDimension) {
+                            me.$el.find("select").val(selectedDimension);
+                        }*/
+                    }
+
+                    // Remove Button Title Tag
+                    me.$el.find("button").removeAttr('title');
+                });
+            });
+
+            return this;
+        },
+
+        isChosen : function(facet) {
+            var selected = false;
+
+            var dimensions = this.model.get("chosenDimensions");
+
+            if (dimensions) {
+                if (this.periodIndex !== null) {
+                    if (facet.id == dimensions[this.periodIndex]) {
+                        selected = true;
+                    }
+                } else {
+                    for (var j=0; j<dimensions.length; j++) {
+                        if (facet.id == dimensions[j]) {
+                            selected = true;
+                        }
+                    }
+                }
+            }
+            return selected;
+        }
+
+    });
+
+    return View;
+}));
+
+(function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD.
         define(['Backbone', 'squid_api'], factory);
@@ -2650,6 +2993,13 @@ $.widget( "ui.dialog", $.ui.dialog, {
             return !isEqual;
         },
 
+        remove: function() {
+                   this.undelegateEvents();
+                   this.$el.empty();
+                   this.stopListening();
+                   return this;
+        },
+
         getSelectedItems : function(selection, dimensionId) {
             var facets = selection.facets;
             for (var i=0; i<facets.length; i++) {
@@ -2683,6 +3033,12 @@ $.widget( "ui.dialog", $.ui.dialog, {
         template : null,
 
         format : null,
+
+        periodSelector : null,
+
+        selectedPeriod: null,
+
+        nbPeriod: null,
 
         periodView : null,
 
@@ -2725,13 +3081,14 @@ $.widget( "ui.dialog", $.ui.dialog, {
             if (options.ranges) {
                 this.ranges = options.ranges;
             }
+
             this.render();
 
             // listen for global status change
             squid_api.model.status.on('change:status', this.enable, this);
         },
 
-        enable: function() {
+        enable: function () {
             var select = this.$el.find("button");
             if (select) {
                 var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
@@ -2740,6 +3097,23 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     this.$el.find(select).attr("disabled", true);
                 } else {
                     // computation is done : enable input
+
+                    // Compute period numbers
+                    var sel = squid_api.model.filters.get("selection");
+                    if (sel && sel.facets) {
+                        var nb = 0;
+                        var facets = sel.facets;
+                        for (var i = 0; i < facets.length; i++) {
+                            var facet = facets[i];
+                            if (facet.dimension.type == "CONTINUOUS") {
+                                nb = nb + 1;
+                            }
+                        }
+                        this.nbPeriod = nb;
+                        //refreshing
+                        this.render();
+                    }
+
                     this.$el.find(select).attr("disabled", false);
                 }
             }
@@ -2756,21 +3130,61 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 // first call, setup the child views
                 this.$el.html(this.template());
 
-                this.periodView = new squid_api.view.PeriodView({
-                    el : this.el,
-                    model : this.model,
-                    format : this.format
-                });
+                // Compute period numbers
+                var sel = squid_api.model.filters.get("selection");
+                if (sel && sel.facets) {
+                    var nb = 0;
+                    var facets = sel.facets;
+                    for (var i = 0; i < facets.length; i++) {
+                        var facet = facets[i];
+                        if (facet.dimension.type == "CONTINUOUS") {
+                            nb = nb + 1;
+                        }
+                    }
+                    this.nbPeriod = nb;
+                }
 
-                this.datePickerView = new squid_api.view.FiltersView({
-                    model : this.model,
-                    el : this.$el.find("#date-picker"),
-                    pickerVisible : true,
-                    datePickerPosition: this.datePickerPosition,
-                    refreshOnChange : this.refreshOnChange,
-                    displayCategorical : false,
-                    ranges : this.ranges
-                });
+                if(this.selectedPeriod === null && this.nbPeriod > 1){
+                    if(this.datePickerView){
+                      this.datePickerView.remove();
+                    }
+                    if(this.periodView){
+                        this.periodView.remove();
+                    }
+
+                    console.log("several continuous dimension detected; activating period selector");
+                    this.periodSelector = new squid_api.view.ContinuousFilterSelectorView({
+                        el : this.$el.find("#date-picker"),
+                        model : this.model,
+                        format : this.format
+                    });
+
+
+                } else if (this.selectedPeriod !== null || this.nbPeriod === 1){
+
+                  if(this.periodSelector){
+                      this.periodSelector.remove();
+                  }
+
+                    this.periodView = new squid_api.view.PeriodView({
+                        el : this.el,
+                        model : this.model,
+                        format : this.format
+                    });
+
+                    this.datePickerView = new squid_api.view.FiltersView({
+                        model : this.model,
+                        el : this.$el.find("#date-picker"),
+                        pickerVisible : true,
+                        datePickerPosition: this.datePickerPosition,
+                        refreshOnChange : this.refreshOnChange,
+                        displayCategorical : false,
+                        ranges : this.ranges
+                    });
+                }
+
+
+
             }
         }
     });
@@ -2785,9 +3199,16 @@ $.widget( "ui.dialog", $.ui.dialog, {
     var View = Backbone.View.extend({
 
         model : null,
-        
+
         format : null,
 
+        remove: function() {
+                   this.undelegateEvents();
+                   this.$el.empty();
+                   this.stopListening();
+                   return this;
+        },
+        
         initialize : function(options) {
             if (!this.model) {
                 this.model = squid_api.model.filters;

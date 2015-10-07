@@ -399,6 +399,13 @@
             return !isEqual;
         },
 
+        remove: function() {
+                   this.undelegateEvents();
+                   this.$el.empty();
+                   this.stopListening();
+                   return this;
+        },
+
         getSelectedItems : function(selection, dimensionId) {
             var facets = selection.facets;
             for (var i=0; i<facets.length; i++) {

@@ -1916,9 +1916,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 this.model = squid_api.model.config;
             }
 
+            me.render();
+
             // listen for global status change
             squid_api.model.status.on('change:status', this.enable, this);
-            me.render();
 
         },
 
@@ -3125,7 +3126,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
         },
 
         render : function() {
-            if (!this.periodView) {
+            if (!(this.periodView || this.periodSelector)) {
 
                 // first call, setup the child views
                 this.$el.html(this.template());

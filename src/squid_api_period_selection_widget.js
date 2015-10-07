@@ -106,7 +106,7 @@
         },
 
         render : function() {
-            if (!this.periodView) {
+            if (!(this.periodView || this.periodSelector)) {
 
                 // first call, setup the child views
                 this.$el.html(this.template());

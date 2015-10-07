@@ -48,9 +48,10 @@
                 this.model = squid_api.model.config;
             }
 
+            me.render();
+
             // listen for global status change
             squid_api.model.status.on('change:status', this.enable, this);
-            me.render();
 
         },
 

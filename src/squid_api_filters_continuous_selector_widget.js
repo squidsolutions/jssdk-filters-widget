@@ -10,10 +10,10 @@
         filters: null,
 
         remove: function() {
-                   this.undelegateEvents();
-                   this.$el.empty();
-                   this.stopListening();
-                   return this;
+            this.undelegateEvents();
+            this.$el.empty();
+            this.stopListening();
+            return this;
         },
 
         initialize: function(options) {

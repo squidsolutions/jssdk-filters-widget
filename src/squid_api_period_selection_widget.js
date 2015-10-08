@@ -63,10 +63,8 @@
                 this.ranges = options.ranges;
             }
 
-            this.render();
-
             // listen for global status change
-            squid_api.model.status.on('change:status', this.enable, this);
+            squid_api.model.filters.on('change:selection', this.enable, this);
         },
 
         enable: function () {
@@ -91,13 +89,12 @@
                             }
                         }
                         this.nbPeriod = nb;
-                        //refreshing
-                        this.render();
                     }
 
                     this.$el.find(select).attr("disabled", false);
                 }
             }
+            this.resetViews();
         },
 
         setModel : function(model) {
@@ -105,67 +102,60 @@
             this.initialize();
         },
 
+        resetViews : function() {
+            if (this.periodSelector) {
+                this.periodSelector.remove();
+            }
+            if (this.datePickerView) {
+                this.datePickerView.remove();
+            }
+            if (this.periodView) {
+                this.periodView.remove();
+            }
+
+            this.render();
+        },
+
         render : function() {
-            if (!(this.periodView || this.periodSelector)) {
+            // first call, setup the child views
+            this.$el.html(this.template());
 
-                // first call, setup the child views
-                this.$el.html(this.template());
-
-                // Compute period numbers
-                var sel = squid_api.model.filters.get("selection");
-                if (sel && sel.facets) {
-                    var nb = 0;
-                    var facets = sel.facets;
-                    for (var i = 0; i < facets.length; i++) {
-                        var facet = facets[i];
-                        if (facet.dimension.type == "CONTINUOUS") {
-                            nb = nb + 1;
-                        }
+            // Compute period numbers
+            var sel = squid_api.model.filters.get("selection");
+            if (sel && sel.facets) {
+                var nb = 0;
+                var facets = sel.facets;
+                for (var i = 0; i < facets.length; i++) {
+                    var facet = facets[i];
+                    if (facet.dimension.type == "CONTINUOUS") {
+                        nb = nb + 1;
                     }
-                    this.nbPeriod = nb;
                 }
+                this.nbPeriod = nb;
+            }
 
-                if(this.selectedPeriod === null && this.nbPeriod > 1){
-                    if(this.datePickerView){
-                      this.datePickerView.remove();
-                    }
-                    if(this.periodView){
-                        this.periodView.remove();
-                    }
-
-                    console.log("several continuous dimension detected; activating period selector");
-                    this.periodSelector = new squid_api.view.ContinuousFilterSelectorView({
-                        el : this.$el.find("#date-picker"),
-                        model : this.model,
-                        format : this.format
-                    });
-
-
-                } else if (this.selectedPeriod !== null || this.nbPeriod === 1){
-
-                  if(this.periodSelector){
-                      this.periodSelector.remove();
-                  }
-
-                    this.periodView = new squid_api.view.PeriodView({
-                        el : this.el,
-                        model : this.model,
-                        format : this.format
-                    });
-
-                    this.datePickerView = new squid_api.view.FiltersView({
-                        model : this.model,
-                        el : this.$el.find("#date-picker"),
-                        pickerVisible : true,
-                        datePickerPosition: this.datePickerPosition,
-                        refreshOnChange : this.refreshOnChange,
-                        displayCategorical : false,
-                        ranges : this.ranges
-                    });
-                }
-
-
-
+            if (this.selectedPeriod === null && this.nbPeriod > 1) {
+                console.log("several continuous dimension detected; activating period selector");
+                this.periodSelector = new squid_api.view.ContinuousFilterSelectorView({
+                    el : this.$el.find("#date-picker"),
+                    model : this.model,
+                    format : this.format
+                });
+            } else if (this.selectedPeriod !== null || this.nbPeriod === 1) {
+                this.datePickerView = new squid_api.view.FiltersView({
+                      model : this.model,
+                      el : this.$el.find("#date-picker"),
+                      pickerVisible : true,
+                      datePickerPosition: this.datePickerPosition,
+                      refreshOnChange : this.refreshOnChange,
+                      displayCategorical : false,
+                      ranges : this.ranges
+                });
+                this.periodView = new squid_api.view.PeriodView({
+                    el : this.el,
+                    model : this.model,
+                    format : this.format
+                });
             }
         }
     });

@@ -73,6 +73,7 @@
                         this.model.set("selection", selectionClone);
                     }
                 }
+                squid_api.model.config.trigger("change:domain", squid_api.model.config);
             }
         },
 

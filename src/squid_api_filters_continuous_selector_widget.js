@@ -56,6 +56,9 @@
                     model.save(null, {
                         success: function () {
                             squid_api.model.config.trigger("change:domain", squid_api.model.config);
+                        },
+                        error: function(response) {
+                            squid_api.model.status.set("error", response);
                         }
                     });
                 }

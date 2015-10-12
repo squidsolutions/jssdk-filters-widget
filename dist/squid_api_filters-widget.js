@@ -1050,7 +1050,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     var facets = selection.facets;
                     for (i=0; i<facets.length; i++) {
                         var selectedItems = facets[i].selectedItems;
-                            if (facets[i].dimension.type !== "CONTINUOUS") {
+                            if (facets[i].dimension.type == "CATEGORICAL") {
                                 for (ix=0; ix<selectedItems.length; ix++) {
                                     if (this.initialFacet == facets[i].id || (!this.initialFacet && !this.initialDimension)) {
                                         noData = false;
@@ -1927,6 +1927,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     model.save(null, {
                         success: function () {
                             squid_api.model.config.trigger("change:domain", squid_api.model.config);
+                        },
+                        error: function(response) {
+                            squid_api.model.status.set("error", response);
                         }
                     });
                 }

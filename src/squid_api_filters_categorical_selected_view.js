@@ -87,7 +87,7 @@
                     var facets = selection.facets;
                     for (i=0; i<facets.length; i++) {
                         var selectedItems = facets[i].selectedItems;
-                            if (facets[i].dimension.type !== "CONTINUOUS") {
+                            if (facets[i].dimension.type == "CATEGORICAL") {
                                 for (ix=0; ix<selectedItems.length; ix++) {
                                     if (this.initialFacet == facets[i].id || (!this.initialFacet && !this.initialDimension)) {
                                         noData = false;

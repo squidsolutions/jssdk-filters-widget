@@ -1,10 +1,10 @@
 {{#if selAvailable}}
-    <select class="sq-select form-control squid-api-filters-widgets-period-selector" {{#if multiple}}multiple{{/if}}>
+    <select class="sq-select form-control squid-api-filters-widgets-period-selector" multiple>
         {{#if empty}}
             <option>No period available</option>
         {{/if}}
         {{#each options}}
-            <option value="{{value}}" {{#if selected}}selected{{/if}} {{#if error}} disabled {{/if}}>
+            <option value="{{value}}" {{#if error}} disabled {{/if}}>
                 {{label}}
             </option>
         {{/each}}

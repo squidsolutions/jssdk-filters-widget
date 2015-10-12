@@ -470,8 +470,13 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 function program1(depth0,data) {
   
-  
-  return "\r\n\r\n<button class=\"btn btn-default\">Period <span class=\"caret\"></span></button>\r\n\r\n";
+  var buffer = "", stack1, helper;
+  buffer += "\r\n\r\n<button class=\"btn btn-default\">";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + " <span class=\"caret\"></span></button>\r\n\r\n";
+  return buffer;
   }
 
 function program3(depth0,data) {

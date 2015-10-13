@@ -313,6 +313,15 @@
                     }
 
                     var viewIdx = 0;
+
+                    var continousCount = 0;
+                    for (var ix = 0; ix<sortedFacets.length; ix++) {
+                        if (sortedFacets[ix]) {
+                            if (sortedFacets[ix].dimension.type == "CONTINUOUS") {
+                                continousCount++;
+                            }
+                        }
+                    }
                     for (var i2 = 0; i2 < sortedFacets.length; i2++) {
                         var facet2 = sortedFacets[i2];
                         if (facet2) {
@@ -326,7 +335,7 @@
                                 container.append("<div id='"+facetContainerId+"'></div>");
                                 filterEl = this.$el.find("#"+facetContainerId);
                                 model = new this.filterModel();
-                                if (facet2.dimension.type == "CONTINUOUS") {
+                                if (facet2.dimension.type == "CONTINUOUS" && continousCount === 1) {
                                     view = new ContinuousFilterView({
                                         model: model,
                                         el: filterEl,
@@ -342,23 +351,29 @@
                                     });
                                     view.setTemplate(this.categoricalFilterTemplate);
                                 }
-                                view.parent = this;
-                                view.setEnable(enabled);
-                                this.childViews.push(view);
+                                if (view) {
+                                    view.parent = this;
+                                    view.setEnable(enabled);
+                                    this.childViews.push(view);
+                                }
                             } else {
-                                model = this.childViews[viewIdx].model;
-                                viewIdx++;
+                                if (this.childViews[viewIdx]) {
+                                    model = this.childViews[viewIdx].model;
+                                    viewIdx++;
+                                }
                             }
                             // set view model
-                            var facetName = facet2.name || facet2.dimension.name;
-                            model.set({
-                                facetId: facet2.id,
-                                dimension: facet2.dimension,
-                                items: facet2.items,
-                                selectedItems: facet2.selectedItems,
-                                name: facetName
-                            },{silent:true});
-                            model.trigger("change");
+                            if (model) {
+                                var facetName = facet2.name || facet2.dimension.name;
+                                model.set({
+                                    facetId: facet2.id,
+                                    dimension: facet2.dimension,
+                                    items: facet2.items,
+                                    selectedItems: facet2.selectedItems,
+                                    name: facetName
+                                },{silent:true});
+                                model.trigger("change");
+                            }
                         }
                     }
                 }

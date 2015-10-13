@@ -33,10 +33,10 @@
             }
 
             if (!this.model) {
-                this.model = squid_api.model.config;
+                this.model = squid_api.model.filters;
             }
 
-            this.render();
+            this.model.on('change:selection', this.render, this);
         },
 
         remove: function() {
@@ -122,6 +122,10 @@
                     }
                 }
 
+                if (jsonData.options.length == 1) {
+                    jsonData.autoSelect = true;
+                }
+
                 // Alphabetical Sorting
                 jsonData.options.sort(function(a, b) {
                     var labelA=a.label.toLowerCase(), labelB=b.label.toLowerCase();
@@ -143,22 +147,26 @@
 
                 // Initialize plugin
                 me.$el.find("select").multiselect({
-                    buttonContainer: '<div class="squid-api-filters-widgets-period-selector-open" />',
-                    buttonText: function(options, select) {
-                        return 'Select Period';
+                    buttonText: function(option, select) {
+                        var text;
+                        if (select.find("option").length === 1) {
+                            text = $(select.find("option")[0]).html();
+                        } else {
+                            text = 'Select Period';
+                        }
+                        return text;
                     },
                     onChange: function(facet) {
                         var value = facet.val();
                         var selection = me.filters.get("selection");
-                        var updateFacets = [];
                         if (selection) {
                             var facets = selection.facets;
                             for (i=0; i<facets.length; i++) {
                                 if (facets[i].dimension.type === "CONTINUOUS" && facets[i].id !== value) {
-                                    updateFacets.push(facets[i].dimension.oid);
+                                    me.changeFacetType(facets[i].dimension.oid);
                                 }
                             }
-                            me.changeFacetType(updateFacets);
+
                         }
                     }
                 });

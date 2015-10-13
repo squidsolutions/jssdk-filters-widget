@@ -63,7 +63,6 @@
 
             // listen for global status change
             squid_api.model.filters.on('change:selection', this.preRender, this);
-            squid_api.model.status.on('change', this.enable, this);
         },
 
         enable: function () {
@@ -103,43 +102,16 @@
             // first call, setup the child views
             this.$el.html(this.template());
 
-            // Compute period numbers
-            var sel = squid_api.model.filters.get("selection");
-            var nbPeriod = 0;
-            if (sel && sel.facets) {
-                var nb = 0;
-                var facets = sel.facets;
-                for (var i = 0; i < facets.length; i++) {
-                    var facet = facets[i];
-                    if (facet.dimension.type == "CONTINUOUS") {
-                        nbPeriod = nbPeriod + 1;
-                    }
-                }
-            }
-
-            if (this.selectedPeriod === null && nbPeriod > 1) {
-                console.log("several continuous dimension detected; activating period selector");
-                this.periodSelector = new squid_api.view.ContinuousFilterSelectorView({
-                    el : this.$el.find("#date-picker"),
-                    model : this.model,
-                    format : this.format
-                });
-            } else if (this.selectedPeriod !== null || nbPeriod === 1) {
-                this.datePickerView = new squid_api.view.FiltersView({
-                      model : this.model,
-                      el : this.$el.find("#date-picker"),
-                      pickerVisible : true,
-                      datePickerPosition: this.datePickerPosition,
-                      refreshOnChange : this.refreshOnChange,
-                      displayCategorical : false,
-                      ranges : this.ranges
-                });
-                this.periodView = new squid_api.view.PeriodView({
-                    el : this.el,
-                    model : this.model,
-                    format : this.format
-                });
-            }
+            // if a continous filter is active, display the date-picker
+            this.datePickerView = new squid_api.view.FiltersView({
+                  model : this.model,
+                  el : this.$el.find(".date-wrap"),
+                  pickerVisible : true,
+                  datePickerPosition: this.datePickerPosition,
+                  refreshOnChange : this.refreshOnChange,
+                  displayCategorical : false,
+                  ranges : this.ranges
+            });
         }
     });
 

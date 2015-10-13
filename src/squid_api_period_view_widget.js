@@ -7,13 +7,6 @@
         model : null,
 
         format : null,
-
-        remove: function() {
-                   this.undelegateEvents();
-                   this.$el.empty();
-                   this.stopListening();
-                   return this;
-        },
         
         initialize : function(options) {
             if (!this.model) {
@@ -35,6 +28,13 @@
         setModel : function(model) {
             this.model = model;
             this.initialize();
+        },
+
+        remove: function() {
+            this.undelegateEvents();
+            this.$el.empty();
+            this.stopListening();
+            return this;
         },
 
         render : function() {

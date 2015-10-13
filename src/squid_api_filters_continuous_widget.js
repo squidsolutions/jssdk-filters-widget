@@ -108,8 +108,8 @@
                     dateAvailable: dateAvailable,
                     facetId: facetId,
                     name: name,
-                    startDateVal: this.startDate,
-                    endDateVal: this.endDate
+                    startDateVal: this.startDate.format("ll"),
+                    endDateVal: this.endDate.format("ll")
                 });
 
                 // render HTML
@@ -147,23 +147,21 @@
                 }
 
                 // Build Date Picker
-                this.$el.find("button").daterangepicker(
-                        {
-                            opens: me.parent.datePickerPosition,
-                            format: 'YYYY-MM-DD',
-                            startDate: me.startDate,
-                            endDate: me.endDate,
-                            minDate: me.minDate,
-                            maxDate: me.maxDate,
-                            showDropdowns: true,
-                            ranges: pickerRanges
-                        }
-                );
+                this.$el.find("span").daterangepicker({
+                    opens: me.parent.datePickerPosition,
+                    format: 'YYYY-MM-DD',
+                    startDate: me.startDate,
+                    endDate: me.endDate,
+                    minDate: me.minDate,
+                    maxDate: me.maxDate,
+                    showDropdowns: true,
+                    ranges: pickerRanges
+                });
 
                 var dateItems;
 
                 // Detect Apply Action
-                this.$el.find("button").on('apply.daterangepicker', function(ev, picker) {
+                this.$el.find("span").on('apply.daterangepicker', function(ev, picker) {
 
                     // Update Change Selection upon date widget close
                     var startDate = moment.utc(picker.startDate).toDate();
@@ -178,17 +176,17 @@
                 });
 
                 // Detect Cancel Action
-                this.$el.find("button").on('cancel.daterangepicker', function(ev, picker) {
+                this.$el.find("span").on('cancel.daterangepicker', function(ev, picker) {
                     if (me.parent) {
                         me.parent.cancelSelection(me);
                     }
                 });
 
-                this.$el.find("button").on('change.daterangepickerLeft', function(ev) {
+                this.$el.find("span").on('change.daterangepickerLeft', function(ev) {
                     $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
                 });
 
-                this.$el.find("button").on('change.daterangepickerRight', function(ev) {
+                this.$el.find("span").on('change.daterangepickerRight', function(ev) {
                     $('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
                 });
             }

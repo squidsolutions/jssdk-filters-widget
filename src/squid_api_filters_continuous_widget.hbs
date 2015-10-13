@@ -1,9 +1,11 @@
+<div class="squid-api-continuous-widget">
 {{#if dateAvailable}}
 
-<button class="btn btn-default">Period <span class="caret"></span></button>
+<span>{{startDateVal}} - {{endDateVal}}</span>
 
 {{else}}
     <!-- just display item name -->
     {{name}}
     <div>-</div>
 {{/if}}
+</div>

@@ -382,6 +382,78 @@ function program5(depth0,data) {
   return buffer;
   });
 
+this["squid_api"]["template"]["squid_api_filters_continuous_selector_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n    <select class=\"sq-select form-control squid-api-filters-widgets-period-selector\">\r\n        ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.empty), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n        ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.options), {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n    </select>\r\n";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  
+  return "\r\n            <option>No period available</option>\r\n        ";
+  }
+
+function program4(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\r\n            <option value=\"";
+  if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.autoSelect), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.error), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += ">\r\n                ";
+  if (helper = helpers.label) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.label); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\r\n            </option>\r\n        ";
+  return buffer;
+  }
+function program5(depth0,data) {
+  
+  
+  return "selected";
+  }
+
+function program7(depth0,data) {
+  
+  
+  return " disabled ";
+  }
+
+function program9(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\r\n    <!-- just display filter name -->\r\n    <label class=\"squid-api-period-selection-widget\">";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</label>\r\n    <span>-</span>\r\n";
+  return buffer;
+  }
+
+  buffer += "<div class=\"squid-api-continous-selection-widget\">\r\n";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selAvailable), {hash:{},inverse:self.program(9, program9, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n</div>\r\n";
+  return buffer;
+  });
+
 this["squid_api"]["template"]["squid_api_filters_continuous_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -389,8 +461,17 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 function program1(depth0,data) {
   
-  
-  return "\r\n\r\n<button class=\"btn btn-default\">Period <span class=\"caret\"></span></button>\r\n\r\n";
+  var buffer = "", stack1, helper;
+  buffer += "\r\n\r\n<span>";
+  if (helper = helpers.startDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.startDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + " - ";
+  if (helper = helpers.endDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.endDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\r\n\r\n";
+  return buffer;
   }
 
 function program3(depth0,data) {
@@ -404,9 +485,10 @@ function program3(depth0,data) {
   return buffer;
   }
 
+  buffer += "<div class=\"squid-api-continuous-widget\">\r\n";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.dateAvailable), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n";
+  buffer += "\r\n</div>\r\n";
   return buffer;
   });
 
@@ -505,7 +587,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"squid-api-period-selection-widget\">\n	<div id=\"date-picker\"></div>\n	<span class=\"date-wrap\"><span id=\"sq-startDate\"></span> - <span id=\"sq-endDate\"></span></label>\n</div>\n";
+  return "<div class=\"date-wrap\"></div>\n";
   });
 
 this["squid_api"]["template"]["squid_api_selection_widget"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -955,6 +1037,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                         this.model.set("selection", selectionClone);
                     }
                 }
+                squid_api.model.config.trigger("change:domain", squid_api.model.config);
             }
         },
 
@@ -968,7 +1051,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     var facets = selection.facets;
                     for (i=0; i<facets.length; i++) {
                         var selectedItems = facets[i].selectedItems;
-                            if (facets[i].dimension.type !== "CONTINUOUS") {
+                            if (facets[i].dimension.type == "CATEGORICAL") {
                                 for (ix=0; ix<selectedItems.length; ix++) {
                                     if (this.initialFacet == facets[i].id || (!this.initialFacet && !this.initialDimension)) {
                                         noData = false;
@@ -1079,47 +1162,49 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 var selectedFilter = me.filterStore.get("selectedFilter");
                 var facets = this.model.get("selection").facets;
                 var items = [];
-                for (i=0; i<facets.length; i++) {
-                    var facet = facets[i];
-                    if ((facet.dimension.type == "CATEGORICAL") || (facet.dimension.type == "SEGMENTS")) {
-                        var selected = false;
-                        if (facet.id == selectedFilter) {
-                            selected = true;
+                if (this.model.get("selection")) {
+                    for (i=0; i<facets.length; i++) {
+                        var facet = facets[i];
+                        if ((facet.dimension.type == "CATEGORICAL") || (facet.dimension.type == "SEGMENTS")) {
+                            var selected = false;
+                            if (facet.id == selectedFilter) {
+                                selected = true;
+                            }
+                            var json = {
+                                label : facet.name,
+                                title : facet.name,
+                                value : facet.id,
+                                selected : selected
+                            };
+                            if (this.facetList) {
+                                for (ix=0; ix<this.facetList.length; ix++) {
+                                    if (this.facetList[ix] === facet.id) {
+                                        items.push(json);
+                                    }
+                                }
+                            }
+                            else {
+                                items.push(json);
+                            }
                         }
-                        var json = {
-                            label : facet.name,
-                            title : facet.name,
-                            value : facet.id,
-                            selected : selected
-                        };
-                        if (this.facetList) {
-                            for (ix=0; ix<this.facetList.length; ix++) {
-                                if (this.facetList[ix] === facet.id) {
-                                    items.push(json);
+                    }
+                    if (this.avoidFacets) {
+                        for (i=0; i<this.avoidFacets.length; i++) {
+                            for (ix=0; ix<items.length; ix++) {
+                                if (this.avoidFacets[i] === items[ix].value) {
+                                    items.splice(ix, 1);
                                 }
                             }
                         }
-                        else {
-                            items.push(json);
-                        }
                     }
-                }
-                if (this.avoidFacets) {
-                    for (i=0; i<this.avoidFacets.length; i++) {
-                        for (ix=0; ix<items.length; ix++) {
-                            if (this.avoidFacets[i] === items[ix].value) {
-                                items.splice(ix, 1);
-                            }
-                        }
-                    }
-                }
 
-                var select = this.$el.find(".btn-select-filter");
-                select.multiselect('dataprovider', items);
-                
-                // Detect List Length for display purposes
-                if (items.length >= 10) {
-                    select.siblings(".btn-group").addClass("largeList");
+                    var select = this.$el.find(".btn-select-filter");
+                    select.multiselect('dataprovider', items);
+
+                    // Detect List Length for display purposes
+                    if (items.length >= 10) {
+                        select.siblings(".btn-group").addClass("largeList");
+                    }
                 }
             }
         }
@@ -1786,6 +1871,190 @@ $.widget( "ui.dialog", $.ui.dialog, {
     return View;
 }));
 (function (root, factory) {
+    root.squid_api.view.ContinuousFilterSelectorView = factory(root.Backbone, root.squid_api, squid_api.template.squid_api_filters_continuous_selector_widget);
+
+}(this, function (Backbone, squid_api, template) {
+
+    var View = Backbone.View.extend({
+        template : null,
+        periodIdList : null,
+        periodIndex: null,
+        filters: null,
+
+        initialize: function(options) {
+            var me = this;
+
+            // setup options
+            if (options.template) {
+                this.template = options.template;
+            } else {
+                this.template = template;
+            }
+
+            if (options.filters) {
+                this.filters = options.filters;
+            } else {
+                this.filters = squid_api.model.filters;
+            }
+
+            if (options.dimensionIdList) {
+                this.periodIdList = options.dimensionIdList;
+            }
+            if (options.dimensionIndex !== null) {
+                this.periodIndex = options.dimensionIndex;
+            }
+
+            if (!this.model) {
+                this.model = squid_api.model.filters;
+            }
+
+            this.model.on('change:selection', this.render, this);
+        },
+
+        remove: function() {
+            this.undelegateEvents();
+            this.$el.empty();
+            this.stopListening();
+            return this;
+        },
+
+        changeFacetType: function(id) {
+            var me = this;
+            var model = new squid_api.model.DimensionModel();
+            model.set("id", {"projectId":squid_api.model.config.get("project"), "domainId":squid_api.model.config.get("domain"), "dimensionId":id});
+            model.fetch({
+                success: function(model) {
+                    model.set("type", "INDEX");
+                    model.save(null, {
+                        success: function () {
+                            squid_api.model.config.trigger("change:domain", squid_api.model.config);
+                        },
+                        error: function(response) {
+                            squid_api.model.status.set("error", response);
+                        }
+                    });
+                }
+            });
+        },
+
+        render: function() {
+            var me = this;
+            squid_api.utils.fetchModel("domain").then(function(domain) {
+                var isMultiple = true;
+
+                if (me.periodIndex !== null) {
+                    isMultiple = false;
+                }
+
+                var jsonData = {"selAvailable" : true, "options" : [], "multiple" : isMultiple};
+
+                // iterate through all filter facets
+                var selection = me.filters.get("selection");
+                if (selection) {
+                    var facets = selection.facets;
+                    if (facets) {
+                        me.dimensions = [];
+                        var dims = facets;
+                        for (var i=0; i<facets.length; i++){
+                            var facet = facets[i];
+                            if (facet.dimension.type === "CONTINUOUS" || (domain.get("_role") == "WRITE" && (facet.dimension.valueType === "DATE" || facet.dimension.valueType === "TIME"))){
+                                // do not display boolean dimensions
+                                    if (me.periodIdList) {
+                                        // insert and sort
+                                        var idx = me.periodIdList.indexOf(facet.dimension.oid);
+                                        if (idx >= 0) {
+                                            me.dimensions[idx] = facet;
+                                        }
+                                    } else {
+                                        // default unordered behavior
+                                        me.dimensions.push(facet);
+                                    }
+
+                                // avoid holes
+                                if (!me.dimensions[i]) {
+                                    me.dimensions[i] = null;
+                                }
+                            }
+                        }
+                        var noneSelected = true;
+                        for (var dimIdx=0; dimIdx<me.dimensions.length; dimIdx++) {
+                            var facet1 = me.dimensions[dimIdx];
+                            if (facet1) {
+                                // add to the list
+                                var name;
+                                if (facet1.name) {
+                                    name = facet1.name;
+                                } else {
+                                    name = facet1.dimension.name;
+                                }
+                                var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error};
+                                jsonData.options.push(option);
+                            }
+                        }
+                    }
+                }
+
+                if (jsonData.options.length == 1) {
+                    jsonData.autoSelect = true;
+                }
+
+                // Alphabetical Sorting
+                jsonData.options.sort(function(a, b) {
+                    var labelA=a.label.toLowerCase(), labelB=b.label.toLowerCase();
+                    if (labelA < labelB)
+                        return -1;
+                    if (labelA > labelB)
+                        return 1;
+                    return 0; // no sorting
+                });
+
+                // check if empty
+                if (jsonData.options.length === 0) {
+                    jsonData.empty = true;
+                }
+
+                var html = me.template(jsonData);
+                me.$el.html(html);
+                me.$el.show();
+
+                // Initialize plugin
+                me.$el.find("select").multiselect({
+                    buttonText: function(option, select) {
+                        var text;
+                        if (select.find("option").length === 1) {
+                            text = $(select.find("option")[0]).html();
+                        } else {
+                            text = 'Select Period';
+                        }
+                        return text;
+                    },
+                    onChange: function(facet) {
+                        var value = facet.val();
+                        var selection = me.filters.get("selection");
+                        if (selection) {
+                            var facets = selection.facets;
+                            for (i=0; i<facets.length; i++) {
+                                if (facets[i].dimension.type === "CONTINUOUS" && facets[i].id !== value) {
+                                    me.changeFacetType(facets[i].dimension.oid);
+                                }
+                            }
+
+                        }
+                    }
+                });
+
+            // Remove Button Title Tag
+            me.$el.find("button").removeAttr('title');
+        });
+
+        return this;
+        }
+    });
+
+    return View;
+}));
+
+(function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD.
         define(['Backbone', 'squid_api'], factory);
@@ -1891,8 +2160,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     dateAvailable: dateAvailable,
                     facetId: facetId,
                     name: name,
-                    startDateVal: this.startDate,
-                    endDateVal: this.endDate
+                    startDateVal: this.startDate.format("ll"),
+                    endDateVal: this.endDate.format("ll")
                 });
 
                 // render HTML
@@ -1930,23 +2199,21 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 }
 
                 // Build Date Picker
-                this.$el.find("button").daterangepicker(
-                        {
-                            opens: me.parent.datePickerPosition,
-                            format: 'YYYY-MM-DD',
-                            startDate: me.startDate,
-                            endDate: me.endDate,
-                            minDate: me.minDate,
-                            maxDate: me.maxDate,
-                            showDropdowns: true,
-                            ranges: pickerRanges
-                        }
-                );
+                this.$el.find("span").daterangepicker({
+                    opens: me.parent.datePickerPosition,
+                    format: 'YYYY-MM-DD',
+                    startDate: me.startDate,
+                    endDate: me.endDate,
+                    minDate: me.minDate,
+                    maxDate: me.maxDate,
+                    showDropdowns: true,
+                    ranges: pickerRanges
+                });
 
                 var dateItems;
 
                 // Detect Apply Action
-                this.$el.find("button").on('apply.daterangepicker', function(ev, picker) {
+                this.$el.find("span").on('apply.daterangepicker', function(ev, picker) {
 
                     // Update Change Selection upon date widget close
                     var startDate = moment.utc(picker.startDate).toDate();
@@ -1961,17 +2228,17 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 });
 
                 // Detect Cancel Action
-                this.$el.find("button").on('cancel.daterangepicker', function(ev, picker) {
+                this.$el.find("span").on('cancel.daterangepicker', function(ev, picker) {
                     if (me.parent) {
                         me.parent.cancelSelection(me);
                     }
                 });
 
-                this.$el.find("button").on('change.daterangepickerLeft', function(ev) {
+                this.$el.find("span").on('change.daterangepickerLeft', function(ev) {
                     $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
                 });
 
-                this.$el.find("button").on('change.daterangepickerRight', function(ev) {
+                this.$el.find("span").on('change.daterangepickerRight', function(ev) {
                     $('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
                 });
             }
@@ -2564,6 +2831,15 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     }
 
                     var viewIdx = 0;
+
+                    var continousCount = 0;
+                    for (var ix = 0; ix<sortedFacets.length; ix++) {
+                        if (sortedFacets[ix]) {
+                            if (sortedFacets[ix].dimension.type == "CONTINUOUS") {
+                                continousCount++;
+                            }
+                        }
+                    }
                     for (var i2 = 0; i2 < sortedFacets.length; i2++) {
                         var facet2 = sortedFacets[i2];
                         if (facet2) {
@@ -2577,7 +2853,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                                 container.append("<div id='"+facetContainerId+"'></div>");
                                 filterEl = this.$el.find("#"+facetContainerId);
                                 model = new this.filterModel();
-                                if (facet2.dimension.type == "CONTINUOUS") {
+                                if (facet2.dimension.type == "CONTINUOUS" && continousCount === 1) {
                                     view = new ContinuousFilterView({
                                         model: model,
                                         el: filterEl,
@@ -2593,23 +2869,29 @@ $.widget( "ui.dialog", $.ui.dialog, {
                                     });
                                     view.setTemplate(this.categoricalFilterTemplate);
                                 }
-                                view.parent = this;
-                                view.setEnable(enabled);
-                                this.childViews.push(view);
+                                if (view) {
+                                    view.parent = this;
+                                    view.setEnable(enabled);
+                                    this.childViews.push(view);
+                                }
                             } else {
-                                model = this.childViews[viewIdx].model;
-                                viewIdx++;
+                                if (this.childViews[viewIdx]) {
+                                    model = this.childViews[viewIdx].model;
+                                    viewIdx++;
+                                }
                             }
                             // set view model
-                            var facetName = facet2.name || facet2.dimension.name;
-                            model.set({
-                                facetId: facet2.id,
-                                dimension: facet2.dimension,
-                                items: facet2.items,
-                                selectedItems: facet2.selectedItems,
-                                name: facetName
-                            },{silent:true});
-                            model.trigger("change");
+                            if (model) {
+                                var facetName = facet2.name || facet2.dimension.name;
+                                model.set({
+                                    facetId: facet2.id,
+                                    dimension: facet2.dimension,
+                                    items: facet2.items,
+                                    selectedItems: facet2.selectedItems,
+                                    name: facetName
+                                },{silent:true});
+                                model.trigger("change");
+                            }
                         }
                     }
                 }
@@ -2650,6 +2932,13 @@ $.widget( "ui.dialog", $.ui.dialog, {
             return !isEqual;
         },
 
+        remove: function() {
+                   this.undelegateEvents();
+                   this.$el.empty();
+                   this.stopListening();
+                   return this;
+        },
+
         getSelectedItems : function(selection, dimensionId) {
             var facets = selection.facets;
             for (var i=0; i<facets.length; i++) {
@@ -2683,6 +2972,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
         template : null,
 
         format : null,
+
+        periodSelector : null,
+
+        selectedPeriod: null,
 
         periodView : null,
 
@@ -2725,13 +3018,12 @@ $.widget( "ui.dialog", $.ui.dialog, {
             if (options.ranges) {
                 this.ranges = options.ranges;
             }
-            this.render();
 
             // listen for global status change
-            squid_api.model.status.on('change:status', this.enable, this);
+            squid_api.model.filters.on('change:selection', this.preRender, this);
         },
 
-        enable: function() {
+        enable: function () {
             var select = this.$el.find("button");
             if (select) {
                 var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
@@ -2750,28 +3042,34 @@ $.widget( "ui.dialog", $.ui.dialog, {
             this.initialize();
         },
 
-        render : function() {
-            if (!this.periodView) {
-
-                // first call, setup the child views
-                this.$el.html(this.template());
-
-                this.periodView = new squid_api.view.PeriodView({
-                    el : this.el,
-                    model : this.model,
-                    format : this.format
-                });
-
-                this.datePickerView = new squid_api.view.FiltersView({
-                    model : this.model,
-                    el : this.$el.find("#date-picker"),
-                    pickerVisible : true,
-                    datePickerPosition: this.datePickerPosition,
-                    refreshOnChange : this.refreshOnChange,
-                    displayCategorical : false,
-                    ranges : this.ranges
-                });
+        preRender : function() {
+            if (this.periodSelector) {
+                this.periodSelector.remove();
             }
+            if (this.datePickerView) {
+                this.datePickerView.remove();
+            }
+            if (this.periodView) {
+                this.periodView.remove();
+            }
+
+            this.render();
+        },
+
+        render : function() {
+            // first call, setup the child views
+            this.$el.html(this.template());
+
+            // if a continous filter is active, display the date-picker
+            this.datePickerView = new squid_api.view.FiltersView({
+                  model : this.model,
+                  el : this.$el.find(".date-wrap"),
+                  pickerVisible : true,
+                  datePickerPosition: this.datePickerPosition,
+                  refreshOnChange : this.refreshOnChange,
+                  displayCategorical : false,
+                  ranges : this.ranges
+            });
         }
     });
 
@@ -2785,9 +3083,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
     var View = Backbone.View.extend({
 
         model : null,
-        
-        format : null,
 
+        format : null,
+        
         initialize : function(options) {
             if (!this.model) {
                 this.model = squid_api.model.filters;
@@ -2808,6 +3106,13 @@ $.widget( "ui.dialog", $.ui.dialog, {
         setModel : function(model) {
             this.model = model;
             this.initialize();
+        },
+
+        remove: function() {
+            this.undelegateEvents();
+            this.$el.empty();
+            this.stopListening();
+            return this;
         },
 
         render : function() {

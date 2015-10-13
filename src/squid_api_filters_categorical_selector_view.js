@@ -58,47 +58,49 @@
                 var selectedFilter = me.filterStore.get("selectedFilter");
                 var facets = this.model.get("selection").facets;
                 var items = [];
-                for (i=0; i<facets.length; i++) {
-                    var facet = facets[i];
-                    if ((facet.dimension.type == "CATEGORICAL") || (facet.dimension.type == "SEGMENTS")) {
-                        var selected = false;
-                        if (facet.id == selectedFilter) {
-                            selected = true;
+                if (this.model.get("selection")) {
+                    for (i=0; i<facets.length; i++) {
+                        var facet = facets[i];
+                        if ((facet.dimension.type == "CATEGORICAL") || (facet.dimension.type == "SEGMENTS")) {
+                            var selected = false;
+                            if (facet.id == selectedFilter) {
+                                selected = true;
+                            }
+                            var json = {
+                                label : facet.name,
+                                title : facet.name,
+                                value : facet.id,
+                                selected : selected
+                            };
+                            if (this.facetList) {
+                                for (ix=0; ix<this.facetList.length; ix++) {
+                                    if (this.facetList[ix] === facet.id) {
+                                        items.push(json);
+                                    }
+                                }
+                            }
+                            else {
+                                items.push(json);
+                            }
                         }
-                        var json = {
-                            label : facet.name,
-                            title : facet.name,
-                            value : facet.id,
-                            selected : selected
-                        };
-                        if (this.facetList) {
-                            for (ix=0; ix<this.facetList.length; ix++) {
-                                if (this.facetList[ix] === facet.id) {
-                                    items.push(json);
+                    }
+                    if (this.avoidFacets) {
+                        for (i=0; i<this.avoidFacets.length; i++) {
+                            for (ix=0; ix<items.length; ix++) {
+                                if (this.avoidFacets[i] === items[ix].value) {
+                                    items.splice(ix, 1);
                                 }
                             }
                         }
-                        else {
-                            items.push(json);
-                        }
                     }
-                }
-                if (this.avoidFacets) {
-                    for (i=0; i<this.avoidFacets.length; i++) {
-                        for (ix=0; ix<items.length; ix++) {
-                            if (this.avoidFacets[i] === items[ix].value) {
-                                items.splice(ix, 1);
-                            }
-                        }
-                    }
-                }
 
-                var select = this.$el.find(".btn-select-filter");
-                select.multiselect('dataprovider', items);
-                
-                // Detect List Length for display purposes
-                if (items.length >= 10) {
-                    select.siblings(".btn-group").addClass("largeList");
+                    var select = this.$el.find(".btn-select-filter");
+                    select.multiselect('dataprovider', items);
+
+                    // Detect List Length for display purposes
+                    if (items.length >= 10) {
+                        select.siblings(".btn-group").addClass("largeList");
+                    }
                 }
             }
         }

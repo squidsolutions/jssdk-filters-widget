@@ -5,9 +5,9 @@
     var View = Backbone.View.extend({
 
         model : null,
-        
-        format : null,
 
+        format : null,
+        
         initialize : function(options) {
             if (!this.model) {
                 this.model = squid_api.model.filters;
@@ -28,6 +28,13 @@
         setModel : function(model) {
             this.model = model;
             this.initialize();
+        },
+
+        remove: function() {
+            this.undelegateEvents();
+            this.$el.empty();
+            this.stopListening();
+            return this;
         },
 
         render : function() {

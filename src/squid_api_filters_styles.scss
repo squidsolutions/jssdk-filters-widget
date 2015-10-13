@@ -48,6 +48,11 @@
     }
 }
 
+.squid-api-continuous-widget span {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .squid-api-filters-categorical-selected-view {
     .warning {
         color: #e74c3c;

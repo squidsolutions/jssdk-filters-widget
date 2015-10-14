@@ -127,6 +127,8 @@
                 for (var i=0; i<attributesClone.selection.facets.length; i++) {
                     if (attributesClone.selection.facets[i].id == facet.id) {
                         attributesClone.selection.facets[i].selectedItems = obj;
+                    } else if (attributesClone.selection.facets[i].dimension.valueType == "DATE") {
+                        attributesClone.selection.facets[i].selectedItems = [];
                     }
                 }
                 this.filters.set("userSelection", attributesClone.selection);

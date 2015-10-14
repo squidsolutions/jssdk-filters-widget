@@ -34,7 +34,7 @@
     }
 }
 
-.squid-api-period-selection-widget {
+.squid-api-date-selection-widget {
     #date-picker {
         float: left;
 
@@ -46,11 +46,10 @@
         margin-top: 9px;
         display: inline-block;
     }
-}
-
-.squid-api-continuous-widget span {
-    cursor: pointer;
-    text-decoration: underline;
+    span {
+        cursor: pointer;
+        text-decoration: underline;
+    }
 }
 
 .squid-api-filters-categorical-selected-view {

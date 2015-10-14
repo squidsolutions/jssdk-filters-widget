@@ -5,7 +5,7 @@
             <option>No period available</option>
         {{/if}}
         {{#each options}}
-            <option value="{{value}}" {{#if autoSelect}}selected{{/if}}{{#if error}} disabled {{/if}}>
+            <option value="{{value}}" {{#if selected}}selected{{/if}}{{#if error}} disabled {{/if}}>
                 {{label}}
             </option>
         {{/each}}

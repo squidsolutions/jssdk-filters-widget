@@ -24,15 +24,14 @@
       top: 5px;
       cursor: pointer; }
 
-.squid-api-period-selection-widget #date-picker {
+.squid-api-date-selection-widget #date-picker {
   float: left; }
-  .squid-api-period-selection-widget #date-picker .sq-content {
+  .squid-api-date-selection-widget #date-picker .sq-content {
     margin-bottom: auto; }
-.squid-api-period-selection-widget .date-wrap {
+.squid-api-date-selection-widget .date-wrap {
   margin-top: 9px;
   display: inline-block; }
-
-.squid-api-continuous-widget span {
+.squid-api-date-selection-widget span {
   cursor: pointer;
   text-decoration: underline; }
 

@@ -137,16 +137,6 @@
 
         renderPicker : function(facet) {
             var me  = this;
-            var min;
-            var max;
-
-            if (this.currentStartDate && this.currentEndDate) {
-                min = this.currentStartDate;
-                max = this.currentEndDate;
-            } else {
-                min = this.minStartDate;
-                max = this.maxEndDate;
-            }
 
             // compute the ranges
             var pickerRanges = {};
@@ -162,11 +152,19 @@
                     func = value;
                 }
                 if (func) {
-                    pickerRanges[rangeName] = func.call(this, min, max);
+                    pickerRanges[rangeName] = func.call(this, this.minStartDate, this.maxEndDate);
                 }
             }
 
-            var datePickerOptions = {opens: me.datePickerPosition, format: 'YYYY-MM-DD', showDropdowns: true, ranges: pickerRanges, "startDate" : min, "endDate" : max};
+            if (this.currentStartDate && this.currentEndDate) {
+                startDate = this.currentStartDate;
+                endDate = this.currentEndDate;
+            } else {
+                startDate = this.minStartDate;
+                endDate = this.maxEndDate;
+            }
+
+            var datePickerOptions = {opens: me.datePickerPosition, format: 'YYYY-MM-DD', showDropdowns: true, ranges: pickerRanges, "startDate" : startDate, "endDate" : endDate, "minDate" : this.minStartDate, "maxDate" : this.maxEndDate};
 
             // Build Date Picker
             this.$el.find("span").daterangepicker(datePickerOptions);

@@ -2055,7 +2055,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                                 facet = facets[i];
                                 break;
                             }
-                        } else if (facets[i].dimension.type == "CONTINUOUS") {
+                        } else if (facets[i].dimension.valueType == "DATE") {
                             dates = this.setDates(facets[i]);
                             facet = facets[i];
                             break;

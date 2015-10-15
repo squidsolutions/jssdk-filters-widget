@@ -32,6 +32,8 @@
         },
 
         initialize: function(options) {
+            var me = this;
+
             if (options.pickerVisible && (options.pickerVisible === true)) {
                 this.pickerVisible = true;
                 this.pickerAlwaysVisible = true;
@@ -55,29 +57,35 @@
 
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
+            this.listenTo(this.config, "change:domain", function() {
+                me.config.unset("period");
+            });
         },
 
         setDates: function(facet) {
+            var obj = {};
             if (facet.items) {
                 if (facet.items.length > 0) {
-                    this.minStartDate = moment(facet.items[0].lowerBound);
-                    this.maxEndDate = moment(facet.items[0].upperBound);
+                    obj.minStartDate = moment(facet.items[0].lowerBound);
+                    obj.maxEndDate = moment(facet.items[0].upperBound);
                 }
             }
             if (facet.selectedItems.length > 0) {
-                this.currentStartDate = moment(facet.selectedItems[0].lowerBound);
-                this.currentEndDate = moment(facet.selectedItems[0].upperBound);
+                obj.currentStartDate = moment(facet.selectedItems[0].lowerBound);
+                obj.currentEndDate = moment(facet.selectedItems[0].upperBound);
             } else {
-                this.currentStartDate = null;
-                this.currentEndDate = null;
+                obj.currentStartDate = null;
+                obj.currentEndDate = null;
             }
+            return obj;
         },
 
         render: function() {
             if (this.filters) {
                 var selection = this.filters.get('selection');
                 var period = this.config.get("period");
-                var facet;
+                var dates = {};
+                var facet = false;
 
                 if (selection) {
                     var facets = selection.facets;
@@ -85,25 +93,25 @@
                         var items = facets[i].facets;
                         if (period) {
                             if (facets[i].id == period.val) {
-                                this.setDates(facets[i]);
+                                dates = this.setDates(facets[i]);
                                 facet = facets[i];
                                 break;
                             }
                         } else if (facets[i].dimension.type == "CONTINUOUS") {
-                            this.setDates(facets[i]);
+                            dates = this.setDates(facets[i]);
                             facet = facets[i];
                             break;
                         }
                     }
                 }
 
-                var viewData = {};
+                var viewData = {"facet":facet};
 
                 // build the date pickers
-                if (this.currentStartDate && this.currentEndDate) {
+                if (dates.currentStartDate && dates.currentEndDate) {
                     viewData.dateAvailable = true;
-                    viewData.startDateVal = this.currentStartDate.format("ll");
-                    viewData.endDateVal = this.currentEndDate.format("ll");
+                    viewData.startDateVal = dates.currentStartDate.format("ll");
+                    viewData.endDateVal = dates.currentEndDate.format("ll");
                 } else {
                     viewData.dateAvailable = false;
                 }
@@ -114,7 +122,7 @@
                 this.$el.html(selHTML);
 
                 // attach date picker onto date display
-                this.renderPicker(facet);
+                this.renderPicker(facet, dates);
             }
 
             return this;
@@ -135,7 +143,7 @@
             }
         },
 
-        renderPicker : function(facet) {
+        renderPicker : function(facet, dates) {
             var me  = this;
 
             // compute the ranges
@@ -152,19 +160,19 @@
                     func = value;
                 }
                 if (func) {
-                    pickerRanges[rangeName] = func.call(this, this.minStartDate, this.maxEndDate);
+                    pickerRanges[rangeName] = func.call(this, dates.minStartDate, dates.maxEndDate);
                 }
             }
 
-            if (this.currentStartDate && this.currentEndDate) {
-                startDate = this.currentStartDate;
-                endDate = this.currentEndDate;
+            if (dates.currentStartDate && dates.currentEndDate) {
+                startDate = dates.currentStartDate;
+                endDate = dates.currentEndDate;
             } else {
-                startDate = this.minStartDate;
-                endDate = this.maxEndDate;
+                startDate = dates.minStartDate;
+                endDate = dates.maxEndDate;
             }
 
-            var datePickerOptions = {opens: me.datePickerPosition, format: 'YYYY-MM-DD', showDropdowns: true, ranges: pickerRanges, "startDate" : startDate, "endDate" : endDate, "minDate" : this.minStartDate, "maxDate" : this.maxEndDate};
+            var datePickerOptions = {opens: me.datePickerPosition, format: 'YYYY-MM-DD', showDropdowns: true, ranges: pickerRanges, "startDate" : startDate, "endDate" : endDate, "minDate" : dates.minStartDate, "maxDate" : dates.maxEndDate};
 
             // Build Date Picker
             this.$el.find("span").daterangepicker(datePickerOptions);
@@ -194,10 +202,6 @@
             this.$el.find("span").on('change.daterangepickerRight', function(ev) {
                 $('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
             });
-        },
-
-        setEnable: function(enable) {
-            this.enable = enable;
         }
     });
 

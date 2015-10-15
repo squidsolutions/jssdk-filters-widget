@@ -35,8 +35,9 @@
                 this.config = squid_api.model.config;
             }
 
-            this.filters.on('change:selection', this.render, this);
-            this.config.on('change:period', this.render, this);
+            this.listenTo(this.filters, "change:selection", this.render);
+            this.listenTo(this.config, "change:period", this.render);
+            this.listenTo(this.config, "change:domain", this.render);
         },
 
         remove: function() {
@@ -136,8 +137,12 @@
                         var text;
                         if (period) {
                             text = period.name;
-                        } else {
-                            text = 'Select Period';
+                        } else if (select.find("option")) {
+                            if (select.find("option").length > 0) {
+                                text = $(select.find("option")[0]).html();
+                            } else {
+                                text = 'No period exists';
+                            }
                         }
                         return text;
                     },

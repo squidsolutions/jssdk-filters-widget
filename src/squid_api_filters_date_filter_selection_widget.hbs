@@ -1,9 +1,6 @@
 <div class="squid-api-continous-selection-widget">
 {{#if selAvailable}}
     <select class="sq-select form-control squid-api-filters-widgets-period-selector">
-        {{#if empty}}
-            <option>No period available</option>
-        {{/if}}
         {{#each options}}
             <option value="{{value}}" {{#if selected}}selected{{/if}}{{#if error}} disabled {{/if}}>
                 {{label}}

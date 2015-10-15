@@ -391,21 +391,12 @@ function program1(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n    <select class=\"sq-select form-control squid-api-filters-widgets-period-selector\">\r\n        ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.empty), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n        ";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.options), {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.options), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n    </select>\r\n";
   return buffer;
   }
 function program2(depth0,data) {
-  
-  
-  return "\r\n            <option>No period available</option>\r\n        ";
-  }
-
-function program4(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += "\r\n            <option value=\"";
@@ -413,9 +404,9 @@ function program4(depth0,data) {
   else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
     + "\" ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.error), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.error), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += ">\r\n                ";
   if (helper = helpers.label) { stack1 = helper.call(depth0, {hash:{},data:data}); }
@@ -424,19 +415,19 @@ function program4(depth0,data) {
     + "\r\n            </option>\r\n        ";
   return buffer;
   }
-function program5(depth0,data) {
+function program3(depth0,data) {
   
   
   return "selected";
   }
 
-function program7(depth0,data) {
+function program5(depth0,data) {
   
   
   return " disabled ";
   }
 
-function program9(depth0,data) {
+function program7(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += "\r\n    <!-- just display filter name -->\r\n    <label class=\"squid-api-period-selection-widget\">";
@@ -448,7 +439,7 @@ function program9(depth0,data) {
   }
 
   buffer += "<div class=\"squid-api-continous-selection-widget\">\r\n";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selAvailable), {hash:{},inverse:self.program(9, program9, data),fn:self.program(1, program1, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selAvailable), {hash:{},inverse:self.program(7, program7, data),fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n</div>\r\n";
   return buffer;
@@ -476,8 +467,23 @@ function program1(depth0,data) {
 
 function program3(depth0,data) {
   
+  var buffer = "", stack1;
+  buffer += "\r\n        ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.facet), {hash:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n    ";
+  return buffer;
+  }
+function program4(depth0,data) {
   
-  return "\r\n        <span>select a date range</span>\r\n    ";
+  
+  return "\r\n            <span>select a date range</span>\r\n        ";
+  }
+
+function program6(depth0,data) {
+  
+  
+  return "\r\n            <span>no date available</span>\r\n        ";
   }
 
   buffer += "<div class=\"squid-api-date-selection-widget\">\r\n    ";
@@ -1826,8 +1832,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 this.config = squid_api.model.config;
             }
 
-            this.filters.on('change:selection', this.render, this);
-            this.config.on('change:period', this.render, this);
+            this.listenTo(this.filters, "change:selection", this.render);
+            this.listenTo(this.config, "change:period", this.render);
+            this.listenTo(this.config, "change:domain", this.render);
         },
 
         remove: function() {
@@ -1927,8 +1934,12 @@ $.widget( "ui.dialog", $.ui.dialog, {
                         var text;
                         if (period) {
                             text = period.name;
-                        } else {
-                            text = 'Select Period';
+                        } else if (select.find("option")) {
+                            if (select.find("option").length > 0) {
+                                text = $(select.find("option")[0]).html();
+                            } else {
+                                text = 'No period exists';
+                            }
                         }
                         return text;
                     },
@@ -1979,6 +1990,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
         },
 
         initialize: function(options) {
+            var me = this;
+
             if (options.pickerVisible && (options.pickerVisible === true)) {
                 this.pickerVisible = true;
                 this.pickerAlwaysVisible = true;
@@ -2002,29 +2015,35 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
+            this.listenTo(this.config, "change:domain", function() {
+                me.config.unset("period");
+            });
         },
 
         setDates: function(facet) {
+            var obj = {};
             if (facet.items) {
                 if (facet.items.length > 0) {
-                    this.minStartDate = moment(facet.items[0].lowerBound);
-                    this.maxEndDate = moment(facet.items[0].upperBound);
+                    obj.minStartDate = moment(facet.items[0].lowerBound);
+                    obj.maxEndDate = moment(facet.items[0].upperBound);
                 }
             }
             if (facet.selectedItems.length > 0) {
-                this.currentStartDate = moment(facet.selectedItems[0].lowerBound);
-                this.currentEndDate = moment(facet.selectedItems[0].upperBound);
+                obj.currentStartDate = moment(facet.selectedItems[0].lowerBound);
+                obj.currentEndDate = moment(facet.selectedItems[0].upperBound);
             } else {
-                this.currentStartDate = null;
-                this.currentEndDate = null;
+                obj.currentStartDate = null;
+                obj.currentEndDate = null;
             }
+            return obj;
         },
 
         render: function() {
             if (this.filters) {
                 var selection = this.filters.get('selection');
                 var period = this.config.get("period");
-                var facet;
+                var dates = {};
+                var facet = false;
 
                 if (selection) {
                     var facets = selection.facets;
@@ -2032,25 +2051,25 @@ $.widget( "ui.dialog", $.ui.dialog, {
                         var items = facets[i].facets;
                         if (period) {
                             if (facets[i].id == period.val) {
-                                this.setDates(facets[i]);
+                                dates = this.setDates(facets[i]);
                                 facet = facets[i];
                                 break;
                             }
                         } else if (facets[i].dimension.type == "CONTINUOUS") {
-                            this.setDates(facets[i]);
+                            dates = this.setDates(facets[i]);
                             facet = facets[i];
                             break;
                         }
                     }
                 }
 
-                var viewData = {};
+                var viewData = {"facet":facet};
 
                 // build the date pickers
-                if (this.currentStartDate && this.currentEndDate) {
+                if (dates.currentStartDate && dates.currentEndDate) {
                     viewData.dateAvailable = true;
-                    viewData.startDateVal = this.currentStartDate.format("ll");
-                    viewData.endDateVal = this.currentEndDate.format("ll");
+                    viewData.startDateVal = dates.currentStartDate.format("ll");
+                    viewData.endDateVal = dates.currentEndDate.format("ll");
                 } else {
                     viewData.dateAvailable = false;
                 }
@@ -2061,7 +2080,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 this.$el.html(selHTML);
 
                 // attach date picker onto date display
-                this.renderPicker(facet);
+                this.renderPicker(facet, dates);
             }
 
             return this;
@@ -2082,7 +2101,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
             }
         },
 
-        renderPicker : function(facet) {
+        renderPicker : function(facet, dates) {
             var me  = this;
 
             // compute the ranges
@@ -2099,19 +2118,19 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     func = value;
                 }
                 if (func) {
-                    pickerRanges[rangeName] = func.call(this, this.minStartDate, this.maxEndDate);
+                    pickerRanges[rangeName] = func.call(this, dates.minStartDate, dates.maxEndDate);
                 }
             }
 
-            if (this.currentStartDate && this.currentEndDate) {
-                startDate = this.currentStartDate;
-                endDate = this.currentEndDate;
+            if (dates.currentStartDate && dates.currentEndDate) {
+                startDate = dates.currentStartDate;
+                endDate = dates.currentEndDate;
             } else {
-                startDate = this.minStartDate;
-                endDate = this.maxEndDate;
+                startDate = dates.minStartDate;
+                endDate = dates.maxEndDate;
             }
 
-            var datePickerOptions = {opens: me.datePickerPosition, format: 'YYYY-MM-DD', showDropdowns: true, ranges: pickerRanges, "startDate" : startDate, "endDate" : endDate, "minDate" : this.minStartDate, "maxDate" : this.maxEndDate};
+            var datePickerOptions = {opens: me.datePickerPosition, format: 'YYYY-MM-DD', showDropdowns: true, ranges: pickerRanges, "startDate" : startDate, "endDate" : endDate, "minDate" : dates.minStartDate, "maxDate" : dates.maxEndDate};
 
             // Build Date Picker
             this.$el.find("span").daterangepicker(datePickerOptions);
@@ -2141,10 +2160,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
             this.$el.find("span").on('change.daterangepickerRight', function(ev) {
                 $('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
             });
-        },
-
-        setEnable: function(enable) {
-            this.enable = enable;
         }
     });
 

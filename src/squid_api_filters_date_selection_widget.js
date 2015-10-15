@@ -122,7 +122,9 @@
                 this.$el.html(selHTML);
 
                 // attach date picker onto date display
-                this.renderPicker(facet, dates);
+                if (facet) {
+                    this.renderPicker(facet, dates);
+                }
             }
 
             return this;

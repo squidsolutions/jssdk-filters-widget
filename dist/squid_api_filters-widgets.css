@@ -24,13 +24,18 @@
       top: 5px;
       cursor: pointer; }
 
-.squid-api-period-selection-widget #date-picker {
+.squid-api-date-selection-widget #date-picker {
   float: left; }
-  .squid-api-period-selection-widget #date-picker .sq-content {
+  .squid-api-date-selection-widget #date-picker .sq-content {
     margin-bottom: auto; }
-.squid-api-period-selection-widget .date-wrap {
+.squid-api-date-selection-widget .date-wrap {
   margin-top: 9px;
   display: inline-block; }
+.squid-api-date-selection-widget span {
+  cursor: pointer;
+  text-decoration: underline; }
+  .squid-api-date-selection-widget span.inactive {
+    opacity: 0.7; }
 
 .squid-api-filters-categorical-selected-view .warning {
   color: #e74c3c; }

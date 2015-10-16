@@ -34,7 +34,7 @@
     }
 }
 
-.squid-api-period-selection-widget {
+.squid-api-date-selection-widget {
     #date-picker {
         float: left;
 
@@ -45,6 +45,13 @@
     .date-wrap {
         margin-top: 9px;
         display: inline-block;
+    }
+    span {
+        cursor: pointer;
+        text-decoration: underline;
+        &.inactive {
+			opacity: 0.7;
+    	}
     }
 }
 

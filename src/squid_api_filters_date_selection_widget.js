@@ -75,13 +75,13 @@
             var obj = {};
             if (facet.items) {
                 if (facet.items.length > 0) {
-                    obj.minStartDate = moment(facet.items[0].lowerBound);
-                    obj.maxEndDate = moment(facet.items[0].upperBound);
+                    obj.minStartDate = moment(facet.items[0].lowerBound).utc();
+                    obj.maxEndDate = moment(facet.items[0].upperBound).utc();
                 }
             }
             if (facet.selectedItems.length > 0) {
-                obj.currentStartDate = moment(facet.selectedItems[0].lowerBound);
-                obj.currentEndDate = moment(facet.selectedItems[0].upperBound);
+                obj.currentStartDate = moment(facet.selectedItems[0].lowerBound).utc();
+                obj.currentEndDate = moment(facet.selectedItems[0].upperBound).utc();
             } else {
                 obj.currentStartDate = null;
                 obj.currentEndDate = null;
@@ -193,8 +193,8 @@
             // Detect Apply Action
             this.$el.find("span").on('apply.daterangepicker', function(ev, picker) {
                 // Update Change Selection upon date widget close
-                var startDate = moment.utc(picker.startDate).toDate();
-                var endDate = moment.utc(picker.endDate).toDate();
+                var startDate = moment.utc(picker.startDate).utc().toDate();
+                var endDate = moment.utc(picker.endDate).utc().toDate();
 
                 me.updateFacet(facet, startDate, endDate);
             });

@@ -57,9 +57,18 @@
 
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
-            this.listenTo(this.config, "change:domain", function() {
-                me.config.unset("period");
-            });
+            this.listenTo(this.config, "change:domain", this.render);
+            
+            // listen for global status change
+            squid_api.model.status.on('change:status', this.statusUpdate, this);
+        },
+        
+        statusUpdate: function() {
+        	if (squid_api.model.status.get("status") == "RUNNING") {
+        		this.$el.find("span").addClass("inactive");
+        	} else {
+        		this.$el.find("span").removeClass("inactive");
+        	}
         },
 
         setDates: function(facet) {

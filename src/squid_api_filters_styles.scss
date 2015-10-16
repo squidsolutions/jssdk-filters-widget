@@ -49,6 +49,9 @@
     span {
         cursor: pointer;
         text-decoration: underline;
+        &.inactive {
+			opacity: 0.7;
+    	}
     }
 }
 

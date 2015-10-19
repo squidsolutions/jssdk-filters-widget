@@ -1831,7 +1831,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
             } else {
                 this.config = squid_api.model.config;
             }
-
+            
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
             this.listenTo(this.config, "change:domain", function() {
@@ -1895,6 +1895,12 @@ $.widget( "ui.dialog", $.ui.dialog, {
                                 // avoid holes
                                 if (!me.dimensions[i]) {
                                     me.dimensions[i] = null;
+                                }
+                                
+                                // set period within config
+                                if (! me.config.get("period")) {
+                                	var obj = {"name":facet.dimension.name, "val":facet.id};
+                                    me.config.set("period",obj);
                                 }
                             }
                         }

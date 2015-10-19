@@ -155,14 +155,10 @@
                     buttonText: function(option, select) {
                         var period = me.config.get("period");
                         var text;
-                        if (period) {
+                        if (period && select.find("option").length > 0) {
                             text = period.name;
-                        } else if (select.find("option")) {
-                            if (select.find("option").length > 0) {
-                                text = $(select.find("option")[0]).html();
-                            } else {
-                                text = 'No period exists';
-                            }
+                        } else {
+                        	text = 'No period exists';
                         }
                         return text;
                     },

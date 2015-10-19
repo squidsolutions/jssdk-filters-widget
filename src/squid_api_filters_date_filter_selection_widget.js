@@ -38,7 +38,6 @@
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
             this.listenTo(this.config, "change:domain", function() {
-            	me.config.unset("period");
             	me.render();
             });
             

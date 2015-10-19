@@ -153,13 +153,13 @@
                 // Initialize plugin
                 me.$el.find("select").multiselect({
                     buttonText: function(option, select) {
-                        var period = me.config.get("period");
-                        var text;
-                        if (period && select.find("option").length > 0) {
-                            text = period.name;
-                        } else {
-                        	text = 'No period exists';
-                        }
+                    	if (select.find("option:selected").length > 0) {
+                    		text = select.find("option:selected").text();
+                    	} else if (select.find("option").length > 0) {
+                    		text = "Select a period";
+                    	} else {
+                    		text = 'No period exists';
+                    	}
                         return text;
                     },
                     onChange: function(facet) {

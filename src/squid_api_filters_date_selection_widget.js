@@ -1,29 +1,11 @@
-/*
- * A DatePicker widget.
- * Uses http://jqueryui.com/datepicker/
- */
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD.
-        define(['Backbone', 'squid_api'], factory);
-    } else {
-        root.squid_api.view.DateSelectionWidget = factory(root.Backbone, root.squid_api);
-    }
-}(this, function (Backbone, squid_api) {
+    root.squid_api.view.DateSelectionWidget = factory(root.Backbone, root.squid_api, squid_api.template.squid_api_filters_date_selection_widget);
+
+}(this, function (Backbone, squid_api, template) {
 
     var View = Backbone.View.extend({
 
-        enable: true,
-        startDate: null,
-        endDate: null,
-        minDate: null,
-        maxDate: null,
         model: null,
-        initialized : false,
-        pickerVisible : false,
-        pickerAlwaysVisible : false,
-        parent : null,
-        template : squid_api.template.squid_api_filters_date_selection_widget,
         ranges : null,
         rangesPresets : {
             'all': function(min, max) { return [moment.utc(min), moment.utc(max)]; },
@@ -34,9 +16,10 @@
         initialize: function(options) {
             var me = this;
 
-            if (options.pickerVisible && (options.pickerVisible === true)) {
-                this.pickerVisible = true;
-                this.pickerAlwaysVisible = true;
+            if (options.template) {
+                this.template = options.template;
+            } else {
+                this.template = template;
             }
             if (options.ranges) {
                 this.ranges = options.ranges;
@@ -58,9 +41,6 @@
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
             this.listenTo(this.config, "change:domain", this.render);
-            this.listenTo(this.config, "change:project", function() {
-            	me.config.unset("selection");
-            });
             
             // listen for global status change
             squid_api.model.status.on('change:status', this.statusUpdate, this);
@@ -196,27 +176,24 @@
                 endDate = dates.maxEndDate;
             }
 
-            var datePickerOptions = {opens: me.datePickerPosition, format: 'YYYY-MM-DD', showDropdowns: true, ranges: pickerRanges, "startDate" : startDate, "endDate" : endDate, "minDate" : dates.minStartDate, "maxDate" : dates.maxEndDate};
-
             // Build Date Picker
-            this.$el.find("span").daterangepicker(datePickerOptions);
-
-            var dateItems;
-
+            this.$el.find("span").daterangepicker({
+            	opens: me.datePickerPosition, 
+            	format: 'YYYY-MM-DD', 
+            	showDropdowns: true, 
+            	ranges: pickerRanges, 
+            	"startDate" : startDate, 
+            	"endDate" : endDate, 
+            	"minDate" : dates.minStartDate, 
+            	"maxDate" : dates.maxEndDate
+            });
+            
             // Detect Apply Action
             this.$el.find("span").on('apply.daterangepicker', function(ev, picker) {
                 // Update Change Selection upon date widget close
                 var startDate = moment.utc(picker.startDate).utc().toDate();
                 var endDate = moment.utc(picker.endDate).utc().toDate();
-
                 me.updateFacet(facet, startDate, endDate);
-            });
-
-            // Detect Cancel Action
-            this.$el.find("span").on('cancel.daterangepicker', function(ev, picker) {
-                //if (me.parent) {
-                //    me.parent.cancelSelection(me);
-                //}
             });
 
             this.$el.find("span").on('change.daterangepickerLeft', function(ev) {

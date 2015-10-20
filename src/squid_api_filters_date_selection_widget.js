@@ -58,6 +58,9 @@
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
             this.listenTo(this.config, "change:domain", this.render);
+            this.listenTo(this.config, "change:project", function() {
+            	me.config.unset("selection");
+            });
             
             // listen for global status change
             squid_api.model.status.on('change:status', this.statusUpdate, this);

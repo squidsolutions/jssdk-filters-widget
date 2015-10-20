@@ -98,12 +98,6 @@
                                 if (!me.dimensions[i]) {
                                     me.dimensions[i] = null;
                                 }
-                                
-                                // set period within config
-                                if (! me.config.get("period")) {
-                                	var obj = {"name":facet.dimension.name, "val":facet.id};
-                                    me.config.set("period",obj);
-                                }
                             }
                         }
                         var noneSelected = true;

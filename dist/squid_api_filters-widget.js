@@ -1895,12 +1895,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
                                 if (!me.dimensions[i]) {
                                     me.dimensions[i] = null;
                                 }
-                                
-                                // set period within config
-                                if (! me.config.get("period")) {
-                                	var obj = {"name":facet.dimension.name, "val":facet.id};
-                                    me.config.set("period",obj);
-                                }
                             }
                         }
                         var noneSelected = true;
@@ -2084,6 +2078,16 @@ $.widget( "ui.dialog", $.ui.dialog, {
                             facet = facets[i];
                             break;
                         }
+                    }
+                    // if period config exist but isn't found within the current domain, select the first one                    
+                    if (! facet ) {
+                    	for (i=0; i<facets.length; i++) {
+                    		if (facets[i].dimension.valueType == "DATE") {
+                    			 dates = this.setDates(facets[i]);
+                                 facet = facets[i];
+                                 break;
+                    		}
+                    	}
                     }
                 }
 

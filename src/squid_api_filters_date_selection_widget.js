@@ -112,6 +112,16 @@
                             break;
                         }
                     }
+                    // if period config exist but isn't found within the current domain, select the first one                    
+                    if (! facet ) {
+                    	for (i=0; i<facets.length; i++) {
+                    		if (facets[i].dimension.valueType == "DATE") {
+                    			 dates = this.setDates(facets[i]);
+                                 facet = facets[i];
+                                 break;
+                    		}
+                    	}
+                    }
                 }
 
                 var viewData = {"facet":facet};

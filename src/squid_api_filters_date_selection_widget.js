@@ -95,9 +95,11 @@
                 	for (i=0; i<facets.length; i++) {
                         if (facets[i].dimension.type == "CONTINUOUS" && facets[i].dimension.valueType == "DATE") {
                         	if (facets[i].id == facet.id) {
-                        		selectedItems[0].lowerBound = obj.maxEndDate.subtract(1, "months").utc().toISOString();
-            					selectedItems[0].upperBound = obj.maxEndDate.utc().toISOString();
-                                facets[i].selectedItems = selectedItems;
+                        		if (obj.maxEndDate) {
+                        			selectedItems[0].lowerBound = moment(obj.maxEndDate.utc()).startOf('month').toISOString();
+                					selectedItems[0].upperBound = obj.maxEndDate.utc().toISOString();
+                                    facets[i].selectedItems = selectedItems;
+                        		}
                             } else {
                             	facets[i].selectedItems = [];
                             }

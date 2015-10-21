@@ -2056,7 +2056,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     for (i=0; i<facets.length; i++) {
                         if (facets[i].dimension.type == "CONTINUOUS" && facets[i].dimension.valueType == "DATE") {
                         	if (facets[i].id == facet.id) {
-                                facets[i].selectedItems = selectedItems;
+                        		if (JSON.stringify(facets[i].selectedItems[0]) !== JSON.stringify(selectedItems[0])) {
+                        			facets[i].selectedItems = selectedItems;
+                        		}
                             } else {
                             	facets[i].selectedItems = [];
                             }

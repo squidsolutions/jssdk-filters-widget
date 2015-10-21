@@ -81,7 +81,7 @@
                         for (var i=0; i<facets.length; i++){
                             var facet = facets[i];
                             //Change for Period TODO
-                            if (facet.dimension.valueType === "DATE" || (domain.get("_role") == "WRITE" && (facet.dimension.valueType === "DATE" || facet.dimension.valueType === "TIME"))){
+                            if (facet.dimension.valueType === "DATE" && facet.dimension.type === "CONTINUOUS" || (domain.get("_role") == "WRITE" && (facet.dimension.valueType === "DATE" || facet.dimension.valueType === "TIME"))){
                                 // do not display boolean dimensions
                                     if (me.periodIdList) {
                                         // insert and sort

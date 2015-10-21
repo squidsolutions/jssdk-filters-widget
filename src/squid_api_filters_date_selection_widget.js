@@ -56,19 +56,57 @@
 
         setDates: function(facet) {
             var obj = {};
+            var filters = this.filters.get("selection");
             if (facet.items) {
                 if (facet.items.length > 0) {
-                    obj.minStartDate = moment(facet.items[0].lowerBound).utc();
-                    obj.maxEndDate = moment(facet.items[0].upperBound).utc();
+                    obj.minStartDate = moment(facet.items[0].lowerBound);
+                    obj.maxEndDate = moment(facet.items[0].upperBound);
                 }
             }
-            if (facet.selectedItems.length > 0) {
-                obj.currentStartDate = moment(facet.selectedItems[0].lowerBound).utc();
-                obj.currentEndDate = moment(facet.selectedItems[0].upperBound).utc();
-            } else {
-                obj.currentStartDate = null;
-                obj.currentEndDate = null;
-            }
+        	var selectedItems = [{"type":"i", "lowerBound": "", "upperBound": ""}];
+        	var attributesClone =  $.extend(true, {}, this.filters.attributes);
+        	var selAvailable = false;
+        	if (filters) {
+        		for (i=0; i<filters.facets.length; i++) {
+        			if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE") {
+        				if (filters.facets[i].selectedItems.length > 0) {
+        					selAvailable = true;
+        					obj.currentStartDate = moment(filters.facets[i].selectedItems[0].lowerBound);
+        					obj.currentEndDate = moment(filters.facets[i].selectedItems[0].upperBound);
+        					selectedItems[0].lowerBound = filters.facets[i].selectedItems[0].lowerBound;
+        					selectedItems[0].upperBound = filters.facets[i].selectedItems[0].upperBound;
+        				}
+        			}
+        		}
+        	}
+        	if (attributesClone.selection) {
+        		var facets = attributesClone.selection.facets;
+        		if (selAvailable) {
+                    for (i=0; i<facets.length; i++) {
+                        if (facets[i].dimension.type == "CONTINUOUS" && facets[i].dimension.valueType == "DATE") {
+                        	if (facets[i].id == facet.id) {
+                                facets[i].selectedItems = selectedItems;
+                            } else {
+                            	facets[i].selectedItems = [];
+                            }
+                        }
+                    }
+                } else {
+                	for (i=0; i<facets.length; i++) {
+                        if (facets[i].dimension.type == "CONTINUOUS" && facets[i].dimension.valueType == "DATE") {
+                        	if (facets[i].id == facet.id) {
+                        		selectedItems[0].lowerBound = obj.maxEndDate.subtract(1, "months").utc().toISOString();
+            					selectedItems[0].upperBound = obj.maxEndDate.utc().toISOString();
+                                facets[i].selectedItems = selectedItems;
+                            } else {
+                            	facets[i].selectedItems = [];
+                            }
+                        }
+                    }
+                }
+        		this.filters.set("userSelection", attributesClone.selection);
+        	}
+                       
             return obj;
         },
 
@@ -89,7 +127,7 @@
                                 facet = facets[i];
                                 break;
                             }
-                        } else if (facets[i].dimension.valueType == "DATE") {
+                        } else if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
                             dates = this.setDates(facets[i]);
                             facet = facets[i];
                             break;
@@ -98,7 +136,7 @@
                     // if period config exist but isn't found within the current domain, select the first one                    
                     if (! facet ) {
                     	for (i=0; i<facets.length; i++) {
-                    		if (facets[i].dimension.valueType == "DATE") {
+                    		if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
                     			 dates = this.setDates(facets[i]);
                                  facet = facets[i];
                                  break;
@@ -112,8 +150,8 @@
                 // build the date pickers
                 if (dates.currentStartDate && dates.currentEndDate) {
                     viewData.dateAvailable = true;
-                    viewData.startDateVal = dates.currentStartDate.format("ll");
-                    viewData.endDateVal = dates.currentEndDate.format("ll");
+                    viewData.startDateVal = dates.currentStartDate.utc().format("ll");
+                    viewData.endDateVal = dates.currentEndDate.utc().format("ll");
                 } else {
                     viewData.dateAvailable = false;
                 }

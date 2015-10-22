@@ -37,12 +37,12 @@
             
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
-            this.listenTo(this.config, "change:project", function(config) {
+            this.listenTo(this.config, "change:domain", function(config) {
             	var selection = config.get("selection");
             	if (selection) {
             		if (selection.facets) {
             			for (i=0; i<selection.facets.length; i++) {
-                			if (selection.facets[i].dimension.valueType == "DATE" && selection.facets[i].dimension.type == "CONTINUOUS") {
+                			if (selection.facets[i].dimension.valueType == "DATE" && selection.facets[i].dimension.type == "CONTINUOUS" && selection.facets[i].dimension.id.domainId !== config.get("domain")) {
                 				selection.facets.splice(i, 1);
                 			}
                 		}

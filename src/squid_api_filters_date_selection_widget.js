@@ -37,7 +37,7 @@
             } else {
                 this.config = squid_api.model.config;
             }
-
+            
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
             this.listenTo(this.config, "change:domain", this.render);
@@ -108,7 +108,12 @@
                         }
                     }
                 }
-        		this.filters.set("userSelection", attributesClone.selection);
+        		// make sure filters are ready for resetting the userSelection
+        		if (this.filters.get("domains")) {
+        			if (this.filters.get("domains").length > 0) {
+            			this.filters.set("userSelection", attributesClone.selection);
+            		}
+        		}
         	}
                        
             return obj;

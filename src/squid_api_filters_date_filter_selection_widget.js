@@ -162,7 +162,7 @@
                     	var obj = {};
                     	var period = me.config.get("period");
                     	if (period) {
-                    		obj = period;
+                    		obj = _.clone(period);
                     	}
                     	obj[me.config.get("domain")] = {name: facet.html(), id: facet.val()};
                         me.config.set("period",obj);

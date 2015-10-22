@@ -1834,8 +1834,18 @@ $.widget( "ui.dialog", $.ui.dialog, {
             
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
-            this.listenTo(this.config, "change:domain", function() {
-            	me.render();
+            this.listenTo(this.config, "change:project", function(config) {
+            	var selection = config.get("selection");
+            	if (selection) {
+            		if (selection.facets) {
+            			for (i=0; i<selection.facets.length; i++) {
+                			if (selection.facets[i].dimension.valueType == "DATE" && selection.facets[i].dimension.type == "CONTINUOUS") {
+                				selection.facets.splice(i, 1);
+                			}
+                		}
+                		this.filters.set("selection", selection);
+            		}
+            	}
             });
             
             // listen for global status change
@@ -2019,7 +2029,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
             
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
-            this.listenTo(this.config, "change:domain", this.render);
             
             // listen for global status change
             squid_api.model.status.on('change:status', this.statusUpdate, this);

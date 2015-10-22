@@ -101,6 +101,7 @@
                             }
                         }
                         var noneSelected = true;
+                        var period = me.config.get("period");
                         for (var dimIdx=0; dimIdx<me.dimensions.length; dimIdx++) {
                             var facet1 = me.dimensions[dimIdx];
                             if (facet1) {
@@ -112,10 +113,12 @@
                                 } else {
                                     name = facet1.dimension.name;
                                 }
-                                if (me.config.get("period")) {
-                                    if (me.config.get("period").val == facet1.id) {
-                                        selected = true;
-                                    }
+                                if (period) {
+                                	if (period[domain.id]) {
+                                		if (period[domain.id].id == facet1.id) {
+                                    		selected = true;
+                                    	}
+                                	}
                                 }
                                 var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
                                 jsonData.options.push(option);
@@ -156,7 +159,12 @@
                         return text;
                     },
                     onChange: function(facet) {
-                        var obj = {"name":facet.html(), "val":facet.val()};
+                    	var obj = {};
+                    	var period = me.config.get("period");
+                    	if (period) {
+                    		obj = period;
+                    	}
+                    	obj[me.config.get("domain")] = {name: facet.html(), id: facet.val()};
                         me.config.set("period",obj);
                     }
                 });

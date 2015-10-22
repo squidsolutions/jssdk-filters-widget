@@ -118,6 +118,7 @@
             if (this.filters) {
                 var selection = this.filters.get('selection');
                 var period = this.config.get("period");
+                var domain = this.config.get("domain");
                 var dates = {};
                 var facet = false;
 
@@ -126,11 +127,13 @@
                     for (var i=0; i<facets.length; i++) {
                         var items = facets[i].facets;
                         if (period) {
-                            if (facets[i].id == period.val) {
-                                dates = this.setDates(facets[i]);
-                                facet = facets[i];
-                                break;
-                            }
+                        	if (period[domain]) {
+                        		if (period[domain].id == facets[i].id) {
+                        			dates = this.setDates(facets[i]);
+                                    facet = facets[i];
+                                    break;
+                        		}
+                        	}
                         } else if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
                             dates = this.setDates(facets[i]);
                             facet = facets[i];

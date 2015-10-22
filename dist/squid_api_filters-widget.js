@@ -1898,6 +1898,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                             }
                         }
                         var noneSelected = true;
+                        var period = me.config.get("period");
                         for (var dimIdx=0; dimIdx<me.dimensions.length; dimIdx++) {
                             var facet1 = me.dimensions[dimIdx];
                             if (facet1) {
@@ -1909,10 +1910,12 @@ $.widget( "ui.dialog", $.ui.dialog, {
                                 } else {
                                     name = facet1.dimension.name;
                                 }
-                                if (me.config.get("period")) {
-                                    if (me.config.get("period").val == facet1.id) {
-                                        selected = true;
-                                    }
+                                if (period) {
+                                	if (period[domain.id]) {
+                                		if (period[domain.id].id == facet1.id) {
+                                    		selected = true;
+                                    	}
+                                	}
                                 }
                                 var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
                                 jsonData.options.push(option);
@@ -1953,7 +1956,12 @@ $.widget( "ui.dialog", $.ui.dialog, {
                         return text;
                     },
                     onChange: function(facet) {
-                        var obj = {"name":facet.html(), "val":facet.val()};
+                    	var obj = {};
+                    	var period = me.config.get("period");
+                    	if (period) {
+                    		obj = period;
+                    	}
+                    	obj[me.config.get("domain")] = {name: facet.html(), id: facet.val()};
                         me.config.set("period",obj);
                     }
                 });
@@ -2089,6 +2097,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
             if (this.filters) {
                 var selection = this.filters.get('selection');
                 var period = this.config.get("period");
+                var domain = this.config.get("domain");
                 var dates = {};
                 var facet = false;
 
@@ -2097,11 +2106,13 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     for (var i=0; i<facets.length; i++) {
                         var items = facets[i].facets;
                         if (period) {
-                            if (facets[i].id == period.val) {
-                                dates = this.setDates(facets[i]);
-                                facet = facets[i];
-                                break;
-                            }
+                        	if (period[domain]) {
+                        		if (period[domain].id == facets[i].id) {
+                        			dates = this.setDates(facets[i]);
+                                    facet = facets[i];
+                                    break;
+                        		}
+                        	}
                         } else if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
                             dates = this.setDates(facets[i]);
                             facet = facets[i];

@@ -63,7 +63,7 @@
                 }
             }
         	var selectedItems = [{"type":"i", "lowerBound": "", "upperBound": ""}];
-        	var attributesClone =  $.extend(true, {}, this.filters.attributes);
+        	var attributesClone =  this.filters.attributes;
         	var selAvailable = false;
         	if (filters) {
         		for (i=0; i<filters.facets.length; i++) {

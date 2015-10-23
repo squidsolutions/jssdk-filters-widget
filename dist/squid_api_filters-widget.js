@@ -2052,7 +2052,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 }
             }
         	var selectedItems = [{"type":"i", "lowerBound": "", "upperBound": ""}];
-        	var attributesClone =  $.extend(true, {}, this.filters.attributes);
+        	var attributesClone =  this.filters.attributes;
         	var selAvailable = false;
         	if (filters) {
         		for (i=0; i<filters.facets.length; i++) {
@@ -2099,7 +2099,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
         		// make sure filters are ready for resetting the userSelection
         		if (this.filters.get("domains")) {
         			if (this.filters.get("domains").length > 0) {
-            			this.filters.set("userSelection", attributesClone.selection);
+        				if (attributesClone.selection !== this.filters.get("selection")) {
+        					this.filters.set("userSelection", attributesClone.selection);
+        				}
             		}
         		}
         	}

@@ -2043,64 +2043,73 @@ $.widget( "ui.dialog", $.ui.dialog, {
         },
 
         setDates: function(facet) {
-            var obj = {};
-            var filters = this.filters.get("selection");
-            if (facet.items) {
-                if (facet.items.length > 0) {
-                    obj.minStartDate = moment(facet.items[0].lowerBound);
-                    obj.maxEndDate = moment(facet.items[0].upperBound);
-                }
-            }
+        	var filters = $.extend(true, {}, this.filters.get("selection"));
         	var selectedItems = [{"type":"i", "lowerBound": "", "upperBound": ""}];
-        	var selected =  this.filters.get("selection");
-        	var selAvailable = false;
+        	var obj = {};
+        	
+            // Check filter selection for current start & end Date, if not set it as last month          
         	if (filters) {
+        		var lowerBound = "";
+        		var upperBound = "";
+        		
+        		// get previous lower + upperbound dates     		
         		for (i=0; i<filters.facets.length; i++) {
         			if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE") {
         				if (filters.facets[i].selectedItems.length > 0) {
-        					selAvailable = true;
-        					obj.currentStartDate = moment(filters.facets[i].selectedItems[0].lowerBound);
-        					obj.currentEndDate = moment(filters.facets[i].selectedItems[0].upperBound);
-        					selectedItems[0].lowerBound = filters.facets[i].selectedItems[0].lowerBound;
-        					selectedItems[0].upperBound = filters.facets[i].selectedItems[0].upperBound;
+        					lowerBound = filters.facets[i].selectedItems[0].lowerBound;
+        					upperBound = filters.facets[i].selectedItems[0].upperBound;
         				}
         			}
         		}
-        	}
-        	if (selected) {
-        		var facets = selected.facets;
-        		if (selAvailable) {
-                    for (i=0; i<facets.length; i++) {
-                        if (facets[i].dimension.type == "CONTINUOUS" && facets[i].dimension.valueType == "DATE") {
-                        	if (facets[i].id == facet.id) {
-                        		if (JSON.stringify(facets[i].selectedItems[0]) !== JSON.stringify(selectedItems[0])) {
-                        			facets[i].selectedItems = selectedItems;
-                        		}
-                            } else {
-                            	facets[i].selectedItems = [];
-                            }
-                        }
-                    }
-                } else {
-                	for (i=0; i<facets.length; i++) {
-                        if (facets[i].dimension.type == "CONTINUOUS" && facets[i].dimension.valueType == "DATE") {
-                        	if (facets[i].id == facet.id) {
-                        		if (obj.maxEndDate) {
-                        			selectedItems[0].lowerBound = moment(obj.maxEndDate.utc()).startOf('month').toISOString();
-                					selectedItems[0].upperBound = obj.maxEndDate.utc().toISOString();
-                                    facets[i].selectedItems = selectedItems;
-                        		}
-                            } else {
-                            	facets[i].selectedItems = [];
-                            }
-                        }
-                    }
-                }
+        		
+        		for (i=0; i<filters.facets.length; i++) {
+        			if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE") {
+        				if (filters.facets[i].id == facet.id) {
+        					var currentStartDate;
+        					var currentEndDate;
+        					
+        					// min & max dates
+        					if (facet.items) {
+        						if (facet.items.length > 0) {
+            						obj.minStartDate = moment(facet.items[0].lowerBound);
+                	                obj.maxEndDate = moment(facet.items[0].upperBound);
+            					}
+        					} else {
+        						obj.minStartDate = moment(facet.selectedItems[0].lowerBound);
+            	                obj.maxEndDate = moment(facet.selectedItems[0].upperBound);
+        					}
+      
+        	                // if no previous dates found, use the last month        		
+        	        		if (lowerBound.length > 0 && upperBound.length > 0) {
+        	        			currentStartDate = lowerBound;
+        	        			currentEndDate = upperBound;
+        	        		} else {
+        	        			currentStartDate = moment(obj.maxEndDate.utc()).startOf('month').toISOString();
+        	        			currentEndDate = obj.maxEndDate.utc().toISOString();
+        	        		}
+        	        		
+        	        		// current dates
+        	                obj.currentStartDate = moment(currentStartDate);
+        					obj.currentEndDate = moment(currentEndDate);
+        					
+        					// set current selection        					
+        					selectedItems[0].lowerBound = currentStartDate;
+        					selectedItems[0].upperBound = currentEndDate;
+        					
+        					// set selected items        					
+        					filters.facets[i].selectedItems = selectedItems;
+        				} else {
+        					// reset old period selected items        					
+        					if (filters.facets[i].selectedItems.length > 0) {
+        						filters.facets[i].selectedItems = [];
+        					}
+        				}
+        			}
+        		}
+ 
         		// make sure filters are ready for resetting the userSelection
-        		if (this.filters.get("domains")) {
-        			if (this.filters.get("domains").length > 0) {
-            			this.filters.set("userSelection", selected);
-            		}
+        		if (JSON.stringify(this.filters.get("selection")) != JSON.stringify(filters)) {
+        			this.filters.set({"userSelection" : filters});
         		}
         	}
                        

@@ -63,7 +63,7 @@
                 }
             }
         	var selectedItems = [{"type":"i", "lowerBound": "", "upperBound": ""}];
-        	var attributesClone =  this.filters.attributes;
+        	var selected =  this.filters.get("selection");
         	var selAvailable = false;
         	if (filters) {
         		for (i=0; i<filters.facets.length; i++) {
@@ -78,8 +78,8 @@
         			}
         		}
         	}
-        	if (attributesClone.selection) {
-        		var facets = attributesClone.selection.facets;
+        	if (selected) {
+        		var facets = selected.facets;
         		if (selAvailable) {
                     for (i=0; i<facets.length; i++) {
                         if (facets[i].dimension.type == "CONTINUOUS" && facets[i].dimension.valueType == "DATE") {
@@ -110,9 +110,7 @@
         		// make sure filters are ready for resetting the userSelection
         		if (this.filters.get("domains")) {
         			if (this.filters.get("domains").length > 0) {
-        				if (attributesClone.selection !== this.filters.get("selection")) {
-        					this.filters.set("userSelection", attributesClone.selection);
-        				}
+            			this.filters.set("userSelection", selected);
             		}
         		}
         	}

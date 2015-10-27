@@ -34,12 +34,21 @@
             } else {
                 this.config = squid_api.model.config;
             }
-
+            
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
-            this.listenTo(this.config, "change:domain", function() {
-            	me.config.unset("period");
-            	me.render();
+            this.listenTo(this.config, "change:domain", function(config) {
+            	var selection = config.get("selection");
+            	if (selection) {
+            		if (selection.facets) {
+            			for (i=0; i<selection.facets.length; i++) {
+                			if (selection.facets[i].dimension.valueType == "DATE" && selection.facets[i].dimension.type == "CONTINUOUS" && selection.facets[i].dimension.id.domainId !== config.get("domain")) {
+                				selection.facets.splice(i, 1);
+                			}
+                		}
+                		this.filters.set("selection", selection);
+            		}
+            	}
             });
             
             // listen for global status change
@@ -82,7 +91,7 @@
                         for (var i=0; i<facets.length; i++){
                             var facet = facets[i];
                             //Change for Period TODO
-                            if (facet.dimension.valueType === "DATE" || (domain.get("_role") == "WRITE" && (facet.dimension.valueType === "DATE" || facet.dimension.valueType === "TIME"))){
+                            if (facet.dimension.valueType === "DATE" && facet.dimension.type === "CONTINUOUS" || (domain.get("_role") == "WRITE" && (facet.dimension.valueType === "DATE" || facet.dimension.valueType === "TIME"))){
                                 // do not display boolean dimensions
                                     if (me.periodIdList) {
                                         // insert and sort
@@ -102,6 +111,7 @@
                             }
                         }
                         var noneSelected = true;
+                        var period = me.config.get("period");
                         for (var dimIdx=0; dimIdx<me.dimensions.length; dimIdx++) {
                             var facet1 = me.dimensions[dimIdx];
                             if (facet1) {
@@ -113,10 +123,12 @@
                                 } else {
                                     name = facet1.dimension.name;
                                 }
-                                if (me.config.get("period")) {
-                                    if (me.config.get("period").val == facet1.id) {
-                                        selected = true;
-                                    }
+                                if (period) {
+                                	if (period[domain.id]) {
+                                		if (period[domain.id].id == facet1.id) {
+                                    		selected = true;
+                                    	}
+                                	}
                                 }
                                 var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
                                 jsonData.options.push(option);
@@ -147,21 +159,22 @@
                 // Initialize plugin
                 me.$el.find("select").multiselect({
                     buttonText: function(option, select) {
-                        var period = me.config.get("period");
-                        var text;
-                        if (period) {
-                            text = period.name;
-                        } else if (select.find("option")) {
-                            if (select.find("option").length > 0) {
-                                text = $(select.find("option")[0]).html();
-                            } else {
-                                text = 'No period exists';
-                            }
-                        }
+                    	if (select.find("option:selected").length > 0) {
+                    		text = select.find("option:selected").text();
+                    	} else if (select.find("option").length > 0) {
+                    		text = "Select a period";
+                    	} else {
+                    		text = 'No period exists';
+                    	}
                         return text;
                     },
                     onChange: function(facet) {
-                        var obj = {"name":facet.html(), "val":facet.val()};
+                    	var obj = {};
+                    	var period = me.config.get("period");
+                    	if (period) {
+                    		obj = _.clone(period);
+                    	}
+                    	obj[me.config.get("domain")] = {name: facet.html(), id: facet.val()};
                         me.config.set("period",obj);
                     }
                 });

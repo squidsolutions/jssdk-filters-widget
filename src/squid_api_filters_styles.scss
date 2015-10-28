@@ -42,6 +42,25 @@
             margin-bottom: auto;
         }
     }
+    .refresh {
+    	cursor: pointer;
+    	.label {
+    		text-decoration: underline;
+    		font-size: 12px;
+    		background: #707070;
+    		position: relative;
+    		top: -2px;
+    		padding: 5px;
+    	}
+    	.icon {
+    		display: inline-block;
+    		&:before {
+    			content: "\f021";
+    			font-family: FontAwesome;
+    			padding-right: 5px;
+    		}
+    	}
+    }
     .date-wrap {
         margin-top: 9px;
         display: inline-block;

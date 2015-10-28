@@ -285,16 +285,20 @@
             this.$el.find("span").on('change.daterangepickerLeft', function(ev, calendar) {
             	if ($(calendar).hasClass("left")) {
             		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
-            	} else {
+            	} else if ($(calendar).hasClass("right")) {
             		$('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
+            	} else {
+            		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
             	}
             });
 
             this.$el.find("span").on('change.daterangepickerRight', function(ev, calendar) {
             	if ($(calendar).hasClass("left")) {
-            		$('.daterangepicker').find('.left td.available:not(.off):last').trigger('click');
-            	} else {
+            		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
+            	} else if ($(calendar).hasClass("right")) {
             		$('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
+            	} else {
+            		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
             	}
             });
         }

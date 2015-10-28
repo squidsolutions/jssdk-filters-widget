@@ -462,7 +462,7 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   
-  return "\r\n    		<div class=\"refresh\">refresh</div>\r\n    	";
+  return "\r\n    		<div class=\"refresh\">\r\n    			<div class=\"icon\"></div>\r\n				<div class=\"label\">Refresh</div>\r\n			</div>\r\n    	";
   }
 
 function program4(depth0,data) {

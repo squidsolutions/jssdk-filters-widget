@@ -28,6 +28,21 @@
   float: left; }
   .squid-api-date-selection-widget #date-picker .sq-content {
     margin-bottom: auto; }
+.squid-api-date-selection-widget .refresh {
+  cursor: pointer; }
+  .squid-api-date-selection-widget .refresh .label {
+    text-decoration: underline;
+    font-size: 12px;
+    background: #707070;
+    position: relative;
+    top: -2px;
+    padding: 5px; }
+  .squid-api-date-selection-widget .refresh .icon {
+    display: inline-block; }
+    .squid-api-date-selection-widget .refresh .icon:before {
+      content: "\f021";
+      font-family: FontAwesome;
+      padding-right: 5px; }
 .squid-api-date-selection-widget .date-wrap {
   margin-top: 9px;
   display: inline-block; }

@@ -9,10 +9,14 @@
     		<span>{{startDateVal}} - {{endDateVal}}</span>
     	{{/if}}
     {{else}}
-        {{#if facet}}
-            <span>select a date range</span>
-        {{else}}
-            <span>no date available</span>
-        {{/if}}
+    	{{#if notReady}}
+    		<span>no date available</span>
+    		{{else}}
+    			{{#if facet}}
+            		<span>select a date range</span>
+        		{{else}}
+           			<span>no date available</span>
+        		{{/if}}
+    	{{/if}}
     {{/if}}
 </div>

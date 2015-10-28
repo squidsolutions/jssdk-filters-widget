@@ -483,8 +483,8 @@ function program4(depth0,data) {
 function program6(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\r\n        ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.facet), {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
+  buffer += "\r\n    	";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.notReady), {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n    ";
   return buffer;
@@ -492,13 +492,28 @@ function program6(depth0,data) {
 function program7(depth0,data) {
   
   
-  return "\r\n            <span>select a date range</span>\r\n        ";
+  return "\r\n    		<span>no date available</span>\r\n    		";
   }
 
 function program9(depth0,data) {
   
+  var buffer = "", stack1;
+  buffer += "\r\n    			";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.facet), {hash:{},inverse:self.program(12, program12, data),fn:self.program(10, program10, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n    	";
+  return buffer;
+  }
+function program10(depth0,data) {
   
-  return "\r\n            <span>no date available</span>\r\n        ";
+  
+  return "\r\n            		<span>select a date range</span>\r\n        		";
+  }
+
+function program12(depth0,data) {
+  
+  
+  return "\r\n           			<span>no date available</span>\r\n        		";
   }
 
   buffer += "<div class=\"squid-api-date-selection-widget\">\r\n    ";
@@ -1942,8 +1957,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
                                     	}
                                 	}
                                 }
-                                var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
-                                jsonData.options.push(option);
+                                if (! (facet1.items.length === 0 && facet1.done)) {
+                                	var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
+                                    jsonData.options.push(option);
+                                }
                             }
                         }
                     }
@@ -2107,6 +2124,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
             							obj.notReady = true;
             							obj.minStartDate = moment();
             							obj.maxEndDate = moment();
+            						} else {
+            							obj.notReady = true;
             						}
             					}
         					} else {
@@ -2118,21 +2137,27 @@ $.widget( "ui.dialog", $.ui.dialog, {
         	        		if (lowerBound.length > 0 && upperBound.length > 0) {
         	        			currentStartDate = lowerBound;
         	        			currentEndDate = upperBound;
-        	        		} else {
+        	        		} else if (obj.maxEndDate) {
         	        			currentStartDate = moment(obj.maxEndDate.utc()).startOf('month').toISOString();
         	        			currentEndDate = obj.maxEndDate.utc().toISOString();
+        	        		} else {
+        	        			forceChange = true;
         	        		}
         	        		
-        	        		// current dates
-        	                obj.currentStartDate = moment(currentStartDate);
-        					obj.currentEndDate = moment(currentEndDate);
-        					
-        					// set current selection        					
-        					selectedItems[0].lowerBound = currentStartDate;
-        					selectedItems[0].upperBound = currentEndDate;
-        					
-        					// set selected items        					
-        					filters.facets[i].selectedItems = selectedItems;
+        	        		if (currentStartDate && currentEndDate) {
+        	        			// current dates
+            	                obj.currentStartDate = moment(currentStartDate);
+            					obj.currentEndDate = moment(currentEndDate);
+            					
+            					// set current selection        					
+            					selectedItems[0].lowerBound = currentStartDate;
+            					selectedItems[0].upperBound = currentEndDate;
+            					
+            					// set selected items        					
+            					filters.facets[i].selectedItems = selectedItems;
+        	        		} else {
+        	        			filters.facets[i].selectedItems = [];
+        	        		}
         				} else {
         					// reset old period selected items        					
         					if (filters.facets[i].selectedItems.length > 0) {

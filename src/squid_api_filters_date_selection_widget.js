@@ -103,6 +103,8 @@
             							obj.notReady = true;
             							obj.minStartDate = moment();
             							obj.maxEndDate = moment();
+            						} else {
+            							obj.notReady = true;
             						}
             					}
         					} else {
@@ -114,21 +116,27 @@
         	        		if (lowerBound.length > 0 && upperBound.length > 0) {
         	        			currentStartDate = lowerBound;
         	        			currentEndDate = upperBound;
-        	        		} else {
+        	        		} else if (obj.maxEndDate) {
         	        			currentStartDate = moment(obj.maxEndDate.utc()).startOf('month').toISOString();
         	        			currentEndDate = obj.maxEndDate.utc().toISOString();
+        	        		} else {
+        	        			forceChange = true;
         	        		}
         	        		
-        	        		// current dates
-        	                obj.currentStartDate = moment(currentStartDate);
-        					obj.currentEndDate = moment(currentEndDate);
-        					
-        					// set current selection        					
-        					selectedItems[0].lowerBound = currentStartDate;
-        					selectedItems[0].upperBound = currentEndDate;
-        					
-        					// set selected items        					
-        					filters.facets[i].selectedItems = selectedItems;
+        	        		if (currentStartDate && currentEndDate) {
+        	        			// current dates
+            	                obj.currentStartDate = moment(currentStartDate);
+            					obj.currentEndDate = moment(currentEndDate);
+            					
+            					// set current selection        					
+            					selectedItems[0].lowerBound = currentStartDate;
+            					selectedItems[0].upperBound = currentEndDate;
+            					
+            					// set selected items        					
+            					filters.facets[i].selectedItems = selectedItems;
+        	        		} else {
+        	        			filters.facets[i].selectedItems = [];
+        	        		}
         				} else {
         					// reset old period selected items        					
         					if (filters.facets[i].selectedItems.length > 0) {

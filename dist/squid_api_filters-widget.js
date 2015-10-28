@@ -452,8 +452,23 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 function program1(depth0,data) {
   
+  var buffer = "", stack1;
+  buffer += "\r\n    	";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.notReady), {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n    ";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  
+  return "\r\n    		<div class=\"refresh\">\r\n    			<div class=\"icon\"></div>\r\n				<div class=\"label\">Refresh</div>\r\n			</div>\r\n    	";
+  }
+
+function program4(depth0,data) {
+  
   var buffer = "", stack1, helper;
-  buffer += "\r\n        <span>";
+  buffer += "\r\n    		<span>";
   if (helper = helpers.startDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.startDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -461,33 +476,48 @@ function program1(depth0,data) {
   if (helper = helpers.endDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.endDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span>\r\n    ";
+    + "</span>\r\n    	";
   return buffer;
-  }
-
-function program3(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\r\n        ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.facet), {hash:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n    ";
-  return buffer;
-  }
-function program4(depth0,data) {
-  
-  
-  return "\r\n            <span>select a date range</span>\r\n        ";
   }
 
 function program6(depth0,data) {
   
+  var buffer = "", stack1;
+  buffer += "\r\n    	";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.notReady), {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n    ";
+  return buffer;
+  }
+function program7(depth0,data) {
   
-  return "\r\n            <span>no date available</span>\r\n        ";
+  
+  return "\r\n    		<span>no date available</span>\r\n    		";
+  }
+
+function program9(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\r\n    			";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.facet), {hash:{},inverse:self.program(12, program12, data),fn:self.program(10, program10, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n    	";
+  return buffer;
+  }
+function program10(depth0,data) {
+  
+  
+  return "\r\n            		<span>select a date range</span>\r\n        		";
+  }
+
+function program12(depth0,data) {
+  
+  
+  return "\r\n           			<span>no date available</span>\r\n        		";
   }
 
   buffer += "<div class=\"squid-api-date-selection-widget\">\r\n    ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.dateAvailable), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.dateAvailable), {hash:{},inverse:self.program(6, program6, data),fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n</div>\r\n";
   return buffer;
@@ -1927,8 +1957,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
                                     	}
                                 	}
                                 }
-                                var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
-                                jsonData.options.push(option);
+                                if (! (facet1.items.length === 0 && facet1.done)) {
+                                	var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
+                                    jsonData.options.push(option);
+                                }
                             }
                         }
                     }
@@ -2041,6 +2073,20 @@ $.widget( "ui.dialog", $.ui.dialog, {
         		this.$el.find("span").removeClass("inactive");
         	}
         },
+        
+        events: {
+        	"click .refresh": function() {
+        		var filters = $.extend(true, {}, this.filters.get("selection"));
+        		if (filters.facets) {
+        			for (i=0; i<filters.facets.length; i++) {
+            			if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE" && filters.facets[i].selectedItems.length > 0) {
+            				filters.facets[i].selectedItems = [];
+            			}
+            		}
+        			this.filters.set("userSelection", filters);
+        		}
+        	}
+        },
 
         setDates: function(facet) {
         	var filters = $.extend(true, {}, this.filters.get("selection"));
@@ -2073,6 +2119,14 @@ $.widget( "ui.dialog", $.ui.dialog, {
         						if (facet.items.length > 0) {
             						obj.minStartDate = moment(facet.items[0].lowerBound);
                 	                obj.maxEndDate = moment(facet.items[0].upperBound);
+            					} else {
+            						if (! facet.done) {
+            							obj.notReady = true;
+            							obj.minStartDate = moment();
+            							obj.maxEndDate = moment();
+            						} else {
+            							obj.notReady = true;
+            						}
             					}
         					} else {
         						obj.minStartDate = moment(facet.selectedItems[0].lowerBound);
@@ -2083,21 +2137,27 @@ $.widget( "ui.dialog", $.ui.dialog, {
         	        		if (lowerBound.length > 0 && upperBound.length > 0) {
         	        			currentStartDate = lowerBound;
         	        			currentEndDate = upperBound;
-        	        		} else {
+        	        		} else if (obj.maxEndDate) {
         	        			currentStartDate = moment(obj.maxEndDate.utc()).startOf('month').toISOString();
         	        			currentEndDate = obj.maxEndDate.utc().toISOString();
+        	        		} else {
+        	        			forceChange = true;
         	        		}
         	        		
-        	        		// current dates
-        	                obj.currentStartDate = moment(currentStartDate);
-        					obj.currentEndDate = moment(currentEndDate);
-        					
-        					// set current selection        					
-        					selectedItems[0].lowerBound = currentStartDate;
-        					selectedItems[0].upperBound = currentEndDate;
-        					
-        					// set selected items        					
-        					filters.facets[i].selectedItems = selectedItems;
+        	        		if (currentStartDate && currentEndDate) {
+        	        			// current dates
+            	                obj.currentStartDate = moment(currentStartDate);
+            					obj.currentEndDate = moment(currentEndDate);
+            					
+            					// set current selection        					
+            					selectedItems[0].lowerBound = currentStartDate;
+            					selectedItems[0].upperBound = currentEndDate;
+            					
+            					// set selected items        					
+            					filters.facets[i].selectedItems = selectedItems;
+        	        		} else {
+        	        			filters.facets[i].selectedItems = [];
+        	        		}
         				} else {
         					// reset old period selected items        					
         					if (filters.facets[i].selectedItems.length > 0) {
@@ -2154,7 +2214,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     }
                 }
 
-                var viewData = {"facet":facet};
+                var viewData = {"facet":facet, "notReady":dates.notReady};
 
                 // build the date pickers
                 if (dates.currentStartDate && dates.currentEndDate) {

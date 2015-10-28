@@ -52,6 +52,20 @@
         		this.$el.find("span").removeClass("inactive");
         	}
         },
+        
+        events: {
+        	"click .refresh": function() {
+        		var filters = $.extend(true, {}, this.filters.get("selection"));
+        		if (filters.facets) {
+        			for (i=0; i<filters.facets.length; i++) {
+            			if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE" && filters.facets[i].selectedItems.length > 0) {
+            				filters.facets[i].selectedItems = [];
+            			}
+            		}
+        			this.filters.set("userSelection", filters);
+        		}
+        	}
+        },
 
         setDates: function(facet) {
         	var filters = $.extend(true, {}, this.filters.get("selection"));
@@ -84,6 +98,12 @@
         						if (facet.items.length > 0) {
             						obj.minStartDate = moment(facet.items[0].lowerBound);
                 	                obj.maxEndDate = moment(facet.items[0].upperBound);
+            					} else {
+            						if (! facet.done) {
+            							obj.notReady = true;
+            							obj.minStartDate = moment();
+            							obj.maxEndDate = moment();
+            						}
             					}
         					} else {
         						obj.minStartDate = moment(facet.selectedItems[0].lowerBound);
@@ -165,7 +185,7 @@
                     }
                 }
 
-                var viewData = {"facet":facet};
+                var viewData = {"facet":facet, "notReady":dates.notReady};
 
                 // build the date pickers
                 if (dates.currentStartDate && dates.currentEndDate) {

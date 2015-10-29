@@ -101,7 +101,7 @@
             					} else {
             						if (! facet.done) {
             							obj.notReady = true;
-            							obj.minStartDate = moment();
+            							obj.minStartDate = moment().subtract(50, "years");
             							obj.maxEndDate = moment();
             						} else {
             							obj.notReady = true;

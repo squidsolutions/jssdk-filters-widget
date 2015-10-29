@@ -461,8 +461,17 @@ function program1(depth0,data) {
   }
 function program2(depth0,data) {
   
-  
-  return "\r\n    		<div class=\"refresh\">\r\n    			<div class=\"icon\"></div>\r\n				<div class=\"label\">Refresh</div>\r\n			</div>\r\n    	";
+  var buffer = "", stack1, helper;
+  buffer += "\r\n    		<span>";
+  if (helper = helpers.startDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.startDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + " - ";
+  if (helper = helpers.endDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.endDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\r\n    		<div class=\"refresh\">\r\n				<div class=\"label\">Refresh</div>\r\n			</div>\r\n    	";
+  return buffer;
   }
 
 function program4(depth0,data) {
@@ -513,7 +522,7 @@ function program10(depth0,data) {
 function program12(depth0,data) {
   
   
-  return "\r\n           			<span>no date available</span>\r\n        		";
+  return "\r\n           			no date available\r\n        		";
   }
 
   buffer += "<div class=\"squid-api-date-selection-widget\">\r\n    ";
@@ -2122,7 +2131,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
             					} else {
             						if (! facet.done) {
             							obj.notReady = true;
-            							obj.minStartDate = moment();
+            							obj.minStartDate = moment().subtract(50, "years");
             							obj.maxEndDate = moment();
             						} else {
             							obj.notReady = true;

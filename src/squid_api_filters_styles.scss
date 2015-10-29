@@ -43,21 +43,26 @@
         }
     }
     .refresh {
-    	cursor: pointer;
+		cursor: pointer;
+		top: 12px;
+		position: absolute;
+		right: 0px;
     	.label {
-    		text-decoration: underline;
     		font-size: 12px;
+    		width: 65px;
+    		text-align: left;
     		background: #707070;
     		position: relative;
     		top: -2px;
     		padding: 5px;
-    	}
-    	.icon {
     		display: inline-block;
     		&:before {
-    			content: "\f021";
-    			font-family: FontAwesome;
-    			padding-right: 5px;
+				content: "\f021";
+				font-family: FontAwesome;
+				padding-right: 5px;
+				position: absolute;
+				right: 0px;
+				top: 5px;
     		}
     	}
     }

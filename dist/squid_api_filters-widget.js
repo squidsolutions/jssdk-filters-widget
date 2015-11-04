@@ -463,12 +463,8 @@ function program2(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += "\r\n    		<span>";
-  if (helper = helpers.startDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.startDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + " - ";
-  if (helper = helpers.endDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.endDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  if (helper = helpers.dateDisplay) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.dateDisplay); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
     + "</span>\r\n    		<div class=\"refresh\">\r\n				<div class=\"label\">Refresh</div>\r\n			</div>\r\n    	";
   return buffer;
@@ -478,12 +474,8 @@ function program4(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += "\r\n    		<span>";
-  if (helper = helpers.startDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.startDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + " - ";
-  if (helper = helpers.endDateVal) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.endDateVal); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  if (helper = helpers.dateDisplay) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.dateDisplay); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
     + "</span>\r\n    	";
   return buffer;
@@ -661,15 +653,32 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 this.filters = options.filters;
                 this.listenTo(this.filters, "change:selection", this.render);
             }
+            if (options.status) {
+            	this.status = options.status;
+            } else {
+            	this.status = squid_api.model.status;
+            }
             if (options.noFiltersMessage) {
                 this.noFiltersMessage = options.noFiltersMessage;
             }
             if (options.singleSelect) {
                 this.singleSelect = options.singleSelect;
             }
-
+            
             this.listenTo(this.model, "change:pageIndex", this.render);
             this.listenTo(this.model, "change:facet", this.render);
+            this.listenTo(this.status, "change", this.widgetState);
+        },
+        
+        widgetState: function() {
+        	// treat global status
+            var running = (this.status.get("status") != this.status.STATUS_DONE);
+            if (running === true) {
+                // computation is running
+            } else {
+                // computation is done : enable input
+                this.disabled = false;
+            }
         },
 
         events: {
@@ -804,15 +813,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
             });
 
             this.$el.html(html);
-
-            // treat global status
-            var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
-            if (running === true) {
-                // computation is running
-            } else {
-                // computation is done : enable input
-                this.disabled = false;
-            }
         }
 
     });
@@ -2042,6 +2042,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
             'first-month': function(min, max) { return [moment.utc(min).startOf('month'), moment.utc(min).endOf('month')]; },
             'last-month': function(min, max) { return [moment.utc(max).startOf('month'), moment.utc(max).endOf('month')]; }
         },
+        monthsOnlyDisplay : false,
 
         initialize: function(options) {
             var me = this;
@@ -2061,6 +2062,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 this.filters = options.model;
             } else {
                 this.filters = squid_api.model.filters;
+            }
+            if (options.monthsOnlyDisplay) {
+            	this.monthsOnlyDisplay = options.monthsOnlyDisplay;
             }
             if (options.config) {
                 this.config = options.config;
@@ -2228,10 +2232,21 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 // build the date pickers
                 if (dates.currentStartDate && dates.currentEndDate) {
                     viewData.dateAvailable = true;
-                    viewData.startDateVal = dates.currentStartDate.utc().format("ll");
-                    viewData.endDateVal = dates.currentEndDate.utc().format("ll");
+                    viewData.dateDisplay = dates.currentStartDate.utc().format("ll") + " - " + dates.currentEndDate.utc().format("ll");
                 } else {
                     viewData.dateAvailable = false;
+                }
+                
+                // months only display logic
+                if (this.monthsOnlyDisplay) {
+                	var d1 = dates.currentStartDate;
+                	var d2 = dates.currentEndDate;
+                	var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                	if ((d1.month() == d2.month()) && (d1.year() == d2.year())) {
+                		viewData.dateDisplay = monthNames[d1.month()] + " "  + d1.year();
+                	} else {
+                		viewData.dateDisplay =  monthNames[d1.month()] + " " + d1.year() + " - " + monthNames[d2.month()] + " " + d2.year();
+                	}
                 }
 
                 var selHTML = this.template(viewData);

@@ -12,6 +12,7 @@
             'first-month': function(min, max) { return [moment.utc(min).startOf('month'), moment.utc(min).endOf('month')]; },
             'last-month': function(min, max) { return [moment.utc(max).startOf('month'), moment.utc(max).endOf('month')]; }
         },
+        monthsOnlyDisplay : false,
 
         initialize: function(options) {
             var me = this;
@@ -31,6 +32,9 @@
                 this.filters = options.model;
             } else {
                 this.filters = squid_api.model.filters;
+            }
+            if (options.monthsOnlyDisplay) {
+            	this.monthsOnlyDisplay = options.monthsOnlyDisplay;
             }
             if (options.config) {
                 this.config = options.config;
@@ -198,10 +202,21 @@
                 // build the date pickers
                 if (dates.currentStartDate && dates.currentEndDate) {
                     viewData.dateAvailable = true;
-                    viewData.startDateVal = dates.currentStartDate.utc().format("ll");
-                    viewData.endDateVal = dates.currentEndDate.utc().format("ll");
+                    viewData.dateDisplay = dates.currentStartDate.utc().format("ll") + " - " + dates.currentEndDate.utc().format("ll");
                 } else {
                     viewData.dateAvailable = false;
+                }
+                
+                // months only display logic
+                if (this.monthsOnlyDisplay) {
+                	var d1 = dates.currentStartDate;
+                	var d2 = dates.currentEndDate;
+                	var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                	if ((d1.month() == d2.month()) && (d1.year() == d2.year())) {
+                		viewData.dateDisplay = monthNames[d1.month()] + " "  + d1.year();
+                	} else {
+                		viewData.dateDisplay =  monthNames[d1.month()] + " " + d1.year() + " - " + monthNames[d2.month()] + " " + d2.year();
+                	}
                 }
 
                 var selHTML = this.template(viewData);

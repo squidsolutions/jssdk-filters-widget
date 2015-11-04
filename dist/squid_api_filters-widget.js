@@ -653,15 +653,32 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 this.filters = options.filters;
                 this.listenTo(this.filters, "change:selection", this.render);
             }
+            if (options.status) {
+            	this.status = options.status;
+            } else {
+            	this.status = squid_api.model.status;
+            }
             if (options.noFiltersMessage) {
                 this.noFiltersMessage = options.noFiltersMessage;
             }
             if (options.singleSelect) {
                 this.singleSelect = options.singleSelect;
             }
-
+            
             this.listenTo(this.model, "change:pageIndex", this.render);
             this.listenTo(this.model, "change:facet", this.render);
+            this.listenTo(this.status, "change", this.widgetState);
+        },
+        
+        widgetState: function() {
+        	// treat global status
+            var running = (this.status.get("status") != this.status.STATUS_DONE);
+            if (running === true) {
+                // computation is running
+            } else {
+                // computation is done : enable input
+                this.disabled = false;
+            }
         },
 
         events: {
@@ -796,15 +813,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
             });
 
             this.$el.html(html);
-
-            // treat global status
-            var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
-            if (running === true) {
-                // computation is running
-            } else {
-                // computation is done : enable input
-                this.disabled = false;
-            }
         }
 
     });

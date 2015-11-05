@@ -1966,9 +1966,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
                                     	}
                                 	}
                                 }
-                                if (! (facet1.items.length === 0 && facet1.done)) {
-                                	var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
-                                    jsonData.options.push(option);
+                                if (facet1.items) {
+                                	if (! (facet1.items.length === 0 && facet1.done)) {
+                                    	var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
+                                        jsonData.options.push(option);
+                                    }
                                 }
                             }
                         }

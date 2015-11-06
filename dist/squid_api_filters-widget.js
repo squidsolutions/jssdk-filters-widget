@@ -2240,7 +2240,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 }
                 
                 // months only display logic
-                if (this.monthsOnlyDisplay) {
+                if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
                 	var d1 = dates.currentStartDate;
                 	var d2 = dates.currentEndDate;
                 	var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

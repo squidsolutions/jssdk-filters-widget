@@ -1966,9 +1966,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
                                     	}
                                 	}
                                 }
-                                if (! (facet1.items.length === 0 && facet1.done)) {
-                                	var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
-                                    jsonData.options.push(option);
+                                if (facet1.items) {
+                                	if (! (facet1.items.length === 0 && facet1.done)) {
+                                    	var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
+                                        jsonData.options.push(option);
+                                    }
                                 }
                             }
                         }
@@ -2238,7 +2240,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 }
                 
                 // months only display logic
-                if (this.monthsOnlyDisplay) {
+                if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
                 	var d1 = dates.currentStartDate;
                 	var d2 = dates.currentEndDate;
                 	var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

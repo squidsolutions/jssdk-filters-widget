@@ -759,13 +759,14 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 var endIndex = startIndex + pageSize;
 
                 var selectedFilter = this.model.get("selectedFilter");
-                var facets = this.filters.get("selection").facets;
+                var selection = this.filters.get("selection");
                 if (endIndex > facetItems.length) {
                     endIndex = facetItems.length;
                 }
 
-                if (startIndex >= 0) {
+                if (startIndex >= 0 && selection) {
                     var items = [];
+                    var facets = selection.facets;
                     for (ix=startIndex; ix<endIndex; ix++) {
                         items.push(facetItems[ix]);
                     }
@@ -1250,6 +1251,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
             if (options.popup) {
                 this.popup = options.popup;
             }
+            if (options.status) {
+            	this.status = options.status;
+            } else {
+            	this.status = squid_api.model.status;
+            }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
 
@@ -1384,7 +1390,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
         },
 
         statusUpdate : function() {
-            var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
+            var running = (this.status.get("status") != this.status.STATUS_DONE);
             var disabled = null;
 
             if (this.parentCheck && this.currentModel.get("selection")) {
@@ -1613,7 +1619,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
         renderFacet : function(fetch) {
             var me = this;
 
-            if (this.currentModel.get("status") === "DONE") {
+            if (this.currentModel.get("status") === "DONE" && this.status.get("status") === "DONE") {
                 if (this.currentModel.get("selection")) {
                     var selectedFacetId = this.filterStore.get("selectedFilter");
                     var pageIndex = this.filterStore.get("pageIndex");

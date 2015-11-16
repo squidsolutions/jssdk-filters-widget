@@ -168,7 +168,7 @@
                 var facet = false;
 
                 if (selection) {
-                    var facets = selection.facets;
+                    var facets = selection.facets;	
                     for (var i=0; i<facets.length; i++) {
                         var items = facets[i].facets;
                         if (period) {

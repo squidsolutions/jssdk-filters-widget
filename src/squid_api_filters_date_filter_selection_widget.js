@@ -54,7 +54,7 @@
             // listen for global status change
             squid_api.model.status.on('change:status', this.statusUpdate, this);
         },
-
+        
         remove: function() {
             this.undelegateEvents();
             this.$el.empty();
@@ -86,35 +86,10 @@
                 if (selection) {
                     var facets = selection.facets;
                     if (facets) {
-                        me.dimensions = [];
-                        var dims = facets;
-                        for (var i=0; i<facets.length; i++){
-                            var facet = facets[i];
-                            //Change for Period TODO
-                            if (facet.dimension.valueType === "DATE" && facet.dimension.type === "CONTINUOUS" || (domain.get("_role") == "WRITE" && (facet.dimension.valueType === "DATE" || facet.dimension.valueType === "TIME"))){
-                                // do not display boolean dimensions
-                                    if (me.periodIdList) {
-                                        // insert and sort
-                                        var idx = me.periodIdList.indexOf(facet.dimension.oid);
-                                        if (idx >= 0) {
-                                            me.dimensions[idx] = facet;
-                                        }
-                                    } else {
-                                        // default unordered behavior
-                                        me.dimensions.push(facet);
-                                    }
-
-                                // avoid holes
-                                if (!me.dimensions[i]) {
-                                    me.dimensions[i] = null;
-                                }
-                            }
-                        }
-                        var noneSelected = true;
                         var period = me.config.get("period");
-                        for (var dimIdx=0; dimIdx<me.dimensions.length; dimIdx++) {
-                            var facet1 = me.dimensions[dimIdx];
-                            if (facet1) {
+                        for (var dimIdx=0; dimIdx<facets.length; dimIdx++) {
+                            var facet1 = facets[dimIdx];
+                            if (facet1.dimension.valueType === "DATE" && facet1.dimension.type === "CONTINUOUS") {
                                 // add to the list
                                 var name;
                                 var selected = false;
@@ -132,7 +107,7 @@
                                 }
                                 if (facet1.items) {
                                 	if (! (facet1.items.length === 0 && facet1.done)) {
-                                    	var option = {"label" : name, "value" : facet1.id, "error" : me.dimensions[dimIdx].error, "selected" : selected};
+                                    	var option = {"label" : name, "value" : facet1.id, "error" : facets[dimIdx].error, "selected" : selected};
                                         jsonData.options.push(option);
                                     }
                                 }

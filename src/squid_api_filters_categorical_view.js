@@ -439,7 +439,7 @@
         renderFacet : function(fetch) {
             var me = this;
 
-            if (this.currentModel.get("status") === "DONE" && this.status.get("status") === "DONE") {
+            if (this.currentModel.get("status") === "DONE") {
                 if (this.currentModel.get("selection")) {
                     var selectedFacetId = this.filterStore.get("selectedFilter");
                     var pageIndex = this.filterStore.get("pageIndex");

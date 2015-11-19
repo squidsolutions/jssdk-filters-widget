@@ -32,7 +32,7 @@
   cursor: pointer;
   top: 12px;
   position: absolute;
-  right: 0px; }
+  right: -15px; }
   .squid-api-date-selection-widget .refresh .label {
     font-size: 12px;
     width: 65px;

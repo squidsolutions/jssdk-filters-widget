@@ -71,6 +71,11 @@
             if (options.popup) {
                 this.popup = options.popup;
             }
+            if (options.status) {
+            	this.status = options.status;
+            } else {
+            	this.status = squid_api.model.status;
+            }
 
             this.filterPanelTemplate = squid_api.template.squid_api_filters_categorical_view;
 
@@ -205,7 +210,7 @@
         },
 
         statusUpdate : function() {
-            var running = (squid_api.model.status.get("status") != squid_api.model.status.STATUS_DONE);
+            var running = (this.status.get("status") != this.status.STATUS_DONE);
             var disabled = null;
 
             if (this.parentCheck && this.currentModel.get("selection")) {

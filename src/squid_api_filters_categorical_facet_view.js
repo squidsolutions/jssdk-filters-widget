@@ -131,13 +131,14 @@
                 var endIndex = startIndex + pageSize;
 
                 var selectedFilter = this.model.get("selectedFilter");
-                var facets = this.filters.get("selection").facets;
+                var selection = this.filters.get("selection");
                 if (endIndex > facetItems.length) {
                     endIndex = facetItems.length;
                 }
 
-                if (startIndex >= 0) {
+                if (startIndex >= 0 && selection) {
                     var items = [];
+                    var facets = selection.facets;
                     for (ix=startIndex; ix<endIndex; ix++) {
                         items.push(facetItems[ix]);
                     }

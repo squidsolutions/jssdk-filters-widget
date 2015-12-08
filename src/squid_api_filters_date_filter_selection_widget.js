@@ -39,15 +39,17 @@
             this.listenTo(this.config, "change:period", this.render);
             this.listenTo(this.config, "change:domain", function(config) {
             	var selection = config.get("selection");
+            	// set the filters with the date facets
             	if (selection) {
-            		if (selection.facets) {
-            			for (i=0; i<selection.facets.length; i++) {
-                			if (selection.facets[i].dimension.valueType == "DATE" && selection.facets[i].dimension.type == "CONTINUOUS" && selection.facets[i].dimension.id.domainId !== config.get("domain")) {
-                				selection.facets.splice(i, 1);
-                			}
-                		}
-                		this.filters.set("selection", selection);
-            		}
+            	    var filteredSelection = {"facets" : []};
+            	    if (selection.facets) {
+            	        for (i=0; i<selection.facets.length; i++) {
+            	            if (selection.facets[i].dimension.valueType == "DATE" && selection.facets[i].dimension.type == "CONTINUOUS" && selection.facets[i].dimension.id.domainId !== config.get("domain")) {
+            	                filteredSelection.facets.push(selection.facets[i]);
+            	            }
+            	        }
+            	        this.filters.set("selection", filteredSelection);
+            	    }
             	}
             });
             
@@ -72,7 +74,9 @@
 
         render: function() {
             var me = this;
-            squid_api.utils.fetchModel("domain").then(function(domain) {
+            var domains = squid_api.model.project.get("domains");
+            if (domains && this.config.get("domain")) {
+                var domain = domains.findWhere({"oid" : this.config.get("domain")});
                 var isMultiple = true;
 
                 if (me.periodIndex !== null) {
@@ -99,15 +103,15 @@
                                     name = facet1.dimension.name;
                                 }
                                 if (period) {
-                                	if (period[domain.id]) {
-                                		if (period[domain.id].id == facet1.id) {
-                                    		selected = true;
-                                    	}
-                                	}
+                                    if (period[domain.id]) {
+                                        if (period[domain.id].id == facet1.id) {
+                                            selected = true;
+                                        }
+                                    }
                                 }
                                 if (facet1.items) {
-                                	if (! (facet1.items.length === 0 && facet1.done)) {
-                                    	var option = {"label" : name, "value" : facet1.id, "error" : facets[dimIdx].error, "selected" : selected};
+                                    if (! (facet1.items.length === 0 && facet1.done)) {
+                                        var option = {"label" : name, "value" : facet1.id, "error" : facets[dimIdx].error, "selected" : selected};
                                         jsonData.options.push(option);
                                     }
                                 }
@@ -138,29 +142,29 @@
                 // Initialize plugin
                 me.$el.find("select").multiselect({
                     buttonText: function(option, select) {
-                    	if (select.find("option:selected").length > 0) {
-                    		text = select.find("option:selected").text();
-                    	} else if (select.find("option").length > 0) {
-                    		text = "Select a period";
-                    	} else {
-                    		text = 'No period exists';
-                    	}
+                        if (select.find("option:selected").length > 0) {
+                            text = select.find("option:selected").text();
+                        } else if (select.find("option").length > 0) {
+                            text = "Select a period";
+                        } else {
+                            text = 'No period exists';
+                        }
                         return text;
                     },
                     onChange: function(facet) {
-                    	var obj = {};
-                    	var period = me.config.get("period");
-                    	if (period) {
-                    		obj = _.clone(period);
-                    	}
-                    	obj[me.config.get("domain")] = {name: facet.html(), id: facet.val()};
+                        var obj = {};
+                        var period = me.config.get("period");
+                        if (period) {
+                            obj = _.clone(period);
+                        }
+                        obj[me.config.get("domain")] = {name: facet.html(), id: facet.val()};
                         me.config.set("period",obj);
                     }
                 });
 
-            // Remove Button Title Tag
-            me.$el.find("button").removeAttr('title');
-        });
+                // Remove Button Title Tag
+                me.$el.find("button").removeAttr('title');
+            }
 
         return this;
         }

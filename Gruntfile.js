@@ -41,6 +41,29 @@ module.exports = function(grunt) {
                         src : [ 'build/templates.js',
                                 'src/*.js' ],
                         dest : 'dist/squid_api_filters-widget.js',
+                    },
+                    dev:{
+                        files : {
+                            'dist/squid_api_filters_categorical_facet_view.js': ['dist/squid_api_filters_categorical_facet_view_template.js', 'src/squid_api_filters_categorical_facet_view.js'],
+                            'dist/squid_api_filters_categorical_paging_view.js': ['dist/squid_api_filters_categorical_paging_view_template.js', 'src/squid_api_filters_categorical_paging_view.js'],
+                            'dist/squid_api_filters_categorical_selected_view.js': ['dist/squid_api_filters_categorical_selected_view_template.js', 'src/squid_api_filters_categorical_selected_view.js'],
+                            'dist/squid_api_filters_categorical_view.js': ['dist/squid_api_filters_categorical_view_template.js', 'src/squid_api_filters_categorical_view.js'],
+                            'dist/squid_api_filters_categorical_widget.js': ['dist/squid_api_filters_categorical_widget_template.js', 'src/squid_api_filters_categorical_widget.js'],
+                            'dist/squid_api_filters_date_filter_selection_widget.js': ['dist/squid_api_filters_date_filter_selection_widget_template.js', 'src/squid_api_filters_date_filter_selection_widget.js'],
+                            'dist/squid_api_filters_date_selection_widget.js': ['dist/squid_api_filters_date_selection_widget_template.js', 'src/squid_api_filters_date_selection_widget.js'],
+                            'dist/squid_api_filters_segment_widget.js': ['dist/squid_api_filters_segment_widget_template.js', 'src/squid_api_filters_segment_widget.js'],
+                            'dist/squid_api_selection_widget.js': ['dist/squid_api_selection_widget_template.js', 'src/squid_api_selection_widget.js'],
+                        }
+                    }
+                },
+                copy: {
+                    devDist: {
+                        files: [{
+                            expand: true,
+                            flatten: true,
+                            src : [ 'src/*.js' ],
+                            dest: 'dist'
+                        }]
                     }
                 },
                 handlebars : {
@@ -54,6 +77,19 @@ module.exports = function(grunt) {
                     all : {
                         files : {
                             "build/templates.js" : [ "src/*.hbs" ]
+                        }
+                    },
+                    dev:{
+                        files : {
+                            'dist/squid_api_filters_categorical_facet_view_template.js': ['src/squid_api_filters_categorical_facet_view.hbs'],
+                            'dist/squid_api_filters_categorical_paging_view_template.js': ['src/squid_api_filters_categorical_paging_view.hbs'],
+                            'dist/squid_api_filters_categorical_selected_view_template.js': ['src/squid_api_filters_categorical_selected_view.hbs'],
+                            'dist/squid_api_filters_categorical_view_template.js': ['src/squid_api_filters_categorical_view.hbs'],
+                            'dist/squid_api_filters_categorical_widget_template.js': ['src/squid_api_filters_categorical_widget.hbs'],
+                            'dist/squid_api_filters_date_filter_selection_widget_template.js': ['src/squid_api_filters_date_filter_selection_widget.hbs'],
+                            'dist/squid_api_filters_date_selection_widget_template.js': ['src/squid_api_filters_date_selection_widget.hbs'],
+                            'dist/squid_api_filters_segment_widget_template.js': ['src/squid_api_filters_segment_widget.hbs'],
+                            'dist/squid_api_selection_widget_template.js': ['src/squid_api_selection_widget.hbs'],
                         }
                     }
                 },
@@ -77,6 +113,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-bower-concat');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-wiredep');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('default', [ 'jshint', 'clean', 'handlebars', 'concat', 'sass', 'wiredep']);
+    grunt.registerTask('devDist', [ 'jshint', 'clean', 'handlebars:dev', 'copy:devDist', 'concat:dev', 'sass', 'wiredep' ]);
+
+    grunt.registerTask('default', [ 'jshint', 'clean', 'handlebars:all', 'concat:css', 'concat:js', 'sass', 'wiredep']);
 };

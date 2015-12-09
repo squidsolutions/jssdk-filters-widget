@@ -38,19 +38,7 @@
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
             this.listenTo(this.config, "change:domain", function(config) {
-            	var selection = config.get("selection");
-            	// set the filters with the date facets
-            	if (selection) {
-            	    var filteredSelection = {"facets" : []};
-            	    if (selection.facets) {
-            	        for (i=0; i<selection.facets.length; i++) {
-            	            if (selection.facets[i].dimension.valueType == "DATE" && selection.facets[i].dimension.type == "CONTINUOUS" && selection.facets[i].dimension.id.domainId !== config.get("domain")) {
-            	                filteredSelection.facets.push(selection.facets[i]);
-            	            }
-            	        }
-            	        this.filters.set("selection", filteredSelection);
-            	    }
-            	}
+                this.render();
             });
             
             // listen for global status change
@@ -74,9 +62,8 @@
 
         render: function() {
             var me = this;
-            var domains = squid_api.model.project.get("domains");
-            if (domains && this.config.get("domain")) {
-                var domain = domains.findWhere({"oid" : this.config.get("domain")});
+            var domain = this.config.get("domain");
+            if (domain) {
                 var isMultiple = true;
 
                 if (me.periodIndex !== null) {
@@ -103,8 +90,8 @@
                                     name = facet1.dimension.name;
                                 }
                                 if (period) {
-                                    if (period[domain.id]) {
-                                        if (period[domain.id].id == facet1.id) {
+                                    if (period[domain]) {
+                                        if (period[domain].id == facet1.id) {
                                             selected = true;
                                         }
                                     }

@@ -76,11 +76,10 @@
                 var selection = this.filters.get('selection');
                 var period = this.config.get("period");
                 var domain = this.config.get("domain");
-                var dates = {};
                 var facet = false;
 
                 if (selection) {
-                    var facets = selection.facets;	
+                    var facets = selection.facets;
                     for (var i=0; i<facets.length; i++) {
                         var items = facets[i].facets;
                         if (period) {
@@ -95,7 +94,7 @@
                             break;
                         }
                     }
-                    // if period config exist but isn't found within the current domain, select the first one                    
+                    // if period config exist but isn't found within the current domain, select the first one
                     if (! facet ) {
                         for (i=0; i<facets.length; i++) {
                             if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
@@ -106,15 +105,27 @@
                     }
                 }
 
-                var viewData = {"facet":facet, "notReady":dates.notReady};
-
-                // build the date pickers
-                if (dates.currentStartDate && dates.currentEndDate) {
-                    viewData.dateAvailable = true;
-                    viewData.dateDisplay = dates.currentStartDate.utc().format("ll") + " - " + dates.currentEndDate.utc().format("ll");
-                } else {
-                    viewData.dateAvailable = false;
+                var dateAvailable = false;
+                var dates = {
+                    currentStartDate : moment().utc().subtract("1", "month"),
+                    currentEndDate : moment().utc(),
+                    minDate : moment().utc().subtract("50", "year"),
+                    maxDate : moment().utc(),
+                };
+                if (facet.items) {
+                    if (facet.items.length > 0) {
+                        dates.minDate = moment(facet.items[0].lowerBound).utc();
+                        dates.maxDate = moment(facet.items[0].upperBound).utc();
+                        dates.currentEndDate = moment(facet.items[0].upperBound).utc();
+                    }
                 }
+                if (facet.selectedItems[0]) {
+                    dates.currentStartDate = moment(facet.selectedItems[0].lowerBound).utc();
+                    dates.currentEndDate = moment(facet.selectedItems[0].upperBound).utc();
+                    dateAvailable = true;
+                }
+
+                var viewData = {"facet":facet, "dateDisplay" : dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll"), "dateAvailable" : dateAvailable};
 
                 // months only display logic
                 if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
@@ -178,24 +189,21 @@
                 }
             }
 
-            if (dates.currentStartDate && dates.currentEndDate) {
-                startDate = dates.currentStartDate;
-                endDate = dates.currentEndDate;
-            } else {
-                startDate = dates.minStartDate;
-                endDate = dates.maxEndDate;
-            }
+            console.log(dates.currentStartDate.format('YYYY-MM-DD'));
+            console.log(dates.currentEndDate.format('YYYY-MM-DD'));
+            console.log(dates.minDate.format('YYYY-MM-DD'));
+            console.log(dates.maxDate.format('YYYY-MM-DD'));
 
             // Build Date Picker
             this.$el.find("span").daterangepicker({
-                opens: me.datePickerPosition, 
-                format: 'YYYY-MM-DD', 
-                showDropdowns: true, 
-                ranges: pickerRanges, 
-                "startDate" : startDate, 
-                "endDate" : endDate, 
-                "minDate" : dates.minStartDate, 
-                "maxDate" : dates.maxEndDate
+                opens: me.datePickerPosition,
+                format: 'YYYY-MM-DD',
+                showDropdowns: true,
+                ranges: pickerRanges,
+                startDate: '2013-01-01',
+                endDate: '2013-12-31',
+                minDate : '2012-01-01',
+                maxDate : '2015-01-01'
             });
 
             // Detect Apply Action

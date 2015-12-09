@@ -452,73 +452,38 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 function program1(depth0,data) {
   
+  var buffer = "", stack1, helper;
+  buffer += "\r\n		<span>";
+  if (helper = helpers.dateDisplay) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.dateDisplay); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\r\n    ";
+  return buffer;
+  }
+
+function program3(depth0,data) {
+  
   var buffer = "", stack1;
-  buffer += "\r\n    	";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.notReady), {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),data:data});
+  buffer += "\r\n        ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.facet), {hash:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n    ";
   return buffer;
   }
-function program2(depth0,data) {
-  
-  var buffer = "", stack1, helper;
-  buffer += "\r\n    		<span>";
-  if (helper = helpers.dateDisplay) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.dateDisplay); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span>\r\n    		<div class=\"refresh\">\r\n				<div class=\"label\">Refresh</div>\r\n			</div>\r\n    	";
-  return buffer;
-  }
-
 function program4(depth0,data) {
   
-  var buffer = "", stack1, helper;
-  buffer += "\r\n    		<span>";
-  if (helper = helpers.dateDisplay) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.dateDisplay); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span>\r\n    	";
-  return buffer;
+  
+  return "\r\n                <span>select a date range</span>\r\n            ";
   }
 
 function program6(depth0,data) {
   
-  var buffer = "", stack1;
-  buffer += "\r\n    	";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.notReady), {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n    ";
-  return buffer;
-  }
-function program7(depth0,data) {
   
-  
-  return "\r\n    		<span>no date available</span>\r\n    		";
-  }
-
-function program9(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\r\n    			";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.facet), {hash:{},inverse:self.program(12, program12, data),fn:self.program(10, program10, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n    	";
-  return buffer;
-  }
-function program10(depth0,data) {
-  
-  
-  return "\r\n            		<span>select a date range</span>\r\n        		";
-  }
-
-function program12(depth0,data) {
-  
-  
-  return "\r\n           			no date available\r\n        		";
+  return "\r\n                no date available\r\n        ";
   }
 
   buffer += "<div class=\"squid-api-date-selection-widget\">\r\n    ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.dateAvailable), {hash:{},inverse:self.program(6, program6, data),fn:self.program(1, program1, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.dateAvailable), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n</div>\r\n";
   return buffer;
@@ -2080,11 +2045,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 var selection = this.filters.get('selection');
                 var period = this.config.get("period");
                 var domain = this.config.get("domain");
-                var dates = {};
                 var facet = false;
 
                 if (selection) {
-                    var facets = selection.facets;	
+                    var facets = selection.facets;
                     for (var i=0; i<facets.length; i++) {
                         var items = facets[i].facets;
                         if (period) {
@@ -2099,7 +2063,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                             break;
                         }
                     }
-                    // if period config exist but isn't found within the current domain, select the first one                    
+                    // if period config exist but isn't found within the current domain, select the first one
                     if (! facet ) {
                         for (i=0; i<facets.length; i++) {
                             if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
@@ -2110,15 +2074,27 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     }
                 }
 
-                var viewData = {"facet":facet, "notReady":dates.notReady};
-
-                // build the date pickers
-                if (dates.currentStartDate && dates.currentEndDate) {
-                    viewData.dateAvailable = true;
-                    viewData.dateDisplay = dates.currentStartDate.utc().format("ll") + " - " + dates.currentEndDate.utc().format("ll");
-                } else {
-                    viewData.dateAvailable = false;
+                var dateAvailable = false;
+                var dates = {
+                    currentStartDate : moment().utc().subtract("1", "month"),
+                    currentEndDate : moment().utc(),
+                    minDate : moment().utc().subtract("50", "year"),
+                    maxDate : moment().utc(),
+                };
+                if (facet.items) {
+                    if (facet.items.length > 0) {
+                        dates.minDate = moment(facet.items[0].lowerBound).utc();
+                        dates.maxDate = moment(facet.items[0].upperBound).utc();
+                        dates.currentEndDate = moment(facet.items[0].upperBound).utc();
+                    }
                 }
+                if (facet.selectedItems[0]) {
+                    dates.currentStartDate = moment(facet.selectedItems[0].lowerBound).utc();
+                    dates.currentEndDate = moment(facet.selectedItems[0].upperBound).utc();
+                    dateAvailable = true;
+                }
+
+                var viewData = {"facet":facet, "dateDisplay" : dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll"), "dateAvailable" : dateAvailable};
 
                 // months only display logic
                 if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
@@ -2182,24 +2158,21 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 }
             }
 
-            if (dates.currentStartDate && dates.currentEndDate) {
-                startDate = dates.currentStartDate;
-                endDate = dates.currentEndDate;
-            } else {
-                startDate = dates.minStartDate;
-                endDate = dates.maxEndDate;
-            }
+            console.log(dates.currentStartDate.format('YYYY-MM-DD'));
+            console.log(dates.currentEndDate.format('YYYY-MM-DD'));
+            console.log(dates.minDate.format('YYYY-MM-DD'));
+            console.log(dates.maxDate.format('YYYY-MM-DD'));
 
             // Build Date Picker
             this.$el.find("span").daterangepicker({
-                opens: me.datePickerPosition, 
-                format: 'YYYY-MM-DD', 
-                showDropdowns: true, 
-                ranges: pickerRanges, 
-                "startDate" : startDate, 
-                "endDate" : endDate, 
-                "minDate" : dates.minStartDate, 
-                "maxDate" : dates.maxEndDate
+                opens: me.datePickerPosition,
+                format: 'YYYY-MM-DD',
+                showDropdowns: true,
+                ranges: pickerRanges,
+                startDate: '2013-01-01',
+                endDate: '2013-12-31',
+                minDate : '2012-01-01',
+                maxDate : '2015-01-01'
             });
 
             // Detect Apply Action

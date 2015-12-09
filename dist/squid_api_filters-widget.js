@@ -1985,6 +1985,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
         initialize: function(options) {
             var me = this;
+            this.config = squid_api.model.config;
+            this.status = squid_api.model.status;
 
             if (options.template) {
                 this.template = options.template;
@@ -2005,21 +2007,17 @@ $.widget( "ui.dialog", $.ui.dialog, {
             if (options.monthsOnlyDisplay) {
                 this.monthsOnlyDisplay = options.monthsOnlyDisplay;
             }
-            if (options.config) {
-                this.config = options.config;
-            } else {
-                this.config = squid_api.model.config;
-            }
+
 
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
 
             // listen for global status change
-            squid_api.model.status.on('change:status', this.statusUpdate, this);
+            this.listenTo(this.status, "change:status", this.statusUpdate);
         },
 
         statusUpdate: function() {
-            if (squid_api.model.status.get("status") == "RUNNING") {
+            if (this.status.get("status") == "RUNNING") {
                 this.$el.find("span").addClass("inactive");
             } else {
                 this.$el.find("span").removeClass("inactive");
@@ -2083,14 +2081,14 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 };
                 if (facet.items) {
                     if (facet.items.length > 0) {
-                        dates.minDate = moment(facet.items[0].lowerBound).utc();
-                        dates.maxDate = moment(facet.items[0].upperBound).utc();
-                        dates.currentEndDate = moment(facet.items[0].upperBound).utc();
+                        dates.minDate = moment(facet.items[0].lowerBound);
+                        dates.maxDate = moment(facet.items[0].upperBound);
+                        dates.currentEndDate = moment(facet.items[0].upperBound);
                     }
                 }
                 if (facet.selectedItems[0]) {
-                    dates.currentStartDate = moment(facet.selectedItems[0].lowerBound).utc();
-                    dates.currentEndDate = moment(facet.selectedItems[0].upperBound).utc();
+                    dates.currentStartDate = moment(facet.selectedItems[0].lowerBound);
+                    dates.currentEndDate = moment(facet.selectedItems[0].upperBound);
                     dateAvailable = true;
                 }
 
@@ -2158,10 +2156,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 }
             }
 
-            console.log(dates.currentStartDate.format('YYYY-MM-DD'));
-            console.log(dates.currentEndDate.format('YYYY-MM-DD'));
-            console.log(dates.minDate.format('YYYY-MM-DD'));
-            console.log(dates.maxDate.format('YYYY-MM-DD'));
+            console.log("currentStartDate: " + dates.currentStartDate.format('YYYY-MM-DD'));
+            console.log("currentEndDate: " + dates.currentEndDate.format('YYYY-MM-DD'));
+            console.log("minDate: " + dates.minDate.format('YYYY-MM-DD'));
+            console.log("maxDate: " + dates.minDate.format('YYYY-MM-DD'));
 
             // Build Date Picker
             this.$el.find("span").daterangepicker({
@@ -2169,10 +2167,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 format: 'YYYY-MM-DD',
                 showDropdowns: true,
                 ranges: pickerRanges,
-                startDate: '2013-01-01',
-                endDate: '2013-12-31',
-                minDate : '2012-01-01',
-                maxDate : '2015-01-01'
+                startDate: dates.currentStartDate.format('YYYY-MM-DD'),
+                endDate: dates.currentEndDate.format('YYYY-MM-DD'),
+                minDate : dates.minDate.format('YYYY-MM-DD'),
+                maxDate : dates.maxDate.format('YYYY-MM-DD')
             });
 
             // Detect Apply Action

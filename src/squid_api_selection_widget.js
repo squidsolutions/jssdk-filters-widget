@@ -44,7 +44,7 @@
                     }
                 }
             }
-            this.model.set("userSelection", userSel);
+            squid_api.model.config.set("selection", userSel);
         },
 
         events: {

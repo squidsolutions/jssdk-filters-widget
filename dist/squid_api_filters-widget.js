@@ -735,7 +735,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     }
 
                     // Set the updated filters model
-                    this.filters.set("userSelection", selectionClone);
+                    squid_api.model.config.set("selection", selectionClone);
                 }
             },
         },
@@ -999,10 +999,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     if (facets) {
                         // Remove selected item from facet
                         squid_api.controller.facetjob.unSelect(facets, facetName, itemId);
-                        this.model.set("selection", selectionClone);
+                        squid_api.model.config.set("selection", selectionClone);
                     }
                 }
-                squid_api.model.config.trigger("change:domain", squid_api.model.config);
+                //squid_api.model.config.trigger("change:domain", squid_api.model.config);
             }
         },
 
@@ -2070,7 +2070,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                             filters.facets[i].selectedItems = [];
                         }
                     }
-                    this.filters.set("userSelection", filters);
+                    squid_api.model.config.set("selection", filters);
                 }
             }
         },
@@ -2157,7 +2157,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                         attributesClone.selection.facets[i].selectedItems = [];
                     }
                 }
-                this.filters.set("userSelection", attributesClone.selection);
+                squid_api.model.config.set("selection", attributesClone.selection);
             }
         },
 
@@ -2437,7 +2437,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     }
                 }
             }
-            this.model.set("userSelection", userSel);
+            squid_api.model.config.set("selection", userSel);
         },
 
         events: {

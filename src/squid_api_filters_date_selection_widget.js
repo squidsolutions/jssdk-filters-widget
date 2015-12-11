@@ -66,7 +66,7 @@
                             filters.facets[i].selectedItems = [];
                         }
                     }
-                    this.filters.set("userSelection", filters);
+                    squid_api.model.config.set("selection", filters);
                 }
             }
         },
@@ -153,7 +153,7 @@
                         attributesClone.selection.facets[i].selectedItems = [];
                     }
                 }
-                this.filters.set("userSelection", attributesClone.selection);
+                squid_api.model.config.set("selection", attributesClone.selection);
             }
         },
 

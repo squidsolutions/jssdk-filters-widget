@@ -117,11 +117,14 @@
                         dates.currentEndDate = moment(facet.items[0].upperBound);
                     }
                 }
-                if (facet.selectedItems[0]) {
-                    dates.currentStartDate = moment(facet.selectedItems[0].lowerBound);
-                    dates.currentEndDate = moment(facet.selectedItems[0].upperBound);
-                    dateAvailable = true;
+                if (facet.selectedItems) {
+                    if (facet.selectedItems[0]) {
+                        dates.currentStartDate = moment(facet.selectedItems[0].lowerBound);
+                        dates.currentEndDate = moment(facet.selectedItems[0].upperBound);
+                        dateAvailable = true;
+                    }
                 }
+
 
                 var viewData = {"facet":facet, "dateDisplay" : dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll"), "dateAvailable" : dateAvailable};
 

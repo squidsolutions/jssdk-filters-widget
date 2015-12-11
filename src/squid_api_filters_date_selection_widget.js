@@ -16,6 +16,8 @@
 
         initialize: function(options) {
             var me = this;
+            this.config = squid_api.model.config;
+            this.status = squid_api.model.status;
 
             if (options.template) {
                 this.template = options.template;
@@ -36,21 +38,17 @@
             if (options.monthsOnlyDisplay) {
                 this.monthsOnlyDisplay = options.monthsOnlyDisplay;
             }
-            if (options.config) {
-                this.config = options.config;
-            } else {
-                this.config = squid_api.model.config;
-            }
+
 
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
 
             // listen for global status change
-            squid_api.model.status.on('change:status', this.statusUpdate, this);
+            this.listenTo(this.status, "change:status", this.statusUpdate);
         },
 
         statusUpdate: function() {
-            if (squid_api.model.status.get("status") == "RUNNING") {
+            if (this.status.get("status") == "RUNNING") {
                 this.$el.find("span").addClass("inactive");
             } else {
                 this.$el.find("span").removeClass("inactive");
@@ -76,11 +74,10 @@
                 var selection = this.filters.get('selection');
                 var period = this.config.get("period");
                 var domain = this.config.get("domain");
-                var dates = {};
                 var facet = false;
 
                 if (selection) {
-                    var facets = selection.facets;	
+                    var facets = selection.facets;
                     for (var i=0; i<facets.length; i++) {
                         var items = facets[i].facets;
                         if (period) {
@@ -95,7 +92,7 @@
                             break;
                         }
                     }
-                    // if period config exist but isn't found within the current domain, select the first one                    
+                    // if period config exist but isn't found within the current domain, select the first one
                     if (! facet ) {
                         for (i=0; i<facets.length; i++) {
                             if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
@@ -106,15 +103,27 @@
                     }
                 }
 
-                var viewData = {"facet":facet, "notReady":dates.notReady};
-
-                // build the date pickers
-                if (dates.currentStartDate && dates.currentEndDate) {
-                    viewData.dateAvailable = true;
-                    viewData.dateDisplay = dates.currentStartDate.utc().format("ll") + " - " + dates.currentEndDate.utc().format("ll");
-                } else {
-                    viewData.dateAvailable = false;
+                var dateAvailable = false;
+                var dates = {
+                    currentStartDate : moment().utc().subtract("1", "month"),
+                    currentEndDate : moment().utc(),
+                    minDate : moment().utc().subtract("50", "year"),
+                    maxDate : moment().utc(),
+                };
+                if (facet.items) {
+                    if (facet.items.length > 0) {
+                        dates.minDate = moment(facet.items[0].lowerBound);
+                        dates.maxDate = moment(facet.items[0].upperBound);
+                        dates.currentEndDate = moment(facet.items[0].upperBound);
+                    }
                 }
+                if (facet.selectedItems[0]) {
+                    dates.currentStartDate = moment(facet.selectedItems[0].lowerBound);
+                    dates.currentEndDate = moment(facet.selectedItems[0].upperBound);
+                    dateAvailable = true;
+                }
+
+                var viewData = {"facet":facet, "dateDisplay" : dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll"), "dateAvailable" : dateAvailable};
 
                 // months only display logic
                 if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
@@ -178,24 +187,21 @@
                 }
             }
 
-            if (dates.currentStartDate && dates.currentEndDate) {
-                startDate = dates.currentStartDate;
-                endDate = dates.currentEndDate;
-            } else {
-                startDate = dates.minStartDate;
-                endDate = dates.maxEndDate;
-            }
+            console.log("currentStartDate: " + dates.currentStartDate.format('YYYY-MM-DD'));
+            console.log("currentEndDate: " + dates.currentEndDate.format('YYYY-MM-DD'));
+            console.log("minDate: " + dates.minDate.format('YYYY-MM-DD'));
+            console.log("maxDate: " + dates.minDate.format('YYYY-MM-DD'));
 
             // Build Date Picker
             this.$el.find("span").daterangepicker({
-                opens: me.datePickerPosition, 
-                format: 'YYYY-MM-DD', 
-                showDropdowns: true, 
-                ranges: pickerRanges, 
-                "startDate" : startDate, 
-                "endDate" : endDate, 
-                "minDate" : dates.minStartDate, 
-                "maxDate" : dates.maxEndDate
+                opens: me.datePickerPosition,
+                format: 'YYYY-MM-DD',
+                showDropdowns: true,
+                ranges: pickerRanges,
+                startDate: dates.currentStartDate.format('YYYY-MM-DD'),
+                endDate: dates.currentEndDate.format('YYYY-MM-DD'),
+                minDate : dates.minDate.format('YYYY-MM-DD'),
+                maxDate : dates.maxDate.format('YYYY-MM-DD')
             });
 
             // Detect Apply Action

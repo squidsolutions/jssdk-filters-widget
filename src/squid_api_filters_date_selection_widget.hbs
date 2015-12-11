@@ -1,22 +1,11 @@
 <div class="squid-api-date-selection-widget">
     {{#if dateAvailable}}
-    	{{#if notReady}}
-    		<span>{{dateDisplay}}</span>
-    		<div class="refresh">
-				<div class="label">Refresh</div>
-			</div>
-    	{{else}}
-    		<span>{{dateDisplay}}</span>
-    	{{/if}}
+		<span>{{dateDisplay}}</span>
     {{else}}
-    	{{#if notReady}}
-    		<span>no date available</span>
-    		{{else}}
-    			{{#if facet}}
-            		<span>select a date range</span>
-        		{{else}}
-           			no date available
-        		{{/if}}
-    	{{/if}}
+        {{#if facet}}
+                <span>select a date range</span>
+            {{else}}
+                no date available
+        {{/if}}
     {{/if}}
 </div>

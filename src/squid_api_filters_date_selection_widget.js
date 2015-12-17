@@ -18,6 +18,7 @@
             var me = this;
             this.config = squid_api.model.config;
             this.status = squid_api.model.status;
+            this.filters = squid_api.model.filters;
 
             if (options.template) {
                 this.template = options.template;
@@ -30,15 +31,9 @@
             if (options.datePickerPosition) {
                 this.datePickerPosition  = options.datePickerPosition;
             }
-            if (options.model) {
-                this.filters = options.model;
-            } else {
-                this.filters = squid_api.model.filters;
-            }
             if (options.monthsOnlyDisplay) {
                 this.monthsOnlyDisplay = options.monthsOnlyDisplay;
             }
-
 
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
@@ -55,98 +50,73 @@
             }
         },
 
-        events: {
-            "click .refresh": function() {
-                var filters = $.extend(true, {}, this.filters.get("selection"));
-                if (filters.facets) {
-                    for (i=0; i<filters.facets.length; i++) {
-                        if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE" && filters.facets[i].selectedItems.length > 0) {
-                            filters.facets[i].selectedItems = [];
-                        }
-                    }
-                    squid_api.model.config.set("selection", filters);
+        render: function() {
+            var configPeriod = this.config.get("period");
+            var domain = this.config.get("domain");
+            var filters = this.filters;
+            var dates = {};
+            var facetId = null;
+            var facet = null;
+            var viewData = {"dateAvailable" : false};
+
+            // obtain facet name from config
+            if (configPeriod) {
+                if (configPeriod[domain]) {
+                    facetId = configPeriod[domain];
                 }
             }
-        },
-
-        render: function() {
-            if (this.filters) {
-                var selection = this.filters.get('selection');
-                var period = this.config.get("period");
-                var domain = this.config.get("domain");
-                var facet = false;
-
+            if (filters) {
+                var selection = filters.get("selection");
                 if (selection) {
                     var facets = selection.facets;
-                    for (var i=0; i<facets.length; i++) {
-                        var items = facets[i].facets;
-                        if (period) {
-                            if (period[domain]) {
-                                if (period[domain].id == facets[i].id) {
-                                    facet = facets[i];
-                                    break;
-                                }
-                            }
-                        } else if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
+                    for (i=0; i<facets.length; i++) {
+                        if (facets[i].id == facetId) {
                             facet = facets[i];
-                            break;
-                        }
-                    }
-                    // if period config exist but isn't found within the current domain, select the first one
-                    if (! facet ) {
-                        for (i=0; i<facets.length; i++) {
-                            if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
-                                facet = facets[i];
-                                break;
-                            }
                         }
                     }
                 }
-
-                var dateAvailable = false;
-                var dates = {
-                    currentStartDate : moment().utc().subtract("1", "month"),
-                    currentEndDate : moment().utc(),
-                    minDate : moment().utc().subtract("50", "year"),
-                    maxDate : moment().utc(),
-                };
-                if (facet.items) {
-                    if (facet.items.length > 0) {
-                        dates.minDate = moment(facet.items[0].lowerBound);
-                        dates.maxDate = moment(facet.items[0].upperBound);
-                        dates.currentEndDate = moment(facet.items[0].upperBound);
+                if (facet) {
+                    if (facet.items) {
+                        if (facet.items.length > 0) {
+                            dates.minDate = moment(facet.items[0].lowerBound);
+                            dates.maxDate = moment(facet.items[0].upperBound);
+                            dates.currentEndDate = moment(facet.items[0].upperBound);
+                        }
                     }
-                }
-                if (facet.selectedItems) {
-                    if (facet.selectedItems[0]) {
-                        dates.currentStartDate = moment(facet.selectedItems[0].lowerBound);
-                        dates.currentEndDate = moment(facet.selectedItems[0].upperBound);
-                        dateAvailable = true;
+                    if (facet.selectedItems) {
+                        if (facet.selectedItems[0]) {
+                            dates.currentStartDate = moment(facet.selectedItems[0].lowerBound);
+                            dates.currentEndDate = moment(facet.selectedItems[0].upperBound);
+                        }
                     }
-                }
 
+                    // set view data
+                    viewData.facet = facet;
+                    if (dates.currentStartDate && dates.currentEndDate) {
+                        viewData.dateAvailable = true;
+                        viewData.dateDisplay = dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll");
+                    }
 
-                var viewData = {"facet":facet, "dateDisplay" : dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll"), "dateAvailable" : dateAvailable};
-
-                // months only display logic
-                if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
-                    var d1 = dates.currentStartDate;
-                    var d2 = dates.currentEndDate;
-                    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                    if ((d1.month() == d2.month()) && (d1.year() == d2.year())) {
-                        viewData.dateDisplay = monthNames[d1.month()] + " "  + d1.year();
-                    } else {
-                        viewData.dateDisplay =  monthNames[d1.month()] + " " + d1.year() + " - " + monthNames[d2.month()] + " " + d2.year();
+                    // months only display logic
+                    if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
+                        var d1 = dates.currentStartDate;
+                        var d2 = dates.currentEndDate;
+                        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                        if ((d1.month() == d2.month()) && (d1.year() == d2.year())) {
+                            viewData.dateDisplay = monthNames[d1.month()] + " "  + d1.year();
+                        } else {
+                            viewData.dateDisplay =  monthNames[d1.month()] + " " + d1.year() + " - " + monthNames[d2.month()] + " " + d2.year();
+                        }
                     }
                 }
 
-                var selHTML = this.template(viewData);
+                var html = this.template(viewData);
 
                 // render HTML
-                this.$el.html(selHTML);
+                this.$el.html(html);
 
-                // attach date picker onto date display
                 if (facet) {
+                    // attach date picker onto date display
                     this.renderPicker(facet, dates);
                 }
             }
@@ -156,16 +126,14 @@
 
         updateFacet : function(facet, startDate, endDate) {
             var obj = [{"lowerBound":startDate, "type":"i", "upperBound":endDate}];
-            var attributesClone =  $.extend(true, {}, this.filters.attributes);
-            if (attributesClone.selection) {
-                for (var i=0; i<attributesClone.selection.facets.length; i++) {
-                    if (attributesClone.selection.facets[i].id == facet.id) {
-                        attributesClone.selection.facets[i].selectedItems = obj;
-                    } else if (attributesClone.selection.facets[i].dimension.valueType == "DATE") {
-                        attributesClone.selection.facets[i].selectedItems = [];
+            var selection =  _.clone(this.filters.get("selection"));
+            if (selection) {
+                for (var i=0; i<selection.facets.length; i++) {
+                    if (selection.facets[i].id == facet.id) {
+                        selection.facets[i].selectedItems = obj;
                     }
                 }
-                squid_api.model.config.set("selection", attributesClone.selection);
+                this.config.set("selection", selection);
             }
         },
 
@@ -190,21 +158,16 @@
                 }
             }
 
-            console.log("currentStartDate: " + dates.currentStartDate.format('YYYY-MM-DD'));
-            console.log("currentEndDate: " + dates.currentEndDate.format('YYYY-MM-DD'));
-            console.log("minDate: " + dates.minDate.format('YYYY-MM-DD'));
-            console.log("maxDate: " + dates.minDate.format('YYYY-MM-DD'));
-
             // Build Date Picker
             this.$el.find("span").daterangepicker({
                 opens: me.datePickerPosition,
                 format: 'YYYY-MM-DD',
                 showDropdowns: true,
                 ranges: pickerRanges,
-                startDate: dates.currentStartDate.format('YYYY-MM-DD'),
-                endDate: dates.currentEndDate.format('YYYY-MM-DD'),
-                minDate : dates.minDate.format('YYYY-MM-DD'),
-                maxDate : dates.maxDate.format('YYYY-MM-DD')
+                startDate: dates.currentStartDate ? dates.currentStartDate.format('YYYY-MM-DD') : null,
+                endDate: dates.currentEndDate ? dates.currentEndDate.format('YYYY-MM-DD') : null,
+                minDate : dates.minDate ? dates.minDate.format('YYYY-MM-DD') : null,
+                maxDate : dates.maxDate ? dates.maxDate.format('YYYY-MM-DD') : null,
             });
 
             // Detect Apply Action

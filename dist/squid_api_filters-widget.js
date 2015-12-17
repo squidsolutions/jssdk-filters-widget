@@ -389,24 +389,15 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 function program1(depth0,data) {
   
-  var buffer = "", stack1;
-  buffer += "\r\n    <select class=\"sq-select form-control squid-api-filters-widgets-period-selector\">\r\n        ";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.options), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n    </select>\r\n";
-  return buffer;
-  }
-function program2(depth0,data) {
-  
   var buffer = "", stack1, helper;
   buffer += "\r\n            <option value=\"";
   if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
     + "\" ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.error), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.error), {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += ">\r\n                ";
   if (helper = helpers.label) { stack1 = helper.call(depth0, {hash:{},data:data}); }
@@ -415,33 +406,22 @@ function program2(depth0,data) {
     + "\r\n            </option>\r\n        ";
   return buffer;
   }
-function program3(depth0,data) {
+function program2(depth0,data) {
   
   
   return "selected";
   }
 
-function program5(depth0,data) {
+function program4(depth0,data) {
   
   
   return " disabled ";
   }
 
-function program7(depth0,data) {
-  
-  var buffer = "", stack1, helper;
-  buffer += "\r\n    <!-- just display filter name -->\r\n    <label class=\"squid-api-period-selection-widget\">";
-  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</label>\r\n    <span>-</span>\r\n";
-  return buffer;
-  }
-
-  buffer += "<div class=\"squid-api-continous-selection-widget\">\r\n";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selAvailable), {hash:{},inverse:self.program(7, program7, data),fn:self.program(1, program1, data),data:data});
+  buffer += "<div class=\"squid-api-continous-selection-widget\">\r\n    <select class=\"sq-select form-control squid-api-filters-widgets-period-selector\">\r\n        ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.options), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n</div>\r\n";
+  buffer += "\r\n    </select>\r\n</div>\r\n";
   return buffer;
   });
 
@@ -1812,12 +1792,12 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
     var View = Backbone.View.extend({
         template : null,
-        periodIdList : null,
-        periodIndex: null,
-        filters: null,
 
         initialize: function(options) {
             var me = this;
+            this.config = squid_api.model.config;
+            this.filters = squid_api.model.filters;
+            this.status = squid_api.model.status;
 
             // setup options
             if (options.template) {
@@ -1825,40 +1805,26 @@ $.widget( "ui.dialog", $.ui.dialog, {
             } else {
                 this.template = template;
             }
-            if (options.filters) {
-                this.filters = options.filters;
-            } else {
-                this.filters = squid_api.model.filters;
-            }
-            if (options.dimensionIdList) {
-                this.periodIdList = options.dimensionIdList;
-            }
-            if (options.dimensionIndex !== null) {
-                this.periodIndex = options.dimensionIndex;
-            }
             if (options.config) {
                 this.config = options.config;
             } else {
                 this.config = squid_api.model.config;
             }
-            
-            this.listenTo(this.filters, "change:selection", this.render);
+
             this.listenTo(this.config, "change:period", this.render);
-            this.listenTo(this.config, "change:domain", function(config) {
-                this.render();
-            });
-            
+            this.listenTo(this.filters, "change:selection", this.render);
+
             // listen for global status change
-            squid_api.model.status.on('change:status', this.statusUpdate, this);
+            this.status.on('change:status', this.statusUpdate, this);
         },
-        
+
         remove: function() {
             this.undelegateEvents();
             this.$el.empty();
             this.stopListening();
             return this;
         },
-        
+
         statusUpdate: function() {
         	if (squid_api.model.status.get("status") == "RUNNING") {
         		this.$el.find("button").prop("disabled", true);
@@ -1870,97 +1836,66 @@ $.widget( "ui.dialog", $.ui.dialog, {
         render: function() {
             var me = this;
             var domain = this.config.get("domain");
-            if (domain) {
-                var isMultiple = true;
-
-                if (me.periodIndex !== null) {
-                    isMultiple = false;
-                }
-
-                var jsonData = {"selAvailable" : true, "options" : [], "multiple" : isMultiple};
-
-                // iterate through all filter facets
-                var selection = me.filters.get("selection");
-                if (selection) {
-                    var facets = selection.facets;
-                    if (facets) {
-                        var period = me.config.get("period");
-                        for (var dimIdx=0; dimIdx<facets.length; dimIdx++) {
-                            var facet1 = facets[dimIdx];
-                            if (facet1.dimension.valueType === "DATE" && facet1.dimension.type === "CONTINUOUS") {
-                                // add to the list
-                                var name;
-                                var selected = false;
-                                if (facet1.name) {
-                                    name = facet1.name;
-                                } else {
-                                    name = facet1.dimension.name;
-                                }
-                                if (period) {
-                                    if (period[domain]) {
-                                        if (period[domain].id == facet1.id) {
-                                            selected = true;
-                                        }
-                                    }
-                                }
-                                if (facet1.items) {
-                                    if (! (facet1.items.length === 0 && facet1.done)) {
-                                        var option = {"label" : name, "value" : facet1.id, "error" : facets[dimIdx].error, "selected" : selected};
-                                        jsonData.options.push(option);
-                                    }
-                                }
+            var periodConfig = this.config.get("period");
+            var jsonData = {"options" : []};
+            // iterate through all filter facets
+            var selection = me.filters.get("selection");
+            if (selection) {
+                var facets = selection.facets;
+                if (facets) {
+                    var period = me.config.get("period");
+                    for (var dimIdx=0; dimIdx<facets.length; dimIdx++) {
+                        var facet = facets[dimIdx];
+                        if (facet.dimension.valueType === "DATE") {
+                            var option = {"label" : facet.name, "value" : facet.id, "error" : facets[dimIdx].error, "selected" : false};
+                            // if currently selected within config
+                            if (periodConfig[domain] == facet.id) {
+                                option.selected = true;
                             }
+                            jsonData.options.push(option);
                         }
                     }
                 }
-
-                // Alphabetical Sorting
-                jsonData.options.sort(function(a, b) {
-                    var labelA=a.label.toLowerCase(), labelB=b.label.toLowerCase();
-                    if (labelA < labelB)
-                        return -1;
-                    if (labelA > labelB)
-                        return 1;
-                    return 0; // no sorting
-                });
-
-                // check if empty
-                if (jsonData.options.length === 0) {
-                    jsonData.empty = true;
-                }
-
-                var html = me.template(jsonData);
-                me.$el.html(html);
-                me.$el.show();
-
-                // Initialize plugin
-                me.$el.find("select").multiselect({
-                    buttonText: function(option, select) {
-                        if (select.find("option:selected").length > 0) {
-                            text = select.find("option:selected").text();
-                        } else if (select.find("option").length > 0) {
-                            text = "Select a period";
-                        } else {
-                            text = 'No period exists';
-                        }
-                        return text;
-                    },
-                    onChange: function(facet) {
-                        var obj = {};
-                        var period = me.config.get("period");
-                        if (period) {
-                            obj = _.clone(period);
-                        }
-                        obj[me.config.get("domain")] = {name: facet.html(), id: facet.val()};
-                        me.config.set("period",obj);
-                    }
-                });
-
-                // Remove Button Title Tag
-                me.$el.find("button").removeAttr('title');
             }
 
-        return this;
+            // Alphabetical Sorting
+            jsonData.options.sort(function(a, b) {
+                var labelA=a.label.toLowerCase(), labelB=b.label.toLowerCase();
+                if (labelA < labelB)
+                    return -1;
+                if (labelA > labelB)
+                    return 1;
+                return 0; // no sorting
+            });
+
+            var html = me.template(jsonData);
+            me.$el.html(html);
+            me.$el.show();
+
+            // Initialize plugin
+            me.$el.find("select").multiselect({
+                buttonText: function(option, select) {
+                    if (select.find("option:selected").length > 0) {
+                        text = select.find("option:selected").text();
+                    } else if (select.find("option").length > 0) {
+                        text = "Select a period";
+                    } else {
+                        text = 'No period exists';
+                    }
+                    return text;
+                },
+                onChange: function(facet) {
+                    var period = _.clone(me.config.get("period"));
+                    var domain = me.config.get("domain");
+                    period[domain] = facet.val();
+                    me.config.set("period", period);
+                }
+            });
+
+            // Remove Button Title Tag
+            me.$el.find("button").removeAttr('title');
+
+            return this;
         }
     });
 
@@ -1987,6 +1922,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
             var me = this;
             this.config = squid_api.model.config;
             this.status = squid_api.model.status;
+            this.filters = squid_api.model.filters;
 
             if (options.template) {
                 this.template = options.template;
@@ -1999,15 +1935,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
             if (options.datePickerPosition) {
                 this.datePickerPosition  = options.datePickerPosition;
             }
-            if (options.model) {
-                this.filters = options.model;
-            } else {
-                this.filters = squid_api.model.filters;
-            }
             if (options.monthsOnlyDisplay) {
                 this.monthsOnlyDisplay = options.monthsOnlyDisplay;
             }
-
 
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
@@ -2024,98 +1954,73 @@ $.widget( "ui.dialog", $.ui.dialog, {
             }
         },
 
-        events: {
-            "click .refresh": function() {
-                var filters = $.extend(true, {}, this.filters.get("selection"));
-                if (filters.facets) {
-                    for (i=0; i<filters.facets.length; i++) {
-                        if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE" && filters.facets[i].selectedItems.length > 0) {
-                            filters.facets[i].selectedItems = [];
-                        }
-                    }
-                    squid_api.model.config.set("selection", filters);
+        render: function() {
+            var configPeriod = this.config.get("period");
+            var domain = this.config.get("domain");
+            var filters = this.filters;
+            var dates = {};
+            var facetId = null;
+            var facet = null;
+            var viewData = {"dateAvailable" : false};
+
+            // obtain facet name from config
+            if (configPeriod) {
+                if (configPeriod[domain]) {
+                    facetId = configPeriod[domain];
                 }
             }
-        },
-
-        render: function() {
-            if (this.filters) {
-                var selection = this.filters.get('selection');
-                var period = this.config.get("period");
-                var domain = this.config.get("domain");
-                var facet = false;
-
+            if (filters) {
+                var selection = filters.get("selection");
                 if (selection) {
                     var facets = selection.facets;
-                    for (var i=0; i<facets.length; i++) {
-                        var items = facets[i].facets;
-                        if (period) {
-                            if (period[domain]) {
-                                if (period[domain].id == facets[i].id) {
-                                    facet = facets[i];
-                                    break;
-                                }
-                            }
-                        } else if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
+                    for (i=0; i<facets.length; i++) {
+                        if (facets[i].id == facetId) {
                             facet = facets[i];
-                            break;
-                        }
-                    }
-                    // if period config exist but isn't found within the current domain, select the first one
-                    if (! facet ) {
-                        for (i=0; i<facets.length; i++) {
-                            if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
-                                facet = facets[i];
-                                break;
-                            }
                         }
                     }
                 }
-
-                var dateAvailable = false;
-                var dates = {
-                    currentStartDate : moment().utc().subtract("1", "month"),
-                    currentEndDate : moment().utc(),
-                    minDate : moment().utc().subtract("50", "year"),
-                    maxDate : moment().utc(),
-                };
-                if (facet.items) {
-                    if (facet.items.length > 0) {
-                        dates.minDate = moment(facet.items[0].lowerBound);
-                        dates.maxDate = moment(facet.items[0].upperBound);
-                        dates.currentEndDate = moment(facet.items[0].upperBound);
+                if (facet) {
+                    if (facet.items) {
+                        if (facet.items.length > 0) {
+                            dates.minDate = moment(facet.items[0].lowerBound);
+                            dates.maxDate = moment(facet.items[0].upperBound);
+                            dates.currentEndDate = moment(facet.items[0].upperBound);
+                        }
                     }
-                }
-                if (facet.selectedItems) {
-                    if (facet.selectedItems[0]) {
-                        dates.currentStartDate = moment(facet.selectedItems[0].lowerBound);
-                        dates.currentEndDate = moment(facet.selectedItems[0].upperBound);
-                        dateAvailable = true;
+                    if (facet.selectedItems) {
+                        if (facet.selectedItems[0]) {
+                            dates.currentStartDate = moment(facet.selectedItems[0].lowerBound);
+                            dates.currentEndDate = moment(facet.selectedItems[0].upperBound);
+                        }
                     }
-                }
 
+                    // set view data
+                    viewData.facet = facet;
+                    if (dates.currentStartDate && dates.currentEndDate) {
+                        viewData.dateAvailable = true;
+                        viewData.dateDisplay = dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll");
+                    }
 
-                var viewData = {"facet":facet, "dateDisplay" : dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll"), "dateAvailable" : dateAvailable};
-
-                // months only display logic
-                if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
-                    var d1 = dates.currentStartDate;
-                    var d2 = dates.currentEndDate;
-                    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                    if ((d1.month() == d2.month()) && (d1.year() == d2.year())) {
-                        viewData.dateDisplay = monthNames[d1.month()] + " "  + d1.year();
-                    } else {
-                        viewData.dateDisplay =  monthNames[d1.month()] + " " + d1.year() + " - " + monthNames[d2.month()] + " " + d2.year();
+                    // months only display logic
+                    if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
+                        var d1 = dates.currentStartDate;
+                        var d2 = dates.currentEndDate;
+                        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                        if ((d1.month() == d2.month()) && (d1.year() == d2.year())) {
+                            viewData.dateDisplay = monthNames[d1.month()] + " "  + d1.year();
+                        } else {
+                            viewData.dateDisplay =  monthNames[d1.month()] + " " + d1.year() + " - " + monthNames[d2.month()] + " " + d2.year();
+                        }
                     }
                 }
 
-                var selHTML = this.template(viewData);
+                var html = this.template(viewData);
 
                 // render HTML
-                this.$el.html(selHTML);
+                this.$el.html(html);
 
-                // attach date picker onto date display
                 if (facet) {
+                    // attach date picker onto date display
                     this.renderPicker(facet, dates);
                 }
             }
@@ -2125,16 +2030,14 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
         updateFacet : function(facet, startDate, endDate) {
             var obj = [{"lowerBound":startDate, "type":"i", "upperBound":endDate}];
-            var attributesClone =  $.extend(true, {}, this.filters.attributes);
-            if (attributesClone.selection) {
-                for (var i=0; i<attributesClone.selection.facets.length; i++) {
-                    if (attributesClone.selection.facets[i].id == facet.id) {
-                        attributesClone.selection.facets[i].selectedItems = obj;
-                    } else if (attributesClone.selection.facets[i].dimension.valueType == "DATE") {
-                        attributesClone.selection.facets[i].selectedItems = [];
+            var selection =  _.clone(this.filters.get("selection"));
+            if (selection) {
+                for (var i=0; i<selection.facets.length; i++) {
+                    if (selection.facets[i].id == facet.id) {
+                        selection.facets[i].selectedItems = obj;
                     }
                 }
-                squid_api.model.config.set("selection", attributesClone.selection);
+                this.config.set("selection", selection);
             }
         },
 
@@ -2159,21 +2062,16 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 }
             }
 
-            console.log("currentStartDate: " + dates.currentStartDate.format('YYYY-MM-DD'));
-            console.log("currentEndDate: " + dates.currentEndDate.format('YYYY-MM-DD'));
-            console.log("minDate: " + dates.minDate.format('YYYY-MM-DD'));
-            console.log("maxDate: " + dates.minDate.format('YYYY-MM-DD'));
-
             // Build Date Picker
             this.$el.find("span").daterangepicker({
                 opens: me.datePickerPosition,
                 format: 'YYYY-MM-DD',
                 showDropdowns: true,
                 ranges: pickerRanges,
-                startDate: dates.currentStartDate.format('YYYY-MM-DD'),
-                endDate: dates.currentEndDate.format('YYYY-MM-DD'),
-                minDate : dates.minDate.format('YYYY-MM-DD'),
-                maxDate : dates.maxDate.format('YYYY-MM-DD')
+                startDate: dates.currentStartDate ? dates.currentStartDate.format('YYYY-MM-DD') : null,
+                endDate: dates.currentEndDate ? dates.currentEndDate.format('YYYY-MM-DD') : null,
+                minDate : dates.minDate ? dates.minDate.format('YYYY-MM-DD') : null,
+                maxDate : dates.maxDate ? dates.maxDate.format('YYYY-MM-DD') : null,
             });
 
             // Detect Apply Action

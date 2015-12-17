@@ -5,12 +5,12 @@
 
     var View = Backbone.View.extend({
         template : null,
-        periodIdList : null,
-        periodIndex: null,
-        filters: null,
 
         initialize: function(options) {
             var me = this;
+            this.config = squid_api.model.config;
+            this.filters = squid_api.model.filters;
+            this.status = squid_api.model.status;
 
             // setup options
             if (options.template) {
@@ -18,40 +18,26 @@
             } else {
                 this.template = template;
             }
-            if (options.filters) {
-                this.filters = options.filters;
-            } else {
-                this.filters = squid_api.model.filters;
-            }
-            if (options.dimensionIdList) {
-                this.periodIdList = options.dimensionIdList;
-            }
-            if (options.dimensionIndex !== null) {
-                this.periodIndex = options.dimensionIndex;
-            }
             if (options.config) {
                 this.config = options.config;
             } else {
                 this.config = squid_api.model.config;
             }
-            
-            this.listenTo(this.filters, "change:selection", this.render);
+
             this.listenTo(this.config, "change:period", this.render);
-            this.listenTo(this.config, "change:domain", function(config) {
-                this.render();
-            });
-            
+            this.listenTo(this.filters, "change:selection", this.render);
+
             // listen for global status change
-            squid_api.model.status.on('change:status', this.statusUpdate, this);
+            this.status.on('change:status', this.statusUpdate, this);
         },
-        
+
         remove: function() {
             this.undelegateEvents();
             this.$el.empty();
             this.stopListening();
             return this;
         },
-        
+
         statusUpdate: function() {
         	if (squid_api.model.status.get("status") == "RUNNING") {
         		this.$el.find("button").prop("disabled", true);
@@ -63,97 +49,66 @@
         render: function() {
             var me = this;
             var domain = this.config.get("domain");
-            if (domain) {
-                var isMultiple = true;
-
-                if (me.periodIndex !== null) {
-                    isMultiple = false;
-                }
-
-                var jsonData = {"selAvailable" : true, "options" : [], "multiple" : isMultiple};
-
-                // iterate through all filter facets
-                var selection = me.filters.get("selection");
-                if (selection) {
-                    var facets = selection.facets;
-                    if (facets) {
-                        var period = me.config.get("period");
-                        for (var dimIdx=0; dimIdx<facets.length; dimIdx++) {
-                            var facet1 = facets[dimIdx];
-                            if (facet1.dimension.valueType === "DATE" && facet1.dimension.type === "CONTINUOUS") {
-                                // add to the list
-                                var name;
-                                var selected = false;
-                                if (facet1.name) {
-                                    name = facet1.name;
-                                } else {
-                                    name = facet1.dimension.name;
-                                }
-                                if (period) {
-                                    if (period[domain]) {
-                                        if (period[domain].id == facet1.id) {
-                                            selected = true;
-                                        }
-                                    }
-                                }
-                                if (facet1.items) {
-                                    if (! (facet1.items.length === 0 && facet1.done)) {
-                                        var option = {"label" : name, "value" : facet1.id, "error" : facets[dimIdx].error, "selected" : selected};
-                                        jsonData.options.push(option);
-                                    }
-                                }
+            var periodConfig = this.config.get("period");
+            var jsonData = {"options" : []};
+            // iterate through all filter facets
+            var selection = me.filters.get("selection");
+            if (selection) {
+                var facets = selection.facets;
+                if (facets) {
+                    var period = me.config.get("period");
+                    for (var dimIdx=0; dimIdx<facets.length; dimIdx++) {
+                        var facet = facets[dimIdx];
+                        if (facet.dimension.valueType === "DATE") {
+                            var option = {"label" : facet.name, "value" : facet.id, "error" : facets[dimIdx].error, "selected" : false};
+                            // if currently selected within config
+                            if (periodConfig[domain] == facet.id) {
+                                option.selected = true;
                             }
+                            jsonData.options.push(option);
                         }
                     }
                 }
-
-                // Alphabetical Sorting
-                jsonData.options.sort(function(a, b) {
-                    var labelA=a.label.toLowerCase(), labelB=b.label.toLowerCase();
-                    if (labelA < labelB)
-                        return -1;
-                    if (labelA > labelB)
-                        return 1;
-                    return 0; // no sorting
-                });
-
-                // check if empty
-                if (jsonData.options.length === 0) {
-                    jsonData.empty = true;
-                }
-
-                var html = me.template(jsonData);
-                me.$el.html(html);
-                me.$el.show();
-
-                // Initialize plugin
-                me.$el.find("select").multiselect({
-                    buttonText: function(option, select) {
-                        if (select.find("option:selected").length > 0) {
-                            text = select.find("option:selected").text();
-                        } else if (select.find("option").length > 0) {
-                            text = "Select a period";
-                        } else {
-                            text = 'No period exists';
-                        }
-                        return text;
-                    },
-                    onChange: function(facet) {
-                        var obj = {};
-                        var period = me.config.get("period");
-                        if (period) {
-                            obj = _.clone(period);
-                        }
-                        obj[me.config.get("domain")] = {name: facet.html(), id: facet.val()};
-                        me.config.set("period",obj);
-                    }
-                });
-
-                // Remove Button Title Tag
-                me.$el.find("button").removeAttr('title');
             }
 
-        return this;
+            // Alphabetical Sorting
+            jsonData.options.sort(function(a, b) {
+                var labelA=a.label.toLowerCase(), labelB=b.label.toLowerCase();
+                if (labelA < labelB)
+                    return -1;
+                if (labelA > labelB)
+                    return 1;
+                return 0; // no sorting
+            });
+
+            var html = me.template(jsonData);
+            me.$el.html(html);
+            me.$el.show();
+
+            // Initialize plugin
+            me.$el.find("select").multiselect({
+                buttonText: function(option, select) {
+                    if (select.find("option:selected").length > 0) {
+                        text = select.find("option:selected").text();
+                    } else if (select.find("option").length > 0) {
+                        text = "Select a period";
+                    } else {
+                        text = 'No period exists';
+                    }
+                    return text;
+                },
+                onChange: function(facet) {
+                    var period = _.clone(me.config.get("period"));
+                    var domain = me.config.get("domain");
+                    period[domain] = facet.val();
+                    me.config.set("period", period);
+                }
+            });
+
+            // Remove Button Title Tag
+            me.$el.find("button").removeAttr('title');
+
+            return this;
         }
     });
 

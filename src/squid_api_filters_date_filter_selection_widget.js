@@ -59,11 +59,13 @@
                     var period = me.config.get("period");
                     for (var dimIdx=0; dimIdx<facets.length; dimIdx++) {
                         var facet = facets[dimIdx];
-                        if (facet.dimension.valueType === "DATE" && facet.dimension.type === "CONTINUOUS"  && ! facet.error) {
+                        if (facet.dimension.valueType == "DATE" && facet.dimension.type == "CONTINUOUS"  && ! facet.error) {
                             var option = {"label" : facet.name, "value" : facet.id, "error" : facets[dimIdx].error, "selected" : false};
                             // if currently selected within config
-                            if (periodConfig[domain] == facet.id) {
-                                option.selected = true;
+                            if (periodConfig) {
+                                if (periodConfig[domain] == facet.id) {
+                                    option.selected = true;
+                                }
                             }
                             jsonData.options.push(option);
                         }
@@ -93,7 +95,7 @@
                     } else if (select.find("option").length > 0) {
                         text = "Select a period";
                     } else {
-                        text = 'No period exists';
+                        text = 'No usable period exists';
                     }
                     return text;
                 },

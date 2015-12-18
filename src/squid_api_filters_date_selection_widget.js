@@ -94,7 +94,7 @@
                     viewData.facet = facet;
                     if (dates.currentStartDate && dates.currentEndDate) {
                         viewData.dateAvailable = true;
-                        viewData.dateDisplay = dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll");
+                        viewData.dateDisplay = dates.currentStartDate.utc().format("ll") + " - " + dates.currentEndDate.utc().format("ll");
                     }
 
                     // months only display logic

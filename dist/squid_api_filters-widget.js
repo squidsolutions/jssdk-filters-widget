@@ -1846,7 +1846,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     var period = me.config.get("period");
                     for (var dimIdx=0; dimIdx<facets.length; dimIdx++) {
                         var facet = facets[dimIdx];
-                        if (facet.dimension.valueType === "DATE") {
+                        if (facet.dimension.valueType === "DATE" && facet.dimension.type === "CONTINUOUS") {
                             var option = {"label" : facet.name, "value" : facet.id, "error" : facets[dimIdx].error, "selected" : false};
                             // if currently selected within config
                             if (periodConfig[domain] == facet.id) {
@@ -1998,7 +1998,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     viewData.facet = facet;
                     if (dates.currentStartDate && dates.currentEndDate) {
                         viewData.dateAvailable = true;
-                        viewData.dateDisplay = dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll");
+                        viewData.dateDisplay = dates.currentStartDate.utc().format("ll") + " - " + dates.currentEndDate.utc().format("ll");
                     }
 
                     // months only display logic

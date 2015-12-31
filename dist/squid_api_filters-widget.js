@@ -462,8 +462,17 @@ function program6(depth0,data) {
   return "\r\n                no date available\r\n        ";
   }
 
+function program8(depth0,data) {
+  
+  
+  return "\r\n        click to refresh\r\n    ";
+  }
+
   buffer += "<div class=\"squid-api-date-selection-widget\">\r\n    ";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.dateAvailable), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n    ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.computing), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n</div>\r\n";
   return buffer;
@@ -1963,6 +1972,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
             var dates = {};
             var facetId = null;
             var facet = null;
+            var resetFacet = false;
             var viewData = {"dateAvailable" : false};
 
             // obtain facet name from config
@@ -1982,18 +1992,31 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     }
                 }
                 if (facet) {
+                    var minMax = {};
+                    var selectedItems;
                     if (facet.items) {
                         if (facet.items.length > 0) {
-                            dates.minDate = moment(facet.items[0].lowerBound);
-                            dates.maxDate = moment(facet.items[0].upperBound);
-                            dates.currentEndDate = moment(facet.items[0].upperBound);
+                            minMax = facet.items[0];
+                            dates.minDate = moment(minMax.lowerBound);
+                            dates.maxDate = moment(minMax.upperBound);
+                            dates.currentEndDate = moment(minMax.upperBound);
                         }
                     }
                     if (facet.selectedItems) {
-                        if (facet.selectedItems[0]) {
-                            dates.currentStartDate = moment(facet.selectedItems[0].lowerBound);
-                            dates.currentEndDate = moment(facet.selectedItems[0].upperBound);
+                        selectedItems = facet.selectedItems[0];
+                        if (selectedItems) {
+                            if ((minMax.type) && (moment(selectedItems.upperBound).isAfter(dates.maxDate.endOf("day")) || moment(selectedItems.upperBound).isBefore(dates.minDate.startOf("day")) || moment(selectedItems.lowerBound).isAfter(dates.maxDate.endOf("day")) || moment(selectedItems.lowerBound).isBefore(dates.minDate.startOf("day")))) {
+                                this.updateFacet(facet, dates.minDate.format(squid_api.DATE_FORMAT), dates.maxDate.format(squid_api.DATE_FORMAT));
+                            } else {
+                                dates.currentStartDate = moment(selectedItems.lowerBound);
+                                dates.currentEndDate = moment(selectedItems.upperBound);
+                            }
                         }
+                    }
+
+                    // detect if facet is done or not
+                    if (! facet.done) {
+                        viewData.computing = false;
                     }
 
                     // set view data
@@ -2032,7 +2055,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
         updateFacet : function(facet, startDate, endDate) {
             var obj = [{"lowerBound":startDate, "type":"i", "upperBound":endDate}];
-            var selection =  _.clone(this.filters.get("selection"));
+            var selection =  $.extend({}, this.filters.get("selection"));
             if (selection) {
                 for (var i=0; i<selection.facets.length; i++) {
                     if (selection.facets[i].id == facet.id) {
@@ -2072,15 +2095,15 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 ranges: pickerRanges,
                 startDate: dates.currentStartDate ? dates.currentStartDate.format('YYYY-MM-DD') : null,
                 endDate: dates.currentEndDate ? dates.currentEndDate.format('YYYY-MM-DD') : null,
-                minDate : dates.minDate ? dates.minDate.format('YYYY-MM-DD') : null,
-                maxDate : dates.maxDate ? dates.maxDate.format('YYYY-MM-DD') : null,
+                minDate : dates.minDate ? dates.minDate.format('YYYY-MM-DD') : moment().subtract("50", "years").format("YYYY-MM-DD"),
+                maxDate : dates.maxDate ? dates.maxDate.format('YYYY-MM-DD') : moment().format("YYYY-MM-DD"),
             });
 
             // Detect Apply Action
             this.$el.find("span").on('apply.daterangepicker', function(ev, picker) {
                 // Update Change Selection upon date widget close
-                var startDate = moment.utc(picker.startDate).utc().toDate();
-                var endDate = moment.utc(picker.endDate).utc().toDate();
+                var startDate = picker.startDate.format(squid_api.DATE_FORMAT);
+                var endDate = picker.endDate.utc().format(squid_api.DATE_FORMAT);
                 me.updateFacet(facet, startDate, endDate);
             });
 

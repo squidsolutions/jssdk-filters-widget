@@ -51,34 +51,37 @@
         },
 
         render: function() {
+            /*
+               responsible for printing the currently selected date facets selectedItems (active dates)
+             */
             var configPeriod = this.config.get("period");
             var domain = this.config.get("domain");
             var filters = this.filters;
+            var minMax = {};
+            var selectedItems;
             var dates = {};
-            var facetId = null;
             var facet = null;
             var resetFacet = false;
             var viewData = {"dateAvailable" : false};
 
-            // obtain facet name from config
-            if (configPeriod) {
-                if (configPeriod[domain]) {
-                    facetId = configPeriod[domain];
-                }
-            }
             if (filters) {
                 var selection = filters.get("selection");
                 if (selection) {
                     var facets = selection.facets;
                     for (i=0; i<facets.length; i++) {
-                        if (facets[i].id == facetId) {
-                            facet = facets[i];
+                        // obtain current facet from config if exists
+                        if (configPeriod) {
+                            if (configPeriod[domain]) {
+                                if (facets[i].id == configPeriod[domain]) {
+                                    facet = facets[i];
+                                }
+                            }
                         }
+
                     }
                 }
                 if (facet) {
-                    var minMax = {};
-                    var selectedItems;
+                    // min-max date check
                     if (facet.items) {
                         if (facet.items.length > 0) {
                             minMax = facet.items[0];
@@ -87,9 +90,11 @@
                             dates.currentEndDate = moment(minMax.upperBound);
                         }
                     }
+                    // currently selected date check
                     if (facet.selectedItems) {
                         selectedItems = facet.selectedItems[0];
                         if (selectedItems) {
+                            // if currently selected date is outside of the min-max range then force an update
                             if ((minMax.type) && (moment(selectedItems.upperBound).isAfter(dates.maxDate.endOf("day")) || moment(selectedItems.upperBound).isBefore(dates.minDate.startOf("day")) || moment(selectedItems.lowerBound).isAfter(dates.maxDate.endOf("day")) || moment(selectedItems.lowerBound).isBefore(dates.minDate.startOf("day")))) {
                                 this.updateFacet(facet, dates.minDate.format(squid_api.DATE_FORMAT), dates.maxDate.format(squid_api.DATE_FORMAT));
                             } else {
@@ -124,13 +129,12 @@
                     }
                 }
 
+                // render html
                 var html = this.template(viewData);
-
-                // render HTML
                 this.$el.html(html);
 
+                // attach date picker if a facet is found
                 if (facet) {
-                    // attach date picker onto date display
                     this.renderPicker(facet, dates);
                 }
             }
@@ -139,6 +143,9 @@
         },
 
         updateFacet : function(facet, startDate, endDate) {
+            /*
+                responsible for updating a given date facet with a new start / end date.
+             */
             var obj = [{"lowerBound":startDate, "type":"i", "upperBound":endDate}];
             var selection =  $.extend({}, this.filters.get("selection"));
             if (selection) {
@@ -152,6 +159,10 @@
         },
 
         renderPicker : function(facet, dates) {
+            /*
+                responsible for attaching the date picker with associated events
+             */
+
             var me  = this;
 
             // compute the ranges
@@ -184,7 +195,7 @@
                 maxDate : dates.maxDate ? dates.maxDate.format('YYYY-MM-DD') : moment().format("YYYY-MM-DD"),
             });
 
-            // Detect Apply Action
+            // apply action
             this.$el.find("span").on('apply.daterangepicker', function(ev, picker) {
                 // Update Change Selection upon date widget close
                 var startDate = picker.startDate.format(squid_api.DATE_FORMAT);
@@ -192,6 +203,7 @@
                 me.updateFacet(facet, startDate, endDate);
             });
 
+            // automatically trigger first date selection within the month on left calendar change
             this.$el.find("span").on('change.daterangepickerLeft', function(ev, calendar) {
                 if ($(calendar).hasClass("left")) {
                     $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
@@ -202,6 +214,7 @@
                 }
             });
 
+            // automatically trigger last date selection within the month on right calendar change
             this.$el.find("span").on('change.daterangepickerRight', function(ev, calendar) {
                 if ($(calendar).hasClass("left")) {
                     $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');

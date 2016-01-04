@@ -389,24 +389,15 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 function program1(depth0,data) {
   
-  var buffer = "", stack1;
-  buffer += "\r\n    <select class=\"sq-select form-control squid-api-filters-widgets-period-selector\">\r\n        ";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.options), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n    </select>\r\n";
-  return buffer;
-  }
-function program2(depth0,data) {
-  
   var buffer = "", stack1, helper;
   buffer += "\r\n            <option value=\"";
   if (helper = helpers.value) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.value); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
     + "\" ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selected), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.error), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.error), {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += ">\r\n                ";
   if (helper = helpers.label) { stack1 = helper.call(depth0, {hash:{},data:data}); }
@@ -415,33 +406,22 @@ function program2(depth0,data) {
     + "\r\n            </option>\r\n        ";
   return buffer;
   }
-function program3(depth0,data) {
+function program2(depth0,data) {
   
   
   return "selected";
   }
 
-function program5(depth0,data) {
+function program4(depth0,data) {
   
   
   return " disabled ";
   }
 
-function program7(depth0,data) {
-  
-  var buffer = "", stack1, helper;
-  buffer += "\r\n    <!-- just display filter name -->\r\n    <label class=\"squid-api-period-selection-widget\">";
-  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</label>\r\n    <span>-</span>\r\n";
-  return buffer;
-  }
-
-  buffer += "<div class=\"squid-api-continous-selection-widget\">\r\n";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.selAvailable), {hash:{},inverse:self.program(7, program7, data),fn:self.program(1, program1, data),data:data});
+  buffer += "<div class=\"squid-api-continous-selection-widget\">\r\n    <select class=\"sq-select form-control squid-api-filters-widgets-period-selector\">\r\n        ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.options), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n</div>\r\n";
+  buffer += "\r\n    </select>\r\n</div>\r\n";
   return buffer;
   });
 
@@ -452,73 +432,47 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 function program1(depth0,data) {
   
+  var buffer = "", stack1, helper;
+  buffer += "\r\n		<span>";
+  if (helper = helpers.dateDisplay) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.dateDisplay); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\r\n    ";
+  return buffer;
+  }
+
+function program3(depth0,data) {
+  
   var buffer = "", stack1;
-  buffer += "\r\n    	";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.notReady), {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),data:data});
+  buffer += "\r\n        ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.facet), {hash:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n    ";
   return buffer;
   }
-function program2(depth0,data) {
-  
-  var buffer = "", stack1, helper;
-  buffer += "\r\n    		<span>";
-  if (helper = helpers.dateDisplay) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.dateDisplay); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span>\r\n    		<div class=\"refresh\">\r\n				<div class=\"label\">Refresh</div>\r\n			</div>\r\n    	";
-  return buffer;
-  }
-
 function program4(depth0,data) {
   
-  var buffer = "", stack1, helper;
-  buffer += "\r\n    		<span>";
-  if (helper = helpers.dateDisplay) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.dateDisplay); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span>\r\n    	";
-  return buffer;
+  
+  return "\r\n                <span>select a date range</span>\r\n            ";
   }
 
 function program6(depth0,data) {
   
-  var buffer = "", stack1;
-  buffer += "\r\n    	";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.notReady), {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n    ";
-  return buffer;
-  }
-function program7(depth0,data) {
   
-  
-  return "\r\n    		<span>no date available</span>\r\n    		";
+  return "\r\n                no date available\r\n        ";
   }
 
-function program9(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\r\n    			";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.facet), {hash:{},inverse:self.program(12, program12, data),fn:self.program(10, program10, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n    	";
-  return buffer;
-  }
-function program10(depth0,data) {
+function program8(depth0,data) {
   
   
-  return "\r\n            		<span>select a date range</span>\r\n        		";
-  }
-
-function program12(depth0,data) {
-  
-  
-  return "\r\n           			no date available\r\n        		";
+  return "\r\n        click to refresh\r\n    ";
   }
 
   buffer += "<div class=\"squid-api-date-selection-widget\">\r\n    ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.dateAvailable), {hash:{},inverse:self.program(6, program6, data),fn:self.program(1, program1, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.dateAvailable), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n    ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.computing), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n</div>\r\n";
   return buffer;
@@ -735,7 +689,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     }
 
                     // Set the updated filters model
-                    this.filters.set("userSelection", selectionClone);
+                    squid_api.model.config.set("selection", selectionClone);
                 }
             },
         },
@@ -999,10 +953,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     if (facets) {
                         // Remove selected item from facet
                         squid_api.controller.facetjob.unSelect(facets, facetName, itemId);
-                        this.model.set("selection", selectionClone);
+                        squid_api.model.config.set("selection", selectionClone);
                     }
                 }
-                squid_api.model.config.trigger("change:domain", squid_api.model.config);
+                //squid_api.model.config.trigger("change:domain", squid_api.model.config);
             }
         },
 
@@ -1847,12 +1801,12 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
     var View = Backbone.View.extend({
         template : null,
-        periodIdList : null,
-        periodIndex: null,
-        filters: null,
 
         initialize: function(options) {
             var me = this;
+            this.config = squid_api.model.config;
+            this.filters = squid_api.model.filters;
+            this.status = squid_api.model.status;
 
             // setup options
             if (options.template) {
@@ -1860,50 +1814,26 @@ $.widget( "ui.dialog", $.ui.dialog, {
             } else {
                 this.template = template;
             }
-            if (options.filters) {
-                this.filters = options.filters;
-            } else {
-                this.filters = squid_api.model.filters;
-            }
-            if (options.dimensionIdList) {
-                this.periodIdList = options.dimensionIdList;
-            }
-            if (options.dimensionIndex !== null) {
-                this.periodIndex = options.dimensionIndex;
-            }
             if (options.config) {
                 this.config = options.config;
             } else {
                 this.config = squid_api.model.config;
             }
-            
-            this.listenTo(this.filters, "change:selection", this.render);
+
             this.listenTo(this.config, "change:period", this.render);
-            this.listenTo(this.config, "change:domain", function(config) {
-            	var selection = config.get("selection");
-            	if (selection) {
-            		if (selection.facets) {
-            			for (i=0; i<selection.facets.length; i++) {
-                			if (selection.facets[i].dimension.valueType == "DATE" && selection.facets[i].dimension.type == "CONTINUOUS" && selection.facets[i].dimension.id.domainId !== config.get("domain")) {
-                				selection.facets.splice(i, 1);
-                			}
-                		}
-                		this.filters.set("selection", selection);
-            		}
-            	}
-            });
-            
+            this.listenTo(this.filters, "change:selection", this.render);
+
             // listen for global status change
-            squid_api.model.status.on('change:status', this.statusUpdate, this);
+            this.status.on('change:status', this.statusUpdate, this);
         },
-        
+
         remove: function() {
             this.undelegateEvents();
             this.$el.empty();
             this.stopListening();
             return this;
         },
-        
+
         statusUpdate: function() {
         	if (squid_api.model.status.get("status") == "RUNNING") {
         		this.$el.find("button").prop("disabled", true);
@@ -1914,97 +1844,69 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
         render: function() {
             var me = this;
-            squid_api.utils.fetchModel("domain").then(function(domain) {
-                var isMultiple = true;
-
-                if (me.periodIndex !== null) {
-                    isMultiple = false;
-                }
-
-                var jsonData = {"selAvailable" : true, "options" : [], "multiple" : isMultiple};
-
-                // iterate through all filter facets
-                var selection = me.filters.get("selection");
-                if (selection) {
-                    var facets = selection.facets;
-                    if (facets) {
-                        var period = me.config.get("period");
-                        for (var dimIdx=0; dimIdx<facets.length; dimIdx++) {
-                            var facet1 = facets[dimIdx];
-                            if (facet1.dimension.valueType === "DATE" && facet1.dimension.type === "CONTINUOUS") {
-                                // add to the list
-                                var name;
-                                var selected = false;
-                                if (facet1.name) {
-                                    name = facet1.name;
-                                } else {
-                                    name = facet1.dimension.name;
-                                }
-                                if (period) {
-                                	if (period[domain.id]) {
-                                		if (period[domain.id].id == facet1.id) {
-                                    		selected = true;
-                                    	}
-                                	}
-                                }
-                                if (facet1.items) {
-                                	if (! (facet1.items.length === 0 && facet1.done)) {
-                                    	var option = {"label" : name, "value" : facet1.id, "error" : facets[dimIdx].error, "selected" : selected};
-                                        jsonData.options.push(option);
-                                    }
+            var domain = this.config.get("domain");
+            var periodConfig = this.config.get("period");
+            var jsonData = {"options" : []};
+            // iterate through all filter facets
+            var selection = me.filters.get("selection");
+            if (selection) {
+                var facets = selection.facets;
+                if (facets) {
+                    var period = me.config.get("period");
+                    for (var dimIdx=0; dimIdx<facets.length; dimIdx++) {
+                        var facet = facets[dimIdx];
+                        if (facet.dimension.valueType == "DATE" && facet.dimension.type == "CONTINUOUS"  && ! facet.error) {
+                            var option = {"label" : facet.name, "value" : facet.id, "error" : facets[dimIdx].error, "selected" : false};
+                            // if currently selected within config
+                            if (periodConfig) {
+                                if (periodConfig[domain] == facet.id) {
+                                    option.selected = true;
                                 }
                             }
+                            jsonData.options.push(option);
                         }
                     }
                 }
+            }
 
-                // Alphabetical Sorting
-                jsonData.options.sort(function(a, b) {
-                    var labelA=a.label.toLowerCase(), labelB=b.label.toLowerCase();
-                    if (labelA < labelB)
-                        return -1;
-                    if (labelA > labelB)
-                        return 1;
-                    return 0; // no sorting
-                });
+            // Alphabetical Sorting
+            jsonData.options.sort(function(a, b) {
+                var labelA=a.label.toLowerCase(), labelB=b.label.toLowerCase();
+                if (labelA < labelB)
+                    return -1;
+                if (labelA > labelB)
+                    return 1;
+                return 0; // no sorting
+            });
 
-                // check if empty
-                if (jsonData.options.length === 0) {
-                    jsonData.empty = true;
-                }
+            var html = me.template(jsonData);
+            me.$el.html(html);
+            me.$el.show();
 
-                var html = me.template(jsonData);
-                me.$el.html(html);
-                me.$el.show();
-
-                // Initialize plugin
-                me.$el.find("select").multiselect({
-                    buttonText: function(option, select) {
-                    	if (select.find("option:selected").length > 0) {
-                    		text = select.find("option:selected").text();
-                    	} else if (select.find("option").length > 0) {
-                    		text = "Select a period";
-                    	} else {
-                    		text = 'No period exists';
-                    	}
-                        return text;
-                    },
-                    onChange: function(facet) {
-                    	var obj = {};
-                    	var period = me.config.get("period");
-                    	if (period) {
-                    		obj = _.clone(period);
-                    	}
-                    	obj[me.config.get("domain")] = {name: facet.html(), id: facet.val()};
-                        me.config.set("period",obj);
+            // Initialize plugin
+            me.$el.find("select").multiselect({
+                buttonText: function(option, select) {
+                    if (select.find("option:selected").length > 0) {
+                        text = select.find("option:selected").text();
+                    } else if (select.find("option").length > 0) {
+                        text = "Select a period";
+                    } else {
+                        text = 'No usable period exists';
                     }
-                });
+                    return text;
+                },
+                onChange: function(facet) {
+                    var period = _.clone(me.config.get("period"));
+                    var domain = me.config.get("domain");
+                    period[domain] = facet.val();
+                    me.config.set("period", period);
+                }
+            });
 
             // Remove Button Title Tag
             me.$el.find("button").removeAttr('title');
-        });
 
-        return this;
+            return this;
         }
     });
 
@@ -2029,6 +1931,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
         initialize: function(options) {
             var me = this;
+            this.config = squid_api.model.config;
+            this.status = squid_api.model.status;
+            this.filters = squid_api.model.filters;
 
             if (options.template) {
                 this.template = options.template;
@@ -2041,203 +1946,109 @@ $.widget( "ui.dialog", $.ui.dialog, {
             if (options.datePickerPosition) {
                 this.datePickerPosition  = options.datePickerPosition;
             }
-            if (options.model) {
-                this.filters = options.model;
-            } else {
-                this.filters = squid_api.model.filters;
-            }
             if (options.monthsOnlyDisplay) {
-            	this.monthsOnlyDisplay = options.monthsOnlyDisplay;
+                this.monthsOnlyDisplay = options.monthsOnlyDisplay;
             }
-            if (options.config) {
-                this.config = options.config;
-            } else {
-                this.config = squid_api.model.config;
-            }
-            
+
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
-            
+
             // listen for global status change
-            squid_api.model.status.on('change:status', this.statusUpdate, this);
-        },
-        
-        statusUpdate: function() {
-        	if (squid_api.model.status.get("status") == "RUNNING") {
-        		this.$el.find("span").addClass("inactive");
-        	} else {
-        		this.$el.find("span").removeClass("inactive");
-        	}
-        },
-        
-        events: {
-        	"click .refresh": function() {
-        		var filters = $.extend(true, {}, this.filters.get("selection"));
-        		if (filters.facets) {
-        			for (i=0; i<filters.facets.length; i++) {
-            			if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE" && filters.facets[i].selectedItems.length > 0) {
-            				filters.facets[i].selectedItems = [];
-            			}
-            		}
-        			this.filters.set("userSelection", filters);
-        		}
-        	}
+            this.listenTo(this.status, "change:status", this.statusUpdate);
         },
 
-        setDates: function(facet) {
-        	var filters = $.extend(true, {}, this.filters.get("selection"));
-        	var selectedItems = [{"type":"i", "lowerBound": "", "upperBound": ""}];
-        	var obj = {};
-        	
-            // Check filter selection for current start & end Date, if not set it as last month          
-        	if (filters) {
-        		var lowerBound = "";
-        		var upperBound = "";
-        		
-        		// get previous lower + upperbound dates     		
-        		for (i=0; i<filters.facets.length; i++) {
-        			if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE") {
-        				if (filters.facets[i].selectedItems.length > 0) {
-        					lowerBound = filters.facets[i].selectedItems[0].lowerBound;
-        					upperBound = filters.facets[i].selectedItems[0].upperBound;
-        				}
-        			}
-        		}
-        		
-        		for (i=0; i<filters.facets.length; i++) {
-        			if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE") {
-        				if (filters.facets[i].id == facet.id) {
-        					var currentStartDate;
-        					var currentEndDate;
-        					
-        					// min & max dates
-        					if (facet.items) {
-        						if (facet.items.length > 0) {
-            						obj.minStartDate = moment(facet.items[0].lowerBound);
-                	                obj.maxEndDate = moment(facet.items[0].upperBound);
-            					} else {
-            						if (! facet.done) {
-            							obj.notReady = true;
-            							obj.minStartDate = moment().subtract(50, "years");
-            							obj.maxEndDate = moment();
-            						} else {
-            							obj.notReady = true;
-            						}
-            					}
-        					} else {
-        						obj.minStartDate = moment(facet.selectedItems[0].lowerBound);
-            	                obj.maxEndDate = moment(facet.selectedItems[0].upperBound);
-        					}
-      
-        	                // if no previous dates found, use the last month        		
-        	        		if (lowerBound.length > 0 && upperBound.length > 0) {
-        	        			currentStartDate = lowerBound;
-        	        			currentEndDate = upperBound;
-        	        		} else if (obj.maxEndDate) {
-        	        			currentStartDate = moment(obj.maxEndDate.utc()).startOf('month').toISOString();
-        	        			currentEndDate = obj.maxEndDate.utc().toISOString();
-        	        		} else {
-        	        			forceChange = true;
-        	        		}
-        	        		
-        	        		if (currentStartDate && currentEndDate) {
-        	        			// current dates
-            	                obj.currentStartDate = moment(currentStartDate);
-            					obj.currentEndDate = moment(currentEndDate);
-            					
-            					// set current selection        					
-            					selectedItems[0].lowerBound = currentStartDate;
-            					selectedItems[0].upperBound = currentEndDate;
-            					
-            					// set selected items        					
-            					filters.facets[i].selectedItems = selectedItems;
-        	        		} else {
-        	        			filters.facets[i].selectedItems = [];
-        	        		}
-        				} else {
-        					// reset old period selected items        					
-        					if (filters.facets[i].selectedItems.length > 0) {
-        						filters.facets[i].selectedItems = [];
-        					}
-        				}
-        			}
-        		}
- 
-        		// make sure filters are ready for resetting the userSelection
-        		if (JSON.stringify(this.filters.get("selection")) != JSON.stringify(filters)) {
-        			this.filters.set({"userSelection" : filters});
-        		}
-        	}
-                       
-            return obj;
+        statusUpdate: function() {
+            if (this.status.get("status") == "RUNNING") {
+                this.$el.find("span").addClass("inactive");
+            } else {
+                this.$el.find("span").removeClass("inactive");
+            }
         },
 
         render: function() {
-            if (this.filters) {
-                var selection = this.filters.get('selection');
-                var period = this.config.get("period");
-                var domain = this.config.get("domain");
-                var dates = {};
-                var facet = false;
+            /*
+               responsible for printing the currently selected date facets selectedItems (active dates)
+             */
+            var configPeriod = this.config.get("period");
+            var domain = this.config.get("domain");
+            var filters = this.filters;
+            var minMax = {};
+            var selectedItems;
+            var dates = {};
+            var facet = null;
+            var resetFacet = false;
+            var viewData = {"dateAvailable" : false};
 
+            if (filters) {
+                var selection = filters.get("selection");
                 if (selection) {
-                    var facets = selection.facets;	
-                    for (var i=0; i<facets.length; i++) {
-                        var items = facets[i].facets;
-                        if (period) {
-                        	if (period[domain]) {
-                        		if (period[domain].id == facets[i].id) {
-                        			dates = this.setDates(facets[i]);
+                    var facets = selection.facets;
+                    for (i=0; i<facets.length; i++) {
+                        // obtain current facet from config if exists
+                        if (configPeriod) {
+                            if (configPeriod[domain]) {
+                                if (facets[i].id == configPeriod[domain]) {
                                     facet = facets[i];
-                                    break;
-                        		}
-                        	}
-                        } else if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
-                            dates = this.setDates(facets[i]);
-                            facet = facets[i];
-                            break;
+                                }
+                            }
+                        }
+
+                    }
+                }
+                if (facet) {
+                    // min-max date check
+                    if (facet.items) {
+                        if (facet.items.length > 0) {
+                            minMax = facet.items[0];
+                            dates.minDate = moment(minMax.lowerBound);
+                            dates.maxDate = moment(minMax.upperBound);
+                            dates.currentEndDate = moment(minMax.upperBound);
                         }
                     }
-                    // if period config exist but isn't found within the current domain, select the first one                    
-                    if (! facet ) {
-                    	for (i=0; i<facets.length; i++) {
-                    		if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
-                    			 dates = this.setDates(facets[i]);
-                                 facet = facets[i];
-                                 break;
-                    		}
-                    	}
+                    // currently selected date check
+                    if (facet.selectedItems) {
+                        selectedItems = facet.selectedItems[0];
+                        if (selectedItems) {
+                            // if currently selected date is outside of the min-max range then force an update
+                            if ((minMax.type) && (moment(selectedItems.upperBound).isAfter(dates.maxDate.endOf("day")) || moment(selectedItems.upperBound).isBefore(dates.minDate.startOf("day")) || moment(selectedItems.lowerBound).isAfter(dates.maxDate.endOf("day")) || moment(selectedItems.lowerBound).isBefore(dates.minDate.startOf("day")))) {
+                                this.updateFacet(facet, dates.minDate.format(squid_api.DATE_FORMAT), dates.maxDate.format(squid_api.DATE_FORMAT));
+                            } else {
+                                dates.currentStartDate = moment(selectedItems.lowerBound);
+                                dates.currentEndDate = moment(selectedItems.upperBound);
+                            }
+                        }
+                    }
+
+                    // detect if facet is done or not
+                    if (! facet.done) {
+                        viewData.computing = false;
+                    }
+
+                    // set view data
+                    viewData.facet = facet;
+                    if (dates.currentStartDate && dates.currentEndDate) {
+                        viewData.dateAvailable = true;
+                        viewData.dateDisplay = dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll");
+                    }
+
+                    // months only display logic
+                    if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
+                        var d1 = dates.currentStartDate;
+                        var d2 = dates.currentEndDate;
+                        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                        if ((d1.month() == d2.month()) && (d1.year() == d2.year())) {
+                            viewData.dateDisplay = monthNames[d1.month()] + " "  + d1.year();
+                        } else {
+                            viewData.dateDisplay =  monthNames[d1.month()] + " " + d1.year() + " - " + monthNames[d2.month()] + " " + d2.year();
+                        }
                     }
                 }
 
-                var viewData = {"facet":facet, "notReady":dates.notReady};
+                // render html
+                var html = this.template(viewData);
+                this.$el.html(html);
 
-                // build the date pickers
-                if (dates.currentStartDate && dates.currentEndDate) {
-                    viewData.dateAvailable = true;
-                    viewData.dateDisplay = dates.currentStartDate.utc().format("ll") + " - " + dates.currentEndDate.utc().format("ll");
-                } else {
-                    viewData.dateAvailable = false;
-                }
-                
-                // months only display logic
-                if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
-                	var d1 = dates.currentStartDate;
-                	var d2 = dates.currentEndDate;
-                	var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                	if ((d1.month() == d2.month()) && (d1.year() == d2.year())) {
-                		viewData.dateDisplay = monthNames[d1.month()] + " "  + d1.year();
-                	} else {
-                		viewData.dateDisplay =  monthNames[d1.month()] + " " + d1.year() + " - " + monthNames[d2.month()] + " " + d2.year();
-                	}
-                }
-
-                var selHTML = this.template(viewData);
-
-                // render HTML
-                this.$el.html(selHTML);
-
-                // attach date picker onto date display
+                // attach date picker if a facet is found
                 if (facet) {
                     this.renderPicker(facet, dates);
                 }
@@ -2247,21 +2058,26 @@ $.widget( "ui.dialog", $.ui.dialog, {
         },
 
         updateFacet : function(facet, startDate, endDate) {
+            /*
+                responsible for updating a given date facet with a new start / end date.
+             */
             var obj = [{"lowerBound":startDate, "type":"i", "upperBound":endDate}];
-            var attributesClone =  $.extend(true, {}, this.filters.attributes);
-            if (attributesClone.selection) {
-                for (var i=0; i<attributesClone.selection.facets.length; i++) {
-                    if (attributesClone.selection.facets[i].id == facet.id) {
-                        attributesClone.selection.facets[i].selectedItems = obj;
-                    } else if (attributesClone.selection.facets[i].dimension.valueType == "DATE") {
-                        attributesClone.selection.facets[i].selectedItems = [];
+            var selection =  $.extend({}, this.filters.get("selection"));
+            if (selection) {
+                for (var i=0; i<selection.facets.length; i++) {
+                    if (selection.facets[i].id == facet.id) {
+                        selection.facets[i].selectedItems = obj;
                     }
                 }
-                this.filters.set("userSelection", attributesClone.selection);
+                this.config.set("selection", selection);
             }
         },
 
         renderPicker : function(facet, dates) {
+            /*
+                responsible for attaching the date picker with associated events
+             */
+
             var me  = this;
 
             // compute the ranges
@@ -2282,52 +2098,46 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 }
             }
 
-            if (dates.currentStartDate && dates.currentEndDate) {
-                startDate = dates.currentStartDate;
-                endDate = dates.currentEndDate;
-            } else {
-                startDate = dates.minStartDate;
-                endDate = dates.maxEndDate;
-            }
-
             // Build Date Picker
             this.$el.find("span").daterangepicker({
-            	opens: me.datePickerPosition, 
-            	format: 'YYYY-MM-DD', 
-            	showDropdowns: true, 
-            	ranges: pickerRanges, 
-            	"startDate" : startDate, 
-            	"endDate" : endDate, 
-            	"minDate" : dates.minStartDate, 
-            	"maxDate" : dates.maxEndDate
-            });
-            
-            // Detect Apply Action
-            this.$el.find("span").on('apply.daterangepicker', function(ev, picker) {
-                // Update Change Selection upon date widget close
-                var startDate = moment.utc(picker.startDate).utc().toDate();
-                var endDate = moment.utc(picker.endDate).utc().toDate();
-                me.updateFacet(facet, startDate, endDate);
-            });
-                       
-            this.$el.find("span").on('change.daterangepickerLeft', function(ev, calendar) {
-            	if ($(calendar).hasClass("left")) {
-            		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
-            	} else if ($(calendar).hasClass("right")) {
-            		$('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
-            	} else {
-            		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
-            	}
+                opens: me.datePickerPosition,
+                format: 'YYYY-MM-DD',
+                showDropdowns: true,
+                ranges: pickerRanges,
+                startDate: dates.currentStartDate ? dates.currentStartDate.format('YYYY-MM-DD') : null,
+                endDate: dates.currentEndDate ? dates.currentEndDate.format('YYYY-MM-DD') : null,
+                minDate : dates.minDate ? dates.minDate.format('YYYY-MM-DD') : moment().subtract("50", "years").format("YYYY-MM-DD"),
+                maxDate : dates.maxDate ? dates.maxDate.format('YYYY-MM-DD') : moment().format("YYYY-MM-DD"),
             });
 
+            // apply action
+            this.$el.find("span").on('apply.daterangepicker', function(ev, picker) {
+                // Update Change Selection upon date widget close
+                var startDate = picker.startDate.format(squid_api.DATE_FORMAT);
+                var endDate = picker.endDate.format(squid_api.DATE_FORMAT);
+                me.updateFacet(facet, startDate, endDate);
+            });
+
+            // automatically trigger first date selection within the month on left calendar change
+            this.$el.find("span").on('change.daterangepickerLeft', function(ev, calendar) {
+                if ($(calendar).hasClass("left")) {
+                    $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
+                } else if ($(calendar).hasClass("right")) {
+                    $('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
+                } else {
+                    $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
+                }
+            });
+
+            // automatically trigger last date selection within the month on right calendar change
             this.$el.find("span").on('change.daterangepickerRight', function(ev, calendar) {
-            	if ($(calendar).hasClass("left")) {
-            		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
-            	} else if ($(calendar).hasClass("right")) {
-            		$('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
-            	} else {
-            		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
-            	}
+                if ($(calendar).hasClass("left")) {
+                    $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
+                } else if ($(calendar).hasClass("right")) {
+                    $('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
+                } else {
+                    $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
+                }
             });
         }
     });
@@ -2537,7 +2347,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     }
                 }
             }
-            this.model.set("userSelection", userSel);
+            squid_api.model.config.set("selection", userSel);
         },
 
         events: {

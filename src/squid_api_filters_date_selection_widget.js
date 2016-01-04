@@ -16,6 +16,9 @@
 
         initialize: function(options) {
             var me = this;
+            this.config = squid_api.model.config;
+            this.status = squid_api.model.status;
+            this.filters = squid_api.model.filters;
 
             if (options.template) {
                 this.template = options.template;
@@ -28,203 +31,109 @@
             if (options.datePickerPosition) {
                 this.datePickerPosition  = options.datePickerPosition;
             }
-            if (options.model) {
-                this.filters = options.model;
-            } else {
-                this.filters = squid_api.model.filters;
-            }
             if (options.monthsOnlyDisplay) {
-            	this.monthsOnlyDisplay = options.monthsOnlyDisplay;
+                this.monthsOnlyDisplay = options.monthsOnlyDisplay;
             }
-            if (options.config) {
-                this.config = options.config;
-            } else {
-                this.config = squid_api.model.config;
-            }
-            
+
             this.listenTo(this.filters, "change:selection", this.render);
             this.listenTo(this.config, "change:period", this.render);
-            
+
             // listen for global status change
-            squid_api.model.status.on('change:status', this.statusUpdate, this);
-        },
-        
-        statusUpdate: function() {
-        	if (squid_api.model.status.get("status") == "RUNNING") {
-        		this.$el.find("span").addClass("inactive");
-        	} else {
-        		this.$el.find("span").removeClass("inactive");
-        	}
-        },
-        
-        events: {
-        	"click .refresh": function() {
-        		var filters = $.extend(true, {}, this.filters.get("selection"));
-        		if (filters.facets) {
-        			for (i=0; i<filters.facets.length; i++) {
-            			if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE" && filters.facets[i].selectedItems.length > 0) {
-            				filters.facets[i].selectedItems = [];
-            			}
-            		}
-        			this.filters.set("userSelection", filters);
-        		}
-        	}
+            this.listenTo(this.status, "change:status", this.statusUpdate);
         },
 
-        setDates: function(facet) {
-        	var filters = $.extend(true, {}, this.filters.get("selection"));
-        	var selectedItems = [{"type":"i", "lowerBound": "", "upperBound": ""}];
-        	var obj = {};
-        	
-            // Check filter selection for current start & end Date, if not set it as last month          
-        	if (filters) {
-        		var lowerBound = "";
-        		var upperBound = "";
-        		
-        		// get previous lower + upperbound dates     		
-        		for (i=0; i<filters.facets.length; i++) {
-        			if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE") {
-        				if (filters.facets[i].selectedItems.length > 0) {
-        					lowerBound = filters.facets[i].selectedItems[0].lowerBound;
-        					upperBound = filters.facets[i].selectedItems[0].upperBound;
-        				}
-        			}
-        		}
-        		
-        		for (i=0; i<filters.facets.length; i++) {
-        			if (filters.facets[i].dimension.type == "CONTINUOUS" && filters.facets[i].dimension.valueType == "DATE") {
-        				if (filters.facets[i].id == facet.id) {
-        					var currentStartDate;
-        					var currentEndDate;
-        					
-        					// min & max dates
-        					if (facet.items) {
-        						if (facet.items.length > 0) {
-            						obj.minStartDate = moment(facet.items[0].lowerBound);
-                	                obj.maxEndDate = moment(facet.items[0].upperBound);
-            					} else {
-            						if (! facet.done) {
-            							obj.notReady = true;
-            							obj.minStartDate = moment().subtract(50, "years");
-            							obj.maxEndDate = moment();
-            						} else {
-            							obj.notReady = true;
-            						}
-            					}
-        					} else {
-        						obj.minStartDate = moment(facet.selectedItems[0].lowerBound);
-            	                obj.maxEndDate = moment(facet.selectedItems[0].upperBound);
-        					}
-      
-        	                // if no previous dates found, use the last month        		
-        	        		if (lowerBound.length > 0 && upperBound.length > 0) {
-        	        			currentStartDate = lowerBound;
-        	        			currentEndDate = upperBound;
-        	        		} else if (obj.maxEndDate) {
-        	        			currentStartDate = moment(obj.maxEndDate.utc()).startOf('month').toISOString();
-        	        			currentEndDate = obj.maxEndDate.utc().toISOString();
-        	        		} else {
-        	        			forceChange = true;
-        	        		}
-        	        		
-        	        		if (currentStartDate && currentEndDate) {
-        	        			// current dates
-            	                obj.currentStartDate = moment(currentStartDate);
-            					obj.currentEndDate = moment(currentEndDate);
-            					
-            					// set current selection        					
-            					selectedItems[0].lowerBound = currentStartDate;
-            					selectedItems[0].upperBound = currentEndDate;
-            					
-            					// set selected items        					
-            					filters.facets[i].selectedItems = selectedItems;
-        	        		} else {
-        	        			filters.facets[i].selectedItems = [];
-        	        		}
-        				} else {
-        					// reset old period selected items        					
-        					if (filters.facets[i].selectedItems.length > 0) {
-        						filters.facets[i].selectedItems = [];
-        					}
-        				}
-        			}
-        		}
- 
-        		// make sure filters are ready for resetting the userSelection
-        		if (JSON.stringify(this.filters.get("selection")) != JSON.stringify(filters)) {
-        			this.filters.set({"userSelection" : filters});
-        		}
-        	}
-                       
-            return obj;
+        statusUpdate: function() {
+            if (this.status.get("status") == "RUNNING") {
+                this.$el.find("span").addClass("inactive");
+            } else {
+                this.$el.find("span").removeClass("inactive");
+            }
         },
 
         render: function() {
-            if (this.filters) {
-                var selection = this.filters.get('selection');
-                var period = this.config.get("period");
-                var domain = this.config.get("domain");
-                var dates = {};
-                var facet = false;
+            /*
+               responsible for printing the currently selected date facets selectedItems (active dates)
+             */
+            var configPeriod = this.config.get("period");
+            var domain = this.config.get("domain");
+            var filters = this.filters;
+            var minMax = {};
+            var selectedItems;
+            var dates = {};
+            var facet = null;
+            var resetFacet = false;
+            var viewData = {"dateAvailable" : false};
 
+            if (filters) {
+                var selection = filters.get("selection");
                 if (selection) {
-                    var facets = selection.facets;	
-                    for (var i=0; i<facets.length; i++) {
-                        var items = facets[i].facets;
-                        if (period) {
-                        	if (period[domain]) {
-                        		if (period[domain].id == facets[i].id) {
-                        			dates = this.setDates(facets[i]);
+                    var facets = selection.facets;
+                    for (i=0; i<facets.length; i++) {
+                        // obtain current facet from config if exists
+                        if (configPeriod) {
+                            if (configPeriod[domain]) {
+                                if (facets[i].id == configPeriod[domain]) {
                                     facet = facets[i];
-                                    break;
-                        		}
-                        	}
-                        } else if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
-                            dates = this.setDates(facets[i]);
-                            facet = facets[i];
-                            break;
+                                }
+                            }
+                        }
+
+                    }
+                }
+                if (facet) {
+                    // min-max date check
+                    if (facet.items) {
+                        if (facet.items.length > 0) {
+                            minMax = facet.items[0];
+                            dates.minDate = moment(minMax.lowerBound);
+                            dates.maxDate = moment(minMax.upperBound);
+                            dates.currentEndDate = moment(minMax.upperBound);
                         }
                     }
-                    // if period config exist but isn't found within the current domain, select the first one                    
-                    if (! facet ) {
-                    	for (i=0; i<facets.length; i++) {
-                    		if (facets[i].dimension.valueType == "DATE" && facets[i].dimension.type == "CONTINUOUS") {
-                    			 dates = this.setDates(facets[i]);
-                                 facet = facets[i];
-                                 break;
-                    		}
-                    	}
+                    // currently selected date check
+                    if (facet.selectedItems) {
+                        selectedItems = facet.selectedItems[0];
+                        if (selectedItems) {
+                            // if currently selected date is outside of the min-max range then force an update
+                            if ((minMax.type) && (moment(selectedItems.upperBound).isAfter(dates.maxDate.endOf("day")) || moment(selectedItems.upperBound).isBefore(dates.minDate.startOf("day")) || moment(selectedItems.lowerBound).isAfter(dates.maxDate.endOf("day")) || moment(selectedItems.lowerBound).isBefore(dates.minDate.startOf("day")))) {
+                                this.updateFacet(facet, dates.minDate.format(squid_api.DATE_FORMAT), dates.maxDate.format(squid_api.DATE_FORMAT));
+                            } else {
+                                dates.currentStartDate = moment(selectedItems.lowerBound);
+                                dates.currentEndDate = moment(selectedItems.upperBound);
+                            }
+                        }
+                    }
+
+                    // detect if facet is done or not
+                    if (! facet.done) {
+                        viewData.computing = false;
+                    }
+
+                    // set view data
+                    viewData.facet = facet;
+                    if (dates.currentStartDate && dates.currentEndDate) {
+                        viewData.dateAvailable = true;
+                        viewData.dateDisplay = dates.currentStartDate.format("ll") + " - " + dates.currentEndDate.format("ll");
+                    }
+
+                    // months only display logic
+                    if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
+                        var d1 = dates.currentStartDate;
+                        var d2 = dates.currentEndDate;
+                        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                        if ((d1.month() == d2.month()) && (d1.year() == d2.year())) {
+                            viewData.dateDisplay = monthNames[d1.month()] + " "  + d1.year();
+                        } else {
+                            viewData.dateDisplay =  monthNames[d1.month()] + " " + d1.year() + " - " + monthNames[d2.month()] + " " + d2.year();
+                        }
                     }
                 }
 
-                var viewData = {"facet":facet, "notReady":dates.notReady};
+                // render html
+                var html = this.template(viewData);
+                this.$el.html(html);
 
-                // build the date pickers
-                if (dates.currentStartDate && dates.currentEndDate) {
-                    viewData.dateAvailable = true;
-                    viewData.dateDisplay = dates.currentStartDate.utc().format("ll") + " - " + dates.currentEndDate.utc().format("ll");
-                } else {
-                    viewData.dateAvailable = false;
-                }
-                
-                // months only display logic
-                if (this.monthsOnlyDisplay && dates.currentStartDate && dates.currentEndDate) {
-                	var d1 = dates.currentStartDate;
-                	var d2 = dates.currentEndDate;
-                	var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                	if ((d1.month() == d2.month()) && (d1.year() == d2.year())) {
-                		viewData.dateDisplay = monthNames[d1.month()] + " "  + d1.year();
-                	} else {
-                		viewData.dateDisplay =  monthNames[d1.month()] + " " + d1.year() + " - " + monthNames[d2.month()] + " " + d2.year();
-                	}
-                }
-
-                var selHTML = this.template(viewData);
-
-                // render HTML
-                this.$el.html(selHTML);
-
-                // attach date picker onto date display
+                // attach date picker if a facet is found
                 if (facet) {
                     this.renderPicker(facet, dates);
                 }
@@ -234,21 +143,26 @@
         },
 
         updateFacet : function(facet, startDate, endDate) {
+            /*
+                responsible for updating a given date facet with a new start / end date.
+             */
             var obj = [{"lowerBound":startDate, "type":"i", "upperBound":endDate}];
-            var attributesClone =  $.extend(true, {}, this.filters.attributes);
-            if (attributesClone.selection) {
-                for (var i=0; i<attributesClone.selection.facets.length; i++) {
-                    if (attributesClone.selection.facets[i].id == facet.id) {
-                        attributesClone.selection.facets[i].selectedItems = obj;
-                    } else if (attributesClone.selection.facets[i].dimension.valueType == "DATE") {
-                        attributesClone.selection.facets[i].selectedItems = [];
+            var selection =  $.extend({}, this.filters.get("selection"));
+            if (selection) {
+                for (var i=0; i<selection.facets.length; i++) {
+                    if (selection.facets[i].id == facet.id) {
+                        selection.facets[i].selectedItems = obj;
                     }
                 }
-                this.filters.set("userSelection", attributesClone.selection);
+                this.config.set("selection", selection);
             }
         },
 
         renderPicker : function(facet, dates) {
+            /*
+                responsible for attaching the date picker with associated events
+             */
+
             var me  = this;
 
             // compute the ranges
@@ -269,52 +183,46 @@
                 }
             }
 
-            if (dates.currentStartDate && dates.currentEndDate) {
-                startDate = dates.currentStartDate;
-                endDate = dates.currentEndDate;
-            } else {
-                startDate = dates.minStartDate;
-                endDate = dates.maxEndDate;
-            }
-
             // Build Date Picker
             this.$el.find("span").daterangepicker({
-            	opens: me.datePickerPosition, 
-            	format: 'YYYY-MM-DD', 
-            	showDropdowns: true, 
-            	ranges: pickerRanges, 
-            	"startDate" : startDate, 
-            	"endDate" : endDate, 
-            	"minDate" : dates.minStartDate, 
-            	"maxDate" : dates.maxEndDate
-            });
-            
-            // Detect Apply Action
-            this.$el.find("span").on('apply.daterangepicker', function(ev, picker) {
-                // Update Change Selection upon date widget close
-                var startDate = moment.utc(picker.startDate).utc().toDate();
-                var endDate = moment.utc(picker.endDate).utc().toDate();
-                me.updateFacet(facet, startDate, endDate);
-            });
-                       
-            this.$el.find("span").on('change.daterangepickerLeft', function(ev, calendar) {
-            	if ($(calendar).hasClass("left")) {
-            		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
-            	} else if ($(calendar).hasClass("right")) {
-            		$('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
-            	} else {
-            		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
-            	}
+                opens: me.datePickerPosition,
+                format: 'YYYY-MM-DD',
+                showDropdowns: true,
+                ranges: pickerRanges,
+                startDate: dates.currentStartDate ? dates.currentStartDate.format('YYYY-MM-DD') : null,
+                endDate: dates.currentEndDate ? dates.currentEndDate.format('YYYY-MM-DD') : null,
+                minDate : dates.minDate ? dates.minDate.format('YYYY-MM-DD') : moment().subtract("50", "years").format("YYYY-MM-DD"),
+                maxDate : dates.maxDate ? dates.maxDate.format('YYYY-MM-DD') : moment().format("YYYY-MM-DD"),
             });
 
+            // apply action
+            this.$el.find("span").on('apply.daterangepicker', function(ev, picker) {
+                // Update Change Selection upon date widget close
+                var startDate = picker.startDate.format(squid_api.DATE_FORMAT);
+                var endDate = picker.endDate.format(squid_api.DATE_FORMAT);
+                me.updateFacet(facet, startDate, endDate);
+            });
+
+            // automatically trigger first date selection within the month on left calendar change
+            this.$el.find("span").on('change.daterangepickerLeft', function(ev, calendar) {
+                if ($(calendar).hasClass("left")) {
+                    $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
+                } else if ($(calendar).hasClass("right")) {
+                    $('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
+                } else {
+                    $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
+                }
+            });
+
+            // automatically trigger last date selection within the month on right calendar change
             this.$el.find("span").on('change.daterangepickerRight', function(ev, calendar) {
-            	if ($(calendar).hasClass("left")) {
-            		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
-            	} else if ($(calendar).hasClass("right")) {
-            		$('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
-            	} else {
-            		$('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
-            	}
+                if ($(calendar).hasClass("left")) {
+                    $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
+                } else if ($(calendar).hasClass("right")) {
+                    $('.daterangepicker').find('.right td.available:not(.off):last').trigger('click');
+                } else {
+                    $('.daterangepicker').find('.left td.available:not(.off):first').trigger('click');
+                }
             });
         }
     });

@@ -107,7 +107,7 @@
                     }
 
                     // Set the updated filters model
-                    this.filters.set("userSelection", selectionClone);
+                    squid_api.model.config.set("selection", selectionClone);
                 }
             },
         },

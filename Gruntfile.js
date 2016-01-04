@@ -57,11 +57,6 @@ module.exports = function(grunt) {
                         }
                     }
                 },
-                wiredep : {
-                    target : {
-                        src : [ 'test.html' ],
-                    }
-                },
                 watch : {
                     js : {
                         files : [ 'src/**/*.*' ],
@@ -76,7 +71,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-bower-concat');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-wiredep');
 
-    grunt.registerTask('default', [ 'jshint', 'clean', 'handlebars', 'concat', 'sass', 'wiredep']);
+    grunt.registerTask('default', [ 'jshint', 'clean', 'handlebars', 'concat', 'sass']);
 };

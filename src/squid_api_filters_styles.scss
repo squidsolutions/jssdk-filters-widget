@@ -42,6 +42,19 @@
             margin-bottom: auto;
         }
     }
+    button.refresh-facet {
+        float: left;
+        width: 50%;
+        position: relative;
+        top: -6px;
+        left: 10px;
+
+        i {
+            top: 1px;
+            position: relative;
+            left: -3px;
+        }
+    }
     .refresh {
 		cursor: pointer;
 		top: 12px;
@@ -72,6 +85,7 @@
     }
     span {
         cursor: pointer;
+        float: left;
         text-decoration: underline;
         &.inactive {
 			opacity: 0.7;

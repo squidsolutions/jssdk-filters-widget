@@ -42,6 +42,23 @@
             this.listenTo(this.status, "change:status", this.statusUpdate);
         },
 
+        events: {
+            "click .refresh-facet": function() {
+                // allow the user to refresh the given facet
+                var me = this;
+                var periods = this.config.get("period");
+                var periodId = periods[this.config.get("domain")];
+
+                var getFacetMembersCallback = function() {
+                    me.config.set("selection", squid_api.utils.buildCleanSelection(me.filters.get("selection")));
+                };
+                squid_api.controller.facetjob.getFacetMembers(this.filters, periodId).done(getFacetMembersCallback);
+
+                // add a spinning class
+                this.$el.find(".refresh-facet i").addClass("fa-spin");
+            }
+        },
+
         statusUpdate: function() {
             if (this.status.get("status") == "RUNNING") {
                 this.$el.find("span").addClass("inactive");
@@ -81,6 +98,8 @@
                     }
                 }
                 if (facet) {
+                    viewData.name = facet.name;
+
                     // min-max date check
                     if (facet.items) {
                         if (facet.items.length > 0) {
@@ -106,7 +125,7 @@
 
                     // detect if facet is done or not
                     if (! facet.done) {
-                        viewData.computing = false;
+                        viewData.notDone = true;
                     }
 
                     // set view data
@@ -132,6 +151,11 @@
                 // render html
                 var html = this.template(viewData);
                 this.$el.html(html);
+
+                this.$el.find(".refresh-facet").tooltip({
+                    placement: "right",
+                    trigger: "hover"
+                });
 
                 // attach date picker if a facet is found
                 if (facet) {

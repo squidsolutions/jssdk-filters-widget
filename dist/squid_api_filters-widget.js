@@ -465,7 +465,7 @@ function program6(depth0,data) {
 function program8(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\r\n        <button data-toggle=\"tooltip\" title=\"Please click the refresh button calculate the date facet: ";
+  buffer += "\r\n        <button data-toggle=\"tooltip\" title=\"Please click the refresh button to calculate the date facet: ";
   if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)

@@ -28,6 +28,16 @@
   float: left; }
   .squid-api-date-selection-widget #date-picker .sq-content {
     margin-bottom: auto; }
+.squid-api-date-selection-widget button.refresh-facet {
+  float: left;
+  width: 50%;
+  position: relative;
+  top: -6px;
+  left: 10px; }
+  .squid-api-date-selection-widget button.refresh-facet i {
+    top: 1px;
+    position: relative;
+    left: -3px; }
 .squid-api-date-selection-widget .refresh {
   cursor: pointer;
   top: 12px;
@@ -54,6 +64,7 @@
   display: inline-block; }
 .squid-api-date-selection-widget span {
   cursor: pointer;
+  float: left;
   text-decoration: underline; }
   .squid-api-date-selection-widget span.inactive {
     opacity: 0.7; }

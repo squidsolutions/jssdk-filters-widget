@@ -109,10 +109,11 @@
             }
             );
 
-            this.model.on("change:domains", function() {
+            squid_api.model.config.on("change:domain", function() {
                 // reset
                 me.initialFacet = null;
                 me.filterStore.set({
+                    "selectedFilter" : null,
                     "searchPrevious" : null,
                     "search" : null,
                     "facet" : null,

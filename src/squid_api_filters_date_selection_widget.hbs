@@ -8,7 +8,7 @@
                 no date available
         {{/if}}
     {{/if}}
-    {{#if computing}}
-        click to refresh
+    {{#if notDone}}
+        <button data-toggle="tooltip" title="Please click the refresh button to calculate the date facet: {{name}}" class="form-control btn btn-default refresh-facet"><i class="fa fa-refresh"></i> click to refresh</button>
     {{/if}}
 </div>

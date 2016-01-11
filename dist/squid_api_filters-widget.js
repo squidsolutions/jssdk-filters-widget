@@ -464,15 +464,20 @@ function program6(depth0,data) {
 
 function program8(depth0,data) {
   
-  
-  return "\r\n        click to refresh\r\n    ";
+  var buffer = "", stack1, helper;
+  buffer += "\r\n        <button data-toggle=\"tooltip\" title=\"Please click the refresh button to calculate the date facet: ";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" class=\"form-control btn btn-default refresh-facet\"><i class=\"fa fa-refresh\"></i> click to refresh</button>\r\n    ";
+  return buffer;
   }
 
   buffer += "<div class=\"squid-api-date-selection-widget\">\r\n    ";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.dateAvailable), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n    ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.computing), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.notDone), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n</div>\r\n";
   return buffer;
@@ -1243,10 +1248,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
             }
             );
 
-            this.model.on("change:domains", function() {
+            squid_api.model.config.on("change:domain", function() {
                 // reset
                 me.initialFacet = null;
                 me.filterStore.set({
+                    "selectedFilter" : null,
                     "searchPrevious" : null,
                     "search" : null,
                     "facet" : null,
@@ -1957,6 +1963,23 @@ $.widget( "ui.dialog", $.ui.dialog, {
             this.listenTo(this.status, "change:status", this.statusUpdate);
         },
 
+        events: {
+            "click .refresh-facet": function() {
+                // allow the user to refresh the given facet
+                var me = this;
+                var periods = this.config.get("period");
+                var periodId = periods[this.config.get("domain")];
+
+                var getFacetMembersCallback = function() {
+                    me.config.set("selection", squid_api.utils.buildCleanSelection(me.filters.get("selection")));
+                };
+                squid_api.controller.facetjob.getFacetMembers(this.filters, periodId).done(getFacetMembersCallback);
+
+                // add a spinning class
+                this.$el.find(".refresh-facet i").addClass("fa-spin");
+            }
+        },
+
         statusUpdate: function() {
             if (this.status.get("status") == "RUNNING") {
                 this.$el.find("span").addClass("inactive");
@@ -1996,6 +2019,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     }
                 }
                 if (facet) {
+                    viewData.name = facet.name;
+
                     // min-max date check
                     if (facet.items) {
                         if (facet.items.length > 0) {
@@ -2021,7 +2046,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
                     // detect if facet is done or not
                     if (! facet.done) {
-                        viewData.computing = false;
+                        viewData.notDone = true;
                     }
 
                     // set view data
@@ -2047,6 +2072,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
                 // render html
                 var html = this.template(viewData);
                 this.$el.html(html);
+
+                this.$el.find(".refresh-facet").tooltip({
+                    placement: "right",
+                    trigger: "hover"
+                });
 
                 // attach date picker if a facet is found
                 if (facet) {

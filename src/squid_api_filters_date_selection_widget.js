@@ -8,9 +8,15 @@
         model: null,
         ranges : null,
         rangesPresets : {
-            'all': function(min, max) { return [moment.utc(min), moment.utc(max)]; },
-            'first-month': function(min, max) { return [moment.utc(min).startOf('month'), moment.utc(min).endOf('month')]; },
-            'last-month': function(min, max) { return [moment.utc(max).startOf('month'), moment.utc(max).endOf('month')]; }
+            'all': function(min, max) {
+                return [moment(min), moment(max)];
+            },
+            'first-month': function(min, max) {
+                return [moment(min).startOf('month'), moment(min).endOf('month')];
+            },
+            'last-month': function(min, max) {
+                return [moment(max).startOf('month'), moment(max).endOf('month')];
+            }
         },
         monthsOnlyDisplay : false,
 
@@ -203,7 +209,7 @@
                     func = value;
                 }
                 if (func) {
-                    pickerRanges[rangeName] = func.call(this, dates.minStartDate, dates.maxEndDate);
+                    pickerRanges[rangeName] = func.call(this, dates.minDate, dates.maxDate);
                 }
             }
 

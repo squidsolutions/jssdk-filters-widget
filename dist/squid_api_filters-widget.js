@@ -694,7 +694,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                     }
 
                     // Set the updated filters model
-                    squid_api.model.config.set("selection", selectionClone);
+                    squid_api.model.config.set("selection", squid_api.utils.buildCleanSelection(selectionClone));
                 }
             },
         },
@@ -2105,7 +2105,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
                         selection.facets[i].selectedItems = obj;
                     }
                 }
-                this.config.set("selection", selection);
+                this.config.set("selection", squid_api.utils.buildCleanSelection(selection));
             }
         },
 

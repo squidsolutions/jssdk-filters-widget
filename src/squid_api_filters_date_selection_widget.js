@@ -184,7 +184,7 @@
                         selection.facets[i].selectedItems = obj;
                     }
                 }
-                this.config.set("selection", selection);
+                this.config.set("selection", squid_api.utils.buildCleanSelection(selection));
             }
         },
 

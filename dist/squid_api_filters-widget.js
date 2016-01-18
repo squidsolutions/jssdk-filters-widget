@@ -971,57 +971,58 @@ $.widget( "ui.dialog", $.ui.dialog, {
             var noData = true;
 
             if (selection) {
-                 if (selection.facets) {
+                if (selection.facets) {
                     var facets = selection.facets;
                     for (i=0; i<facets.length; i++) {
-                        var selectedItems = facets[i].selectedItems;
-                            if (facets[i].dimension.type == "CATEGORICAL" || facets[i].dimension.type == "SEGMENTS") {
-                                for (ix=0; ix<selectedItems.length; ix++) {
-                                    if (this.initialFacet == facets[i].id || (!this.initialFacet && !this.initialDimension)) {
-                                        noData = false;
-                                        var obj = {};
-                                        obj.facetItem = selectedItems[ix].value;
-                                        obj.facetItemId = selectedItems[ix].id;
-                                        if (facets[i].name) {
-                                            obj.facetName = facets[i].name;
-                                        } else {
-                                            obj.facetName = facets[i].dimension.name;
-                                        }
-                                        obj.facetNameId = facets[i].id;
-                                        selFacets.push(obj);
+                        var facet = facets[i];
+                        if (facet.dimension.type == "CATEGORICAL" || facet.dimension.type == "SEGMENTS") {
+                            var selectedItems = facet.selectedItems;
+                            for (ix=0; ix<selectedItems.length; ix++) {
+                                if (this.initialFacet == facet.id || (!this.initialFacet && !this.initialDimension)) {
+                                    noData = false;
+                                    var obj = {};
+                                    obj.facetItem = selectedItems[ix].value;
+                                    obj.facetItemId = selectedItems[ix].id;
+                                    if (facet.name) {
+                                        obj.facetName = facet.name;
+                                    } else {
+                                        obj.facetName = facet.dimension.name;
                                     }
-                                }
-                            }
-                        }
-                    }
-                    if (this.facetList) {
-                        var updatedFacets = [];
-                        for (i=0; i<selFacets.length; i++) {
-                            for (ix=0; ix<this.facetList.length; ix++) {
-                                if (this.facetList[ix] === selFacets[i].facetNameId) {
-                                    updatedFacets.push(selFacets[i]);
-                                }
-                            }
-                        }
-                        if (updatedFacets.length === 0) {
-                            noData = true;
-                        } else {
-                            selFacets = updatedFacets;
-                        }
-                    }
-                    if (this.avoidFacets) {
-                        for (i=0; i<this.avoidFacets.length; i++) {
-                            for (ix=0; ix<selFacets.length; ix++) {
-                                if (this.avoidFacets[i] === selFacets[ix].facetNameId) {
-                                    selFacets.splice(ix, 1);
+                                    obj.facetNameId = facet.id;
+                                    selFacets.push(obj);
                                 }
                             }
                         }
                     }
                 }
-                this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: this.noDataMessage, mandatory: this.mandatory}));
+                if (this.facetList) {
+                    var updatedFacets = [];
+                    for (i=0; i<selFacets.length; i++) {
+                        for (ix=0; ix<this.facetList.length; ix++) {
+                            if (this.facetList[ix] === selFacets[i].facetNameId) {
+                                updatedFacets.push(selFacets[i]);
+                            }
+                        }
+                    }
+                    if (updatedFacets.length === 0) {
+                        noData = true;
+                    } else {
+                        selFacets = updatedFacets;
+                    }
+                }
+                if (this.avoidFacets) {
+                    for (i=0; i<this.avoidFacets.length; i++) {
+                        for (ix=0; ix<selFacets.length; ix++) {
+                            if (this.avoidFacets[i] === selFacets[ix].facetNameId) {
+                                selFacets.splice(ix, 1);
+                            }
+                        }
+                    }
+                }
             }
-        });
+            this.$el.html(this.filterPanelTemplate({facets: selFacets, noData: noData, noDataMessage: this.noDataMessage, mandatory: this.mandatory}));
+        }
+    });
 
     return View;
 }));

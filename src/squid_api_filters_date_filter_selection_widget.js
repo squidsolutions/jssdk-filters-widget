@@ -103,7 +103,8 @@
                     var period = _.clone(me.config.get("period"));
                     var domain = me.config.get("domain");
                     period[domain] = facet.val();
-                    me.config.set("period", period);
+                    var selection = me.getPeriodSelectio(period);
+                    me.config.set({"period": period, "selection" : selection});
                 }
             });
 
@@ -111,7 +112,32 @@
             me.$el.find("button").removeAttr('title');
 
             return this;
-        }
+        },
+        
+        /**  
+         * responsible for removing a previously active date facet from the selection.
+         */
+        getPeriodSelection: function(period) {
+            var selection = $.extend(true, {}, this.config.get("selection"));
+            if (selection) {
+                var facets = selection.facets;
+                if (facets) {
+                    var changed = false;
+                    var domain = this.config.get("domain");
+                    for (var i=0; i<facets.length; i++) {
+                        var facet = facets[i];
+                        if (facet.dimension.type === "CONTINUOUS" && facet.dimension.valueType === "DATE") {
+                            if (facet.id !== period[domain]) {
+                                changed = true;
+                                facets.splice(i, 1);
+                            }
+                        }
+                    }
+                    selection.facets = facets;
+                }
+            }
+            return selection;
+        },
     });
 
     return View;

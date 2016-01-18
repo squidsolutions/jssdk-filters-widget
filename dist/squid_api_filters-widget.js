@@ -1579,84 +1579,81 @@ $.widget( "ui.dialog", $.ui.dialog, {
          */
         renderFacet : function(fetch) {
             var me = this;
+            if (this.currentModel.get("selection")) {
+                var selectedFacetId = this.filterStore.get("selectedFilter");
+                var pageIndex = this.filterStore.get("pageIndex");
+                var pageSize = this.filterStore.get("pageSize");
+                var facet = this.filterStore.get("facet");
+                var nbPages = this.filterStore.get("nbPages");
 
-            if (this.currentModel.get("status") === "DONE") {
-                if (this.currentModel.get("selection")) {
-                    var selectedFacetId = this.filterStore.get("selectedFilter");
-                    var pageIndex = this.filterStore.get("pageIndex");
-                    var pageSize = this.filterStore.get("pageSize");
-                    var facet = this.filterStore.get("facet");
-                    var nbPages = this.filterStore.get("nbPages");
+                // compute required index range
+                var startIndex = pageIndex * pageSize;
+                var endIndex = startIndex + pageSize;
 
-                    // compute required index range
-                    var startIndex = pageIndex * pageSize;
-                    var endIndex = startIndex + pageSize;
+                // check if we need to fetch more items
+                var searchStale =  false;
+                var searchPrevious = this.filterStore.get("searchPrevious");
+                var search = this.filterStore.get("search");
+                if ((search !== null) && (search != searchPrevious)) {
+                    searchStale = true;
+                }
+                if ((facet) && (facet.get("id") == selectedFacetId) && (!searchStale)) {
+                    var itemIndex = this.filterStore.get("itemIndex");
 
-                    // check if we need to fetch more items
-                    var searchStale =  false;
-                    var searchPrevious = this.filterStore.get("searchPrevious");
-                    var search = this.filterStore.get("search");
-                    if ((search !== null) && (search != searchPrevious)) {
-                        searchStale = true;
-                    }
-                    if ((facet) && (facet.get("id") == selectedFacetId) && (!searchStale)) {
-                        var itemIndex = this.filterStore.get("itemIndex");
-
-                        // compute what's the max index
-                        var maxItem = itemIndex + facet.get("items").length;
-                        if (startIndex < itemIndex) {
-                            fetch = true;
-                        }
-                        if ((endIndex > maxItem) && (facet.get("hasMore") === true)) {
-                            fetch = true;
-                        }
-                    } else {
+                    // compute what's the max index
+                    var maxItem = itemIndex + facet.get("items").length;
+                    if (startIndex < itemIndex) {
                         fetch = true;
                     }
+                    if ((endIndex > maxItem) && (facet.get("hasMore") === true)) {
+                        fetch = true;
+                    }
+                } else {
+                    fetch = true;
+                }
 
-                    if ((fetch === true) && (selectedFacetId) && (this.currentModel.get("id").facetJobId)) {
-                        // pre-fetch some pages of facet members
-                        var facetJob = new squid_api.model.ProjectFacetJobFacet();
-                        facetJob.set("id",this.currentModel.get("id"));
-                        facetJob.set("oid", selectedFacetId);
-                        if (startIndex) {
-                            facetJob.addParameter("startIndex", startIndex);
-                        }
-                        if (pageSize) {
-                            facetJob.addParameter("maxResults", (nbPages * pageSize));
-                        }
-                        if (search) {
-                            facetJob.addParameter("filter", search);
-                            this.filterStore.set("searchPrevious", search);
-                        }
-                        // get the results from API
-                        facetJob.fetch({
-                            error: function(model, response) {
-                                console.error(response);
-                            },
-                            success: function(model, response) {
-                                if (model.get("apiError") && (model.get("apiError") == "COMPUTING_IN_PROGRESS")) {
-                                    // set a fake facet
-                                    var f = new squid_api.model.ProjectFacetJobFacet();
-                                    f.set("items", []);
-                                    me.filterStore.set("facet", f);
-                                } else {
-                                    me.filterStore.set("itemIndex", startIndex);
-                                    me.filterStore.set("facet", model);
-                                }
-                                // set error message if exists
-                                var errorMessage = model.get("errorMessage");
-                                if (model.get("error")) {
-                                    if (errorMessage) {
-                                        squid_api.model.status.set("message", errorMessage);
-                                    }
+                if ((fetch === true) && (selectedFacetId) && (this.currentModel.get("id").facetJobId)) {
+                    // pre-fetch some pages of facet members
+                    var facetJob = new squid_api.model.ProjectFacetJobFacet();
+                    facetJob.set("id",this.currentModel.get("id"));
+                    facetJob.set("oid", selectedFacetId);
+                    if (startIndex) {
+                        facetJob.addParameter("startIndex", startIndex);
+                    }
+                    if (pageSize) {
+                        facetJob.addParameter("maxResults", (nbPages * pageSize));
+                    }
+                    if (search) {
+                        facetJob.addParameter("filter", search);
+                        this.filterStore.set("searchPrevious", search);
+                    }
+                    // get the results from API
+                    facetJob.fetch({
+                        error: function(model, response) {
+                            console.error(response);
+                        },
+                        success: function(model, response) {
+                            if (model.get("apiError") && (model.get("apiError") == "COMPUTING_IN_PROGRESS")) {
+                                // set a fake facet
+                                var f = new squid_api.model.ProjectFacetJobFacet();
+                                f.set("items", []);
+                                me.filterStore.set("facet", f);
+                            } else {
+                                me.filterStore.set("itemIndex", startIndex);
+                                me.filterStore.set("facet", model);
+                            }
+                            // set error message if exists
+                            var errorMessage = model.get("errorMessage");
+                            if (model.get("error")) {
+                                if (errorMessage) {
+                                    squid_api.model.status.set("message", errorMessage);
                                 }
                             }
-                        });
-                    } else {
-                        // trigger facet render
-                        me.filterStore.trigger("change:facet");
-                    }
+                        }
+                    });
+                } else {
+                    // trigger facet render
+                    me.filterStore.trigger("change:facet");
                 }
             }
         },
